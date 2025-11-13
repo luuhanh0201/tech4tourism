@@ -4,22 +4,32 @@
   crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="./app.css">
 <?php
-session_start();
+// session_start();
 
 
 require_once './commons/env.php'; // Khai báo biến môi trường
 require_once './commons/function.php'; // Hàm hỗ trợ
 
-require_once './controllers/ProductController.php';
+require_once './controllers/DashboardController.php';
+
+
+// Auth
+require_once './controllers/AuthController.php';
 
 // Route
-$act = $_GET['act'] ?? '/';
+$route = '/' . ($_GET['route'] ?? '');
 
-match ($act) {
-  // Public route
-  '/' => (new ProductController())->Home(),
+match ($route) {
 
-  default => include '',
+  '/sign-in' => (new AuthController())->SignIn(),
+  '/sign-up' => (new AuthController())->SignUP(),
+
+
+
+
+
+  '/' => (new DashboardController())->Dashboard(),
+
+  default => include './views/errorPage.php',
 };
 
-?>

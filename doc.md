@@ -8,20 +8,26 @@
 5. views // Hiển thị
 6. index.php // Điều hướng
 
-
 // Không sử dụng đường dẫn tuyệt đối(file.php)
 localhost/mvc-basic/trang-chu.php - Không dùng cách này nữa
 -> Dùng route: Gọi đến hàm trong controller để thực thi(hàm không trả về)
-- Hàm không trả về: không có return - Chỉ dùng để thực thi đoạn mã, và hàm này không trả về giá trị
-- Hàm có trả về: Có return - Thực thi đoạn mã và trả về giá trị
+
+-   Hàm không trả về: không có return - Chỉ dùng để thực thi đoạn mã, và hàm này không trả về giá trị
+-   Hàm có trả về: Có return - Thực thi đoạn mã và trả về giá trị
 
 Class - object - Hàm - Mảng
 
+Mô hình MVC
 
-Mô hình MVC 
-- Model: Dùng để tương tác với cơ sở dữ liệu
-- View: Hiển trị, nhận yêu cầu người dùng
-- Controller: Dùng để thực thi các đoạn mã xử lý logic
+-   Model: Dùng để tương tác với cơ sở dữ liệu
+-   View: Hiển trị, nhận yêu cầu người dùng
+-   Controller: Dùng để thực thi các đoạn mã xử lý logic
 
+-   Cấu hình DB trong file commons/env.php
 
-- Cấu hình DB trong file commons/env.php
+<!-- Tất cả router trong dự án -->
+
+<!-- Auth -->
+
+/sign-in
+/sign-up
