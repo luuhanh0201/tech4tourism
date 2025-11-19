@@ -14,13 +14,16 @@ require_once './commons/env.php'; // Khai báo biến môi trường
 require_once './commons/function.php'; // Hàm hỗ trợ
 
 require_once './controllers/DashboardController.php';
-
+require_once './controllers/CategoryController.php';
+require_once './controllers/CategoryController.php';
 
 // Auth
-require_once './controllers/AuthController.php';
+require_once './models/CategoryModel.php';
 
 // Route
-$route = '/' . ($_GET['route'] ?? '');
+$route = '/' . trim($_GET['route'] ?? '', '/');
+$route = $route === '/' ? '/' : $route;
+
 
 match ($route) {
 
@@ -31,12 +34,8 @@ match ($route) {
 
   // Categories
   '/categories' => (new AuthController())->SignUP(),
-
-
-  // 
-
-
-
+  //CategoryCotroller
+  '/category' =>(new CategoryController())->All(),
 
   '/' => (new DashboardController())->Dashboard(),
 

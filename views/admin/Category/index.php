@@ -1,5 +1,5 @@
 <!-- Render danh sách các loại tour -->
- <!-- Code giao diện Dashboard của admin -->
+<!-- Code giao diện Dashboard của admin -->
 <!-- <h1>Dashboard admin</h1> -->
 <!DOCTYPE html>
 <html lang="vi">
@@ -273,6 +273,23 @@
         .icon-chart::before {
             content: "📈";
         }
+
+        table thead tr th {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        table tbody tr {
+            transition: 0.2s;
+        }
+
+        table tbody tr:hover {
+            background: #eef4ff !important;
+        }
+
+        .fw-500 {
+            font-weight: 500;
+        }
     </style>
 </head>
 
@@ -304,11 +321,11 @@
         <div class="sidebar">
             <div class="menu-item active">
                 <span class="menu-icon icon-dashboard"></span>
-                <span><span><a href="/tech4tourism-dev/views/admin/Dashboard/index.php">Dashboard</a></span></span>
+                <span><span><a href="?route=/">Dashboard</a></span></span>
             </div>
             <div class="menu-item">
                 <span class="menu-icon icon-tour"></span>
-                <span><a href="/tech4tourism-dev/views/admin/Tour/index.php">Quản lý tour</a></span>
+                <span><a href="?route=category">Danh mục</a></span>
             </div>
             <div class="menu-item">
                 <span class="menu-icon icon-booking"></span>
@@ -328,40 +345,50 @@
             </div>
         </div>
         <div class="main-content">
-            <h1 class="page-title">Quản lý Danh mục</h1>
+              <div class="container mt-4">
 
-            <div class="dashboard-grid">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>John</td>
-                            <td>Doe</td>
-                            <td>@social</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    <div class="card shadow-sm border-0">
+        
+        <!-- TIÊU ĐỀ + BUTTON -->
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <h4 class="fw-bold m-0 text-primary">Danh sách danh mục</h4>
+            <a href="#" class="btn btn-primary px-4">+ Thêm danh mục</a>
+        </div>
+
+        <!-- TABLE -->
+        <div class="card-body p-0">
+            <table class="table align-middle table-hover mb-0">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th scope="col" class="py-3">Tên tour</th>
+                        <th scope="col" class="py-3">Mô tả</th>
+                        <th scope="col" class="py-3">Ngày tạo</th>
+                        <th scope="col" class="py-3">Cập nhật</th>
+                        <th scope="col" class="text-center py-3">Hành động</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <?php foreach ($danhsach as $pro): ?>
+                    <tr>
+                        <td><?= $pro->name ?></td>
+                        <td><?= $pro->description ?></td>
+                        <td><?= $pro->created_at ?></td>
+                        <td><?= $pro->updated_at ?></td>
+                        <td class="text-center">
+                            <a class="btn btn-sm btn-warning">Sửa</a>
+                            <a class="btn btn-sm btn-danger">Xóa</a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+</div>
+
         </div>
 </body>
 

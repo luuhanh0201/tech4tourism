@@ -300,11 +300,11 @@
         <div class="sidebar">
             <div class="menu-item active">
                 <span class="menu-icon icon-dashboard"></span>
-                <span><span><a href="/tech4tourism-dev/views/admin/Dashboard/index.php">Dashboard</a></span></span>
+                <span><span><a href="?route=/">Dashboard</a></span></span>
             </div>
             <div class="menu-item">
                 <span class="menu-icon icon-tour"></span>
-                <span><a href="/tech4tourism-dev/views/admin/Category/index.php">Danh mục</a></span>
+                <span><a href="?route=category">Danh mục</a></span>
             </div>
             <div class="menu-item">
                 <span class="menu-icon icon-booking"></span>
