@@ -9,7 +9,9 @@
     background-size: cover;
     background-position: center;
     width: 100%;
-    height: 100vh;">
+    height: 100vh;"
+    
+    class="d-flex align-items-center justify-content-center min-vh-100">
 
     <div class="container min-vh-100 d-flex align-items-center justify-content-center py-3 ">
         <div class="card shadow-lg px-3" style="width: 100%; max-width: 500px; border-radius: 20px;">
