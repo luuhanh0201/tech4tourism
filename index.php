@@ -41,6 +41,7 @@ match ($route) {
   '/category' =>(new CategoryController())->All(),
   '/created' => (new CategoryController())->created(),
   '/delete'=>(new CategoryController())->Delete($id),
+  '/update'=>(new CategoryController())->Update($id),
 
   '/' => (new DashboardController())->Dashboard(),
 

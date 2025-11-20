@@ -126,21 +126,21 @@
             gap: 12px;
             cursor: pointer;
             transition: all 0.3s;
-            color: #666;
+            color: #1a1a1a;
             font-size: 15px;
             text-decoration: none;
             border-left: 3px solid transparent;
+            border-bottom: #eae6e6ff solid 1px;
         }
 
         .menu-item:hover {
-            background: #f8f9fa;
+            background: #4285f4;
             color: #1a1a1a;
         }
 
         .menu-item.active {
-            background: #4285f4;
             color: white;
-            border-left-color: #1a73e8;
+            border-bottom: #eae6e6ff solid 1px;
         }
 
         .menu-icon {
@@ -290,6 +290,10 @@
         .fw-500 {
             font-weight: 500;
         }
+       span a{
+         text-decoration: none;
+         color: #1a1a1a;
+        }
     </style>
 </head>
 
@@ -345,7 +349,7 @@
             </div>
         </div>
         <div class="main-content">
-            <form action="" method="POST">
+            <form id="tourForm" action="" method="POST">
                 <h3 class="mb-3">Create New Tour</h3>
                 <div class="mb-3">
                     <label for="name" class="form-label">Tên tour</label>
@@ -358,17 +362,53 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="created_at" class="form-label">ngày tạo</label>
-                    <input type="timestamp" class="form-control" name="created_at" id="created_at" placeholder="nhập" required>
+                    <label for="created_at" class="form-label">Ngày tạo</label>
+                    <input type="text" class="form-control" name="created_at" id="created_at" placeholder="YYYY-MM-DD HH:MM:SS" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="updated_at" class="form-label">update</label>
-                    <input type="timestamp" class="form-control" name="updated_at" id="updated_at" placeholder="nhập" required>
+                    <label for="updated_at" class="form-label">Cập nhật</label>
+                    <input type="text" class="form-control" name="updated_at" id="updated_at" placeholder="YYYY-MM-DD HH:MM:SS" required>
                 </div>
 
-                <button type="submit" class="btn btn-success" name="submit">tạo mới</button>
+                <button type="submit" class="btn btn-success" name="submit">Tạo mới</button>
             </form>
+
+            <script>
+                document.getElementById('tourForm').addEventListener('submit', function(event) {
+                    const name = document.getElementById('name').value.trim();
+                    const description = document.getElementById('description').value.trim();
+                    const createdAt = document.getElementById('created_at').value.trim();
+                    const updatedAt = document.getElementById('updated_at').value.trim();
+
+                    const timestampRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+
+                    if (!name) {
+                        alert('Tên tour không được để trống');
+                        event.preventDefault();
+                        return;
+                    }
+
+                    if (!description) {
+                        alert('Mô tả không được để trống');
+                        event.preventDefault();
+                        return;
+                    }
+
+                    if (!timestampRegex.test(createdAt)) {
+                        alert('Ngày tạo phải đúng định dạng YYYY-MM-DD HH:MM:SS');
+                        event.preventDefault();
+                        return;
+                    }
+
+                    if (!timestampRegex.test(updatedAt)) {
+                        alert('Ngày cập nhật phải đúng định dạng YYYY-MM-DD HH:MM:SS');
+                        event.preventDefault();
+                        return;
+                    }
+                });
+            </script>
+
 
         </div>
 </body>

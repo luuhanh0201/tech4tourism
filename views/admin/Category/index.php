@@ -126,21 +126,21 @@
             gap: 12px;
             cursor: pointer;
             transition: all 0.3s;
-            color: #666;
+            color: #1a1a1a;
             font-size: 15px;
             text-decoration: none;
             border-left: 3px solid transparent;
+            border-bottom: #eae6e6ff solid 1px;
         }
 
         .menu-item:hover {
-            background: #f8f9fa;
+            background: #4285f4;
             color: #1a1a1a;
         }
 
         .menu-item.active {
-            background: #4285f4;
             color: white;
-            border-left-color: #1a73e8;
+            border-bottom: #eae6e6ff solid 1px;
         }
 
         .menu-icon {
@@ -290,6 +290,10 @@
         .fw-500 {
             font-weight: 500;
         }
+        span a{
+         text-decoration: none;
+         color: #1a1a1a;
+        }
     </style>
 </head>
 
@@ -321,7 +325,7 @@
         <div class="sidebar">
             <div class="menu-item active">
                 <span class="menu-icon icon-dashboard"></span>
-                <span><span><a href="?route=/">Dashboard</a></span></span>
+                <span><a href="?route=/">Dashboard</a></span>
             </div>
             <div class="menu-item">
                 <span class="menu-icon icon-tour"></span>
@@ -345,49 +349,68 @@
             </div>
         </div>
         <div class="main-content">
-              <div class="container mt-4">
+            <div class="container mt-4">
+                <div class="card shadow-sm border-0">
+                    <?php
+                    $keyword = isset($_GET["keyword"]) ? strtolower($_GET["keyword"]) : "";
+                    $filtereDate = [];
+                    if ($keyword !== "") {
+                        foreach ($danhsach as $cate) {
+                            if (strpos(strtolower($cate->name), $keyword) !== false) {
+                                $filtereDate[] = $cate;
+                            }
+                        }
+                    } else {
+                        $filtereDate = $danhsach;
+                    }
+                    ?>
+                    <form method="GET">
+                        <input type="hidden" name="route" value="category">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="tìm kiếm" name="keyword">
+                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                        </div>
+                    </form>
 
-    <div class="card shadow-sm border-0">
-        
-        <!-- TIÊU ĐỀ + BUTTON -->
-        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-            <h4 class="fw-bold m-0 text-primary">Danh sách danh mục</h4>
-            <a href="?route=created" class="btn btn-primary px-4">+ Thêm danh mục</a>
-        </div>
+                    <!-- TIÊU ĐỀ + BUTTON -->
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                        <h4 class="fw-bold m-0 text-primary">Danh sách danh mục</h4>
+                        <a href="?route=created" class="btn btn-primary px-4">+ Thêm danh mục</a>
+                    </div>
 
-        <!-- TABLE -->
-        <div class="card-body p-0">
-            <table class="table align-middle table-hover mb-0">
-                <thead class="bg-primary text-white">
-                    <tr>
-                        <th scope="col" class="py-3">Tên tour</th>
-                        <th scope="col" class="py-3">Mô tả</th>
-                        <th scope="col" class="py-3">Ngày tạo</th>
-                        <th scope="col" class="py-3">Cập nhật</th>
-                        <th scope="col" class="text-center py-3">Hành động</th>
-                    </tr>
-                </thead>
+                    <!-- TABLE -->
+                    <div class="card-body p-0">
+                        <table class="table align-middle table-hover mb-0">
+                            <thead class="bg-primary text-white">
+                                <tr>
+                                    <th scope="col" class="py-3">Tên tour</th>
+                                    <th scope="col" class="py-3">Mô tả</th>
+                                    <th scope="col" class="py-3">Ngày tạo</th>
+                                    <th scope="col" class="py-3">Cập nhật</th>
+                                    <th scope="col" class="text-center py-3">Hành động</th>
+                                </tr>
+                            </thead>
 
-                <tbody>
-                    <?php foreach ($danhsach as $pro): ?>
-                    <tr>
-                        <td><?= $pro->name ?></td>
-                        <td><?= $pro->description ?></td>
-                        <td><?= $pro->created_at ?></td>
-                        <td><?= $pro->updated_at ?></td>
-                        <td class="text-center">
-                            <a class="btn btn-sm btn-warning">Sửa</a>
-                            <a class="btn btn-sm btn-danger"  href="?route=delete&id=<?=$pro->id?>"  onclick="return confirm('bạn có chắn muốn xóa không?')" >Xóa</a>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
+                            <tbody>
+                                <?php foreach ($filtereDate as $pro): ?>
+                                    <tr>
+                                        <td><?= $pro->name ?></td>
+                                        <td><?= $pro->description ?></td>
+                                        <td><?= $pro->created_at ?></td>
+                                        <td><?= $pro->updated_at ?></td>
+                                        <td class="text-center">
+                                            <a class="btn btn-sm btn-warning" href="?route=update&id=<?=$pro->id?>">Sửa</a>
+                                            <a class="btn btn-sm btn-danger" href="?route=delete&id=<?= $pro->id ?>" onclick="return confirm('bạn có chắn muốn xóa không?')">Xóa</a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
 
-            </table>
-        </div>
-    </div>
+                        </table>
+                    </div>
+                </div>
 
-</div>
+            </div>
 
         </div>
 </body>
