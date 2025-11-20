@@ -24,7 +24,10 @@ require_once './models/CategoryModel.php';
 $route = '/' . trim($_GET['route'] ?? '', '/');
 $route = $route === '/' ? '/' : $route;
 
-
+$id = "";
+if(isset($_GET['id'])){
+    $id = $_GET['id']?? '/';
+}
 match ($route) {
 
   // HDV
@@ -36,6 +39,8 @@ match ($route) {
   '/categories' => (new AuthController())->SignUP(),
   //CategoryCotroller
   '/category' =>(new CategoryController())->All(),
+  '/created' => (new CategoryController())->created(),
+  '/delete'=>(new CategoryController())->Delete($id),
 
   '/' => (new DashboardController())->Dashboard(),
 

@@ -345,49 +345,30 @@
             </div>
         </div>
         <div class="main-content">
-              <div class="container mt-4">
+            <form action="" method="POST">
+                <h3 class="mb-3">Create New Tour</h3>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Tên tour</label>
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Nhập tên tour" required>
+                </div>
 
-    <div class="card shadow-sm border-0">
-        
-        <!-- TIÊU ĐỀ + BUTTON -->
-        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-            <h4 class="fw-bold m-0 text-primary">Danh sách danh mục</h4>
-            <a href="?route=created" class="btn btn-primary px-4">+ Thêm danh mục</a>
-        </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Mô tả</label>
+                    <input type="text" class="form-control" name="description" id="description" placeholder="Nhập mô tả" required>
+                </div>
 
-        <!-- TABLE -->
-        <div class="card-body p-0">
-            <table class="table align-middle table-hover mb-0">
-                <thead class="bg-primary text-white">
-                    <tr>
-                        <th scope="col" class="py-3">Tên tour</th>
-                        <th scope="col" class="py-3">Mô tả</th>
-                        <th scope="col" class="py-3">Ngày tạo</th>
-                        <th scope="col" class="py-3">Cập nhật</th>
-                        <th scope="col" class="text-center py-3">Hành động</th>
-                    </tr>
-                </thead>
+                <div class="mb-3">
+                    <label for="created_at" class="form-label">ngày tạo</label>
+                    <input type="timestamp" class="form-control" name="created_at" id="created_at" placeholder="nhập" required>
+                </div>
 
-                <tbody>
-                    <?php foreach ($danhsach as $pro): ?>
-                    <tr>
-                        <td><?= $pro->name ?></td>
-                        <td><?= $pro->description ?></td>
-                        <td><?= $pro->created_at ?></td>
-                        <td><?= $pro->updated_at ?></td>
-                        <td class="text-center">
-                            <a class="btn btn-sm btn-warning">Sửa</a>
-                            <a class="btn btn-sm btn-danger"  href="?route=delete&id=<?=$pro->id?>"  onclick="return confirm('bạn có chắn muốn xóa không?')" >Xóa</a>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
+                <div class="mb-3">
+                    <label for="updated_at" class="form-label">update</label>
+                    <input type="timestamp" class="form-control" name="updated_at" id="updated_at" placeholder="nhập" required>
+                </div>
 
-            </table>
-        </div>
-    </div>
-
-</div>
+                <button type="submit" class="btn btn-success" name="submit">tạo mới</button>
+            </form>
 
         </div>
 </body>
