@@ -4,10 +4,7 @@ class GuideController
 {
     public $GuideModel;
 
-    public function __construct()
-    {
-
-    }
+ 
     public function index()
     {
 

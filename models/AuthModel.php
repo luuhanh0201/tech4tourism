@@ -13,7 +13,22 @@ class AuthModel
         $stmt->execute([$email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    public function createDefaultProfile($id)
+    {
+        $sql = "INSERT INTO guide_profiles (user_id)
+            VALUES (:user_id)";
 
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute(['user_id' => $id]);
+    }
+    public function setRoleGuide($id)
+    {
+        $sql = "INSERT INTO roles (user_id)
+            VALUES (:user_id)";
+
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute(['user_id' => $id]);
+    }
     public function signUp($password, $email, $fullName)
     {
         if ($this->getUserByEmail($email)) {
@@ -24,11 +39,19 @@ class AuthModel
                 VALUES (:password, :email,:full_name)";
         $stmt = $this->conn->prepare($sql);
 
-        return $stmt->execute([
+        $success = $stmt->execute([
             'password' => $hashedPassword,
             'email' => $email,
             'full_name' => $fullName
         ]);
+        if ($success) {
+            $userId = $this->conn->lastInsertId();
+            $this->createDefaultProfile($userId);
+            $this->setRoleGuide($userId);
+            return true;
+        }
+        return false;
+
     }
 
 
