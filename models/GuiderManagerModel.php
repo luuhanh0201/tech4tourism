@@ -75,6 +75,32 @@ class GuiderManagerModel
         $result = $stmt->fetchAll((PDO::FETCH_ASSOC));
         return $result;
     }
+    public function updateProfileGuide($id, $dateOfBirth, $gender, $phone, $address, $certifications, $language, $bio)
+    {
+        $sql = "UPDATE users 
+                SET 
+                    date_of_birth = :date_of_birth,
+                    gender = :gender,
+                    phone = :phone,
+                    address=:address
+                    certifications = :certifications,
+                    language = :language,
+                    bio = :bio
+                WHERE user_id = :user_id;";
+        $stmt = $this->conn->prepare(($sql));
+        $stmt->execute([
+            "user_id" => $id,
+            "date_of_birth" => $dateOfBirth,
+            "phone" => $phone,
+            "address" => $address,
+            "certifications" => $certifications,
+            "language" => $language,
+            "bio" => $bio
+
+        ]);
+        return $stmt->rowCount();
+
+    }
 }
 
 ?>

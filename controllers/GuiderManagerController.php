@@ -29,7 +29,30 @@ class GuiderManagerController
         include "./views/admin/GuideManager/detailGuide.php";
 
     }
-    public function editGuide(){
+    public function editGuide()
+    {
+        if (isset($_GET['id'])) {
+            $guide = $this->GuiderManagerModel->getDetailGuide($_GET['id']);
+        } else {
+            echo "Không tìm thấy id";
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $dateOfBirth = $_POST['date_of_birth'];
+            $gender = $_POST['gender'];
+            $phone = $_POST['phone'];
+            $address = $_POST['address'];
+            $certifications = $_POST['certifications'];
+            $language = $_POST['language'];
+            $bio = $_POST['bio'];
+
+            echo $dateOfBirth,
+                $gender,
+                $phone,
+                $address,
+                $certifications,
+                $language,
+                $bio;
+        }
         include "./views/admin/GuideManager/editGuide.php";
 
     }

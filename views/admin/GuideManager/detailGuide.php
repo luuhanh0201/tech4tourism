@@ -19,14 +19,12 @@
 
         <hr>
 
-        <!-- Body -->
         <div class="row">
 
-            <!-- LEFT COLUMN -->
             <div class="col-md-6 mb-3">
-
-                <h5 class="fw-bold mb-3">Thông tin cá nhân</h5>
-
+                <div class="section-title">
+                    Thông Tin Cơ Bản
+                </div>
                 <p><strong>Email:</strong> <?= $guide['email'] ?></p>
                 <p><strong>Số điện thoại:</strong> <?= $guide['phone'] ?? '<i>Chưa cập nhật</i>' ?></p>
                 <p><strong>Ngày sinh:</strong> <?= $guide['date_of_birth'] ?? '<i>Chưa cập nhật</i>' ?></p>
@@ -36,7 +34,9 @@
 
             <div class="col-md-6 mb-3">
 
-                <h5 class="fw-bold mb-3">Thông tin nghề nghiệp</h5>
+                <div class="section-title">
+                    Thông Tin nghề nghiệp
+                </div>
 
                 <p>
                     <strong>Đánh giá:</strong>
@@ -67,7 +67,9 @@
 
         <!-- Bio -->
         <div class="mt-3">
-            <h5 class="fw-bold">Giới thiệu bản thân</h5>
+            <div class="section-title">
+                Giới thiệu bản thân
+            </div>
             <p class="text-muted">
                 <?= $guide['bio'] ?>
             </p>
@@ -77,6 +79,15 @@
 </div>
 
 <style>
+    .section-title {
+        background: #FF8B6A;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
     .status-badge {
         display: inline-block;
         padding: 4px 12px;
