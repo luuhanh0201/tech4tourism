@@ -45,13 +45,11 @@ class GuiderManagerController
             $language = $_POST['language'];
             $bio = $_POST['bio'];
 
-            echo $dateOfBirth,
-                $gender,
-                $phone,
-                $address,
-                $certifications,
-                $language,
-                $bio;
+            if ($this->GuiderManagerModel->updateProfileGuide($_GET['id'], $dateOfBirth, $gender, $phone, $address, $certifications, $language, $bio)) {
+                $_SESSION['success'] = "";
+            } else {
+                echo "FALSE";
+            }
         }
         include "./views/admin/GuideManager/editGuide.php";
 

@@ -68,7 +68,7 @@
                     <select class="form-select" id="editGender" name="gender" required>
                         <option value="">-- Chọn giới tính --</option>
                         <option value="Nam" <?= $guide['gender'] == 'Nam' ? 'selected' : '' ?>>Nam</option>
-                        <option value="Nữ" <?= $guide['gender'] == 'Nữ' ? 'selected' : '' ?>>Nữ</option>
+                        <option value="Nu" <?= $guide['gender'] == 'Nữ' ? 'selected' : '' ?>>Nữ</option>
                     </select>
                 </div>
             </div>
@@ -142,11 +142,11 @@
                     <i class="bi bi-arrow-left"></i> Quay Lại
                 </button>
                 <div>
-                    <button type="button" class="btn btn-outline-danger me-2" onclick="confirmDelete()">
+                    <button type="button" class="btn btn-outline-danger me-2">
                         <i class="bi bi-trash"></i> Xóa HDV
                     </button>
-                    <button name="button" type="button" class="btn btn-success" onclick="updateGuide()">
-                        <i class="bi bi-check-circle"></i> Cập Nhật
+                    <button type="submit" class="btn btn-success">
+                        Cập Nhật
                     </button>
                 </div>
             </div>
@@ -158,7 +158,7 @@
     .btn-change-avatar {
         display: inline-block;
         padding: 8px 18px;
-        border: 2px solid #ff8a65;
+        border: 2px solid #FABC66;
         color: #ff7043;
         background: #fff;
         border-radius: 6px;
@@ -220,7 +220,7 @@
     }
 
     .avatar-preview-container:hover {
-        border-color: #20c997;
+        border-color: #FABC66;
         transform: scale(1.05);
     }
 
@@ -282,7 +282,8 @@
 
     .btn-success:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        background: #FA6F66;
+
     }
 
     .btn-secondary {
@@ -295,7 +296,7 @@
         padding: 12px 25px;
         border-radius: 8px;
         font-weight: 600;
-        border: 2px solid #6c757d;
+        border: 2px solid #FABC66;
     }
 
     .required-text {
