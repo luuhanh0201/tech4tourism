@@ -34,6 +34,7 @@
   require_once './controllers/DashboardController.php';
   require_once './controllers/GuiderManagerController.php';
   require_once './controllers/GuideController.php';
+  require_once './controllers/TourController.php';
 
   // Route
   $route = '/' . ($_GET['route'] ?? '');
@@ -49,6 +50,11 @@
     '/dashboard/guide-manager' => (new GuiderManagerController())->index(),
     '/dashboard/guide-manager/profile-guide' => (new GuiderManagerController())->detailGuide(),
     '/dashboard/guide-manager/profile-guide/edit' => (new GuiderManagerController())->editGuide(),
+    '/dashboard/tours' => (new TourController())->index(),
+    '/dashboard/tours/new-tour' => (new TourController())->addNewTour(),
+
+
+
     '/dashboard' => (new DashboardController())->Dashboard(),
 
 
