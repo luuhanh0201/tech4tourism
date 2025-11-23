@@ -16,6 +16,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <link rel="stylesheet" href="./app.css">
 </head>
 
@@ -30,6 +32,7 @@
   
   require_once './controllers/AuthController.php';
   require_once './controllers/DashboardController.php';
+  require_once './controllers/GuiderManagerController.php';
   require_once './controllers/GuideController.php';
 
   // Route
@@ -42,13 +45,13 @@
     '/sign-up' => (new AuthController())->SignUP(),
 
     // Admin route
-    '/categories' => (new AuthController())->SignUP(),
-
-
+    '/dashboard/categories' => (new AuthController())->SignUP(),
+    '/dashboard/guide-manager' => (new GuiderManagerController())->index(),
+    '/dashboard/guide-manager/profile-guide' => (new GuiderManagerController())->detailGuide(),
+    '/dashboard/guide-manager/profile-guide/edit' => (new GuiderManagerController())->editGuide(),
     '/dashboard' => (new DashboardController())->Dashboard(),
 
 
-    // Hdv route
     "/" => (new GuideController())->index(),
     default => include './views/errorPage.php',
   };
