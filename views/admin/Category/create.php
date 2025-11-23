@@ -290,9 +290,10 @@
         .fw-500 {
             font-weight: 500;
         }
-       span a{
-         text-decoration: none;
-         color: #1a1a1a;
+
+        span a {
+            text-decoration: none;
+            color: #1a1a1a;
         }
     </style>
 </head>
@@ -362,13 +363,11 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="created_at" class="form-label">Ngày tạo</label>
-                    <input type="text" class="form-control" name="created_at" id="created_at" placeholder="YYYY-MM-DD HH:MM:SS" required>
+                    <input type="hidden" name="created_at" value="<?= date('Y-m-d H:i:s') ?>">
                 </div>
 
                 <div class="mb-3">
-                    <label for="updated_at" class="form-label">Cập nhật</label>
-                    <input type="text" class="form-control" name="updated_at" id="updated_at" placeholder="YYYY-MM-DD HH:MM:SS" required>
+                    <input type="hidden" name="updated_at" value="<?= date('Y-m-d H:i:s') ?>">
                 </div>
 
                 <button type="submit" class="btn btn-success" name="submit">Tạo mới</button>
@@ -378,10 +377,10 @@
                 document.getElementById('tourForm').addEventListener('submit', function(event) {
                     const name = document.getElementById('name').value.trim();
                     const description = document.getElementById('description').value.trim();
-                    const createdAt = document.getElementById('created_at').value.trim();
-                    const updatedAt = document.getElementById('updated_at').value.trim();
+                    // const createdAt = document.getElementById('created_at').value.trim();
+                    // const updatedAt = document.getElementById('updated_at').value.trim();
 
-                    const timestampRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+                    // const timestampRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
 
                     if (!name) {
                         alert('Tên tour không được để trống');
@@ -395,17 +394,17 @@
                         return;
                     }
 
-                    if (!timestampRegex.test(createdAt)) {
-                        alert('Ngày tạo phải đúng định dạng YYYY-MM-DD HH:MM:SS');
-                        event.preventDefault();
-                        return;
-                    }
+                    // if (!timestampRegex.test(createdAt)) {
+                    //     alert('Ngày tạo phải đúng định dạng YYYY-MM-DD HH:MM:SS');
+                    //     event.preventDefault();
+                    //     return;
+                    // }
 
-                    if (!timestampRegex.test(updatedAt)) {
-                        alert('Ngày cập nhật phải đúng định dạng YYYY-MM-DD HH:MM:SS');
-                        event.preventDefault();
-                        return;
-                    }
+                    // if (!timestampRegex.test(updatedAt)) {
+                    //     alert('Ngày cập nhật phải đúng định dạng YYYY-MM-DD HH:MM:SS');
+                    //     event.preventDefault();
+                    //     return;
+                    // }
                 });
             </script>
 
