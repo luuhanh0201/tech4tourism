@@ -405,31 +405,14 @@
         <!-- Header -->
         <div class="header-section">
             <div class="plane-icon">
-                <i class="fa-solid fa-plane-departure"></i>
+                <i style="font-size: 55px;" class="fa-solid fa-plane-departure"></i>
             </div>
             <h1>Hệ Thống Quản Lý Tour Du Lịch</h1>
-            <p>✨ Giải pháp quản lý tour chuyên nghiệp cho FPOLY HN ✨</p>
+            <p>Giải pháp quản lý tour chuyên nghiệp cho FPOLY HN</p>
         </div>
 
         <!-- Stats -->
-        <div class="stats-section">
-            <div class="stat-card">
-                <div class="stat-number">500+</div>
-                <div class="stat-label">Tour Du Lịch</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">1000+</div>
-                <div class="stat-label">Khách Hàng</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">50+</div>
-                <div class="stat-label">Địa Điểm</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">24/7</div>
-                <div class="stat-label">Hỗ Trợ</div>
-            </div>
-        </div>
+      
 
         <!-- Welcome Card -->
         <div class="welcome-card">

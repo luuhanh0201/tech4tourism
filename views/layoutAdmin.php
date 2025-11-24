@@ -4,7 +4,7 @@
         <div class="logo-icon">
             <i class="fa-solid fa-plane"></i>
         </div>
-        <h1>FPOLY Tour Management</h1>
+        <h1>FPOLY Quản lý tour</h1>
     </div>
 
     <div class="header-right">
@@ -18,10 +18,10 @@
     </div>
 </div>
 <div class="sidebar">
-  <a href="/dashboard" class="menu-item <?= $active == 'categories' ? 'active' : '' ?>">
-    <i class="fa-solid fa-gauge-high"></i>
-    <span>Dashboard</span>
-</a>
+    <a href="/dashboard" class="menu-item <?= $active == 'categories' ? 'active' : '' ?>">
+        <i class="fa-solid fa-gauge-high"></i>
+        <span>Dashboard</span>
+    </a>
     <a href="/dashboard/categories-manager" class="menu-item <?= $active == 'categories' ? 'active' : '' ?>">
         <i class="fa-regular fa-rectangle-list"></i>
         <span>Quản lí danh mục Tour</span>

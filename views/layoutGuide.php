@@ -1,7 +1,7 @@
 <div class="header">
     <div class="logo">
         <div class="logo-icon">
-            <i class="fa-solid fa-user-tie"></i>
+             <i class="fa-solid fa-plane"></i>
         </div>
         <h2>HDV - Quản lí Tour du lịch</h2>
     </div>
@@ -9,14 +9,14 @@
         <div class="user-info">
             <div class="user-avatar">H</div>
             <div class="user-details">
-                <div class="user-name">HDV Nguyễn Văn A</div>
+                <div class="user-name">HDV - <?= isset($_SESSION['user']['fullName']) ? $_SESSION['user']['fullName'] : 'Nguyễn Văn A' ?></div>
                 <div class="user-role">Hướng dẫn viên</div>
             </div>
         </div>
         <a href="/sign-out" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
     </div>
 </div>
-<div class="content-wrapper">
+<div class="content-wrapper mt-5">
     <?= $content ?>
 </div>
 <style>
