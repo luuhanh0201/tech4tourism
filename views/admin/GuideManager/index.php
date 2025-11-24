@@ -1,6 +1,4 @@
 <div class="container py-5">
-
-    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
             <h2 class="fw-bold">Quản Lý Hướng Dẫn Viên</h2>
@@ -10,8 +8,6 @@
             + Thêm HDV
         </a>
     </div>
-
-    <!-- Search -->
     <div class="mb-4">
         <form class="input-group" method="get">
             <span class="input-group-text bg-white border-end-0">
@@ -21,8 +17,6 @@
                 placeholder="Tìm kiếm theo tên, email, số điện thoại...">
         </form>
     </div>
-
-    <!-- Table Header -->
     <table class="table align-middle bg-white shadow-sm rounded">
         <thead class="text-muted fw-semibold">
             <tr>

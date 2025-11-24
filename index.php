@@ -35,6 +35,7 @@
   require_once './controllers/DashboardController.php';
   require_once './controllers/GuiderManagerController.php';
   require_once './controllers/GuideController.php';
+  require "./helpers/View.php";
 
   // Route
   $route = '/' . ($_GET['route'] ?? '');
@@ -44,21 +45,22 @@
     // Auth
     '/sign-in' => (new AuthController())->SignIn(),
     '/sign-up' => (new AuthController())->SignUP(),
+    '/sign-out' => (new AuthController())->SignOut(),
+    '/' => include './views/welcome.php',
+
 
     // Admin route
-    '/dashboard/categories' => (new AuthController())->SignUP(),
+    // '/dashboard/categories' => (new AuthController())->SignUP(),
     '/dashboard/guide-manager' => (new GuiderManagerController())->index(),
     '/dashboard/guide-manager/profile-guide' => (new GuiderManagerController())->detailGuide(),
     '/dashboard/guide-manager/profile-guide/edit' => (new GuiderManagerController())->editGuide(),
     '/dashboard' => (new DashboardController())->Dashboard(),
 
 
-    "/" => (new GuideController())->index(),
+    "/guide" => (new GuideController())->index(),
     default => include './views/errorPage.php',
   };
   ?>
 </body>
 
 </html>
-
-<h1>Code giao dien guide</h1>
