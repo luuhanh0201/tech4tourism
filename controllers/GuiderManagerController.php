@@ -1,6 +1,5 @@
 <?php
 require './models/GuiderManagerModel.php';
-
 class GuiderManagerController
 {
     protected $GuiderManagerModel;
@@ -11,28 +10,34 @@ class GuiderManagerController
     }
     public function index()
     {
+        $guides = "";
         if (isset($_GET['keyword'])) {
             $guides = $this->GuiderManagerModel->searchGuide($_GET['keyword']);
         } else {
             $guides = $this->GuiderManagerModel->getAllGuider();
 
         }
-        include "./views/admin/GuideManager/index.php";
+        renderLayoutAdmin("admin/GuideManager/index.php", ["guides" => $guides], "Quản lý hướng dẫn viên");
+
+        // include "./views/admin/GuideManager/index.php";
     }
     public function detailGuide()
     {
         if (isset($_GET['id'])) {
             $guide = $this->GuiderManagerModel->getDetailGuide($_GET['id']);
+            renderLayoutAdmin("admin/GuideManager/detailGuide.php", ["guide" => $guide], "Thông tin chi tiết");
         } else {
             echo "Không tìm thấy id";
         }
-        include "./views/admin/GuideManager/detailGuide.php";
+
 
     }
     public function editGuide()
     {
         if (isset($_GET['id'])) {
             $guide = $this->GuiderManagerModel->getDetailGuide($_GET['id']);
+            renderLayoutAdmin("admin/GuideManager/editGuide.php", ["guide" => $guide], "Sửa thông tin hướng dẫn viên");
+
         } else {
             echo "Không tìm thấy id";
         }
@@ -51,7 +56,7 @@ class GuiderManagerController
                 echo "FALSE";
             }
         }
-        include "./views/admin/GuideManager/editGuide.php";
+        // include "./views/admin/GuideManager/editGuide.php";
 
     }
 

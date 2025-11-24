@@ -8,7 +8,10 @@ class AuthModel
     }
     public function getUserByEmail($email)
     {
-        $sql = "SELECT * FROM users WHERE email = ?";
+        $sql = "  SELECT users.*, roles.role 
+    FROM users
+    JOIN roles ON users.id = roles.user_id
+    WHERE users.email = ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([$email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);

@@ -1,7 +1,4 @@
 <div class="container position-relative">
-
-
-
     <div class="main-container">
         <button type="button" onclick="history.back()" class="btn btn-secondary">
             <i class="bi bi-arrow-left"></i> Quay Lại
@@ -173,9 +170,7 @@
     }
 
     .main-container {
-        background: white;
         border-radius: 15px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         padding: 40px;
         max-width: 1200px;
         margin: 0 auto;

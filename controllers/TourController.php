@@ -11,7 +11,9 @@ class TourController
     function index()
     {
         $tours = $this->TourModel->getAllToursModel();
-        include "./views/admin/Tour/index.php";
+        renderLayoutAdmin("admin/Tour/index.php", ["tours" => $tours], "Quản lý tour");
+
+
 
     }
     function addNewTour()

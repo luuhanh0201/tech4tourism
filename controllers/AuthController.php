@@ -1,5 +1,4 @@
 <?php
-session_start();
 require './models/AuthModel.php';
 class AuthController
 {
@@ -7,7 +6,6 @@ class AuthController
     public function __construct()
     {
         $this->authModel = new AuthModel();
-        // require_once './views/layout/headerAdminLayout.php';
     }
     public function SignIn()
     {
@@ -26,7 +24,8 @@ class AuthController
                     'id' => $user['id'],
                     'fullName' => $user['full_name'],
                     'email' => $user['email'],
-                    'avatar' => $user['avatar']
+                    'avatar' => $user['avatar'],
+                    'role' => $user['role']
                 ];
                 $_SESSION['success'] = 'Đăng nhập thành công!';
                 $idUser = $_SESSION['user']['id'];
@@ -35,10 +34,10 @@ class AuthController
                     header('Location: dashboard');
                     exit;
                 } else {
-                    header('Location: /tech4tourism/');
+                    header('Location: /guide');
                     exit;
                 }
-            
+
             } else {
                 $_SESSION['error'] = '<span style="color: red;">Email hoặc mật khẩu không chính xác</span>';
                 header('Location: sign-in');
@@ -95,6 +94,12 @@ class AuthController
 
         include_once './views/auths/signUp.php';
 
+    }
+    public function SignOut()
+    {
+        session_destroy();
+        header('Location: /');
+        exit;
     }
 }
 

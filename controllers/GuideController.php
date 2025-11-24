@@ -3,12 +3,8 @@
 class GuideController
 {
     public $GuideModel;
-
- 
     public function index()
     {
-
-        // logic Dashboard
-        include "./views/guideViews/index.php";
+        renderLayoutGuide("guideViews/index.php", [], "Sửa thông tin hướng dẫn viên");
     }
 }

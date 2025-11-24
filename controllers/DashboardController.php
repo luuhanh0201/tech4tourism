@@ -11,7 +11,7 @@ class DashboardController
     public function Dashboard()
     {
 
-        // logic Dashboard
-        include "./views/admin/Dashboard/index.php";
+        renderLayoutAdmin("admin/Dashboard/index.php", [], "Bảng điều khiển");
+
     }
 }

@@ -1,15 +1,23 @@
 <script>
     document.title = "Quản lý tours"
 </script>
-<div class="container">
+<div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">Quản Lý Tour</h2>
         <a href="tours/new-tour" style="color: white;" class="btn btn-primary btn-lg">Thêm Tour Mới</a>
     </div>
-    <input type='search' />
-    <select name="" id="">
-        <option value="12">Hoạt động</option>
-    </select>
+    <div class="tours-toolbar d-flex flex-wrap align-items-center mb-3">
+        <div class="flex-grow-1 me-2 mb-2 mb-sm-0">
+            <input type="search" class="form-control tours-search" placeholder="Tìm kiếm theo tên tour...">
+        </div>
+        <div class="mb-2 mb-sm-0">
+            <select class="form-select tours-filter">
+                <option value="">Tất cả trạng thái</option>
+                <option value="active">Hoạt động</option>
+                <option value="inactive">Ngừng hoạt động</option>
+            </select>
+        </div>
+    </div>
     <div class="table-container">
         <table class="table align-middle">
             <thead>
@@ -19,7 +27,7 @@
                     <th>Giá</th>
                     <th>Chỗ</th>
                     <th>Trạng thái</th>
-                    <th class="text-end">Thao tác</th>
+                    <th >Thao tác</th>
                 </tr>
             </thead>
 
@@ -29,7 +37,7 @@
                     <tr>
                         <td><?= $tour['tour_name'] ?></td>
                         <td>Trong nước</td>
-                        <td><strong><?= $tour['price'] ?></strong></td>
+                        <td><strong> <?= number_format($tour['price'], 0, ',', '.') . ' ₫' ?></td>
                         <td>20</td>
                         <td><span
                                 class="<?= $tour['status'] === "active" ? "status-active" : "status-stop"; ?>"><?= $tour['status'] === "active" ? "Hoạt động" : "Ngừng hoạt động"; ?></span>
