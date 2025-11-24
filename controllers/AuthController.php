@@ -34,7 +34,7 @@ class AuthController
                     header('Location: dashboard');
                     exit;
                 } else {
-                    header('Location: /tech4tourism/');
+                    header('Location: /guide');
                     exit;
                 }
 
