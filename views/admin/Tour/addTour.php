@@ -1,1 +1,3 @@
-<h1>Thêm tour mới</h1>  
+<div class="container py-5">
+ád
+</div>
