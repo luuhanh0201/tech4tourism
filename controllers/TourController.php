@@ -19,7 +19,8 @@ class TourController
     function addNewTour()
     {
 
-        include "./views/admin/Tour/addTour.php";
+        renderLayoutAdmin("admin/Tour/addTour.php", [], "Quản lý tour");
+
     }
 }
 ?>

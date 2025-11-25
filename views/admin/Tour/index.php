@@ -4,7 +4,9 @@
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">Quản Lý Tour</h2>
-        <a href="tours/new-tour" style="color: white;" class="btn btn-primary btn-lg">Thêm Tour Mới</a>
+        <a href="tours-manager/new-tour" style="color: white; background-color:#ff8a65; border:none;"
+            class="btn btn-primary px-4 py-2">Thêm Tour Mới</a>
+
     </div>
     <div class="tours-toolbar d-flex flex-wrap align-items-center mb-3">
         <div class="flex-grow-1 me-2 mb-2 mb-sm-0">
@@ -27,7 +29,7 @@
                     <th>Giá</th>
                     <th>Chỗ</th>
                     <th>Trạng thái</th>
-                    <th >Thao tác</th>
+                    <th>Thao tác</th>
                 </tr>
             </thead>
 
