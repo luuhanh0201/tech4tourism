@@ -1,4 +1,9 @@
 <div class="container py-5">
+    <div class="text-start mb-3">
+        <a href="/dashboard/guide-manager" class="btn btn-outline-secondary px-4">
+            <i class="fa-solid fa-arrow-left me-2"></i>Quay lại danh sách
+        </a>
+    </div>
     <div class="card shadow-lg border-0 p-4" style="border-radius: 16px;">
 
         <!-- Header -->

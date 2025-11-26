@@ -1,12 +1,15 @@
 <div class="container position-relative">
     <div class="main-container">
-        <button type="button" onclick="history.back()" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Quay Lại
-        </button>
+        <!-- <div class="text-end mb-3">
+            <a href="/dashboard/guide-manager" class="btn btn-outline-secondary px-4">
+                <i class="fa-solid fa-arrow-left me-2"></i>Quay lại danh sách
+            </a>
+        </div> -->
         <!-- Header -->
         <div class="header-section text-center">
-
+           
             <h2 class="mb-2">
+                
                 <i class="bi bi-pencil-square" style="color: #FF8B6A;"></i>
                 Chỉnh Sửa Thông Tin Hướng Dẫn Viên
             </h2>
@@ -291,7 +294,7 @@
         padding: 12px 25px;
         border-radius: 8px;
         font-weight: 600;
-        border: 2px solid #FABC66;
+        border: 2px solid;
     }
 
     .required-text {
