@@ -59,6 +59,7 @@
     '/dashboard/guide-manager/profile-guide/edit' => (new GuiderManagerController())->editGuide(),
     '/dashboard/tours-manager' => (new TourController())->index(),
     '/dashboard/tours-manager/new-tour' => (new TourController())->addNewTour(),
+    '/dashboard/tours-manager/detail' => (new TourController())->getDetailTour(),
 
     '/dashboard' => (new DashboardController())->Dashboard(),
 

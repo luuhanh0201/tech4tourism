@@ -10,6 +10,10 @@
     </div>
 
     <form method="post" enctype="multipart/form-data">
+        <?php if (!empty($_SESSION['error'])): ?>
+            <p class="text-danger"><?= $_SESSION['error'] ?></p>
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
         <div class="row g-3">
             <div class="col-lg-6 d-flex">
                 <div class="card-section">
@@ -19,14 +23,16 @@
                         <div class="col-md-8">
                             <label class="form-label">Tên tour</label>
                             <input type="text" name="tour_name" class="form-control form-control-rounded"
-                                placeholder="Tour du lịch Quảng Bình" required>
+                                placeholder="Tour du lịch Quảng Bình">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Danh mục tour</label>
                             <select name="category_id" class="form-select form-control-rounded" required>
-                                <option value="">Chọn danh mục</option>
-                                <option value="1">Trong nước</option>
-                                <option value="2">Nước ngoài</option>
+                                <option value="0" selected>Chọn danh mục</option>
+                                <?php foreach ($categories as $category): ?>
+                                    <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
+
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
@@ -56,14 +62,6 @@
                                 placeholder="Ví dụ: 4">
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Ngày khởi hành</label>
-                            <input type="date" name="start_date" class="form-control form-control-rounded">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Ngày kết thúc</label>
-                            <input type="date" name="end_date" class="form-control form-control-rounded">
-                        </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Điểm khởi hành</label>
@@ -81,28 +79,20 @@
 
             <!-- Thông tin khác -->
             <div class="col-lg-6 d-flex">
-                <div class="card-section">
+                <div class="card-section h-100 w-100">
                     <h5 class="card-section-title section-header-bar">Thông tin khác</h5>
-
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-12">
                             <label class="form-label">Giá tour</label>
                             <div class="input-group">
-                                <input type="number" name="price" min="0" step="1000"
-                                    class="form-control form-control-rounded border-end-0" placeholder="Ví dụ: 3500000">
-                                <span class="input-group-text border-start-0 rounded-end-pill">đ</span>
+                                <input type="number" name="price" min="0" step="1000" class="form-control"
+                                    placeholder="Ví dụ: 3500000">
+                                <span class="input-group-text ">đ</span>
                             </div>
                         </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Số khách tối đa</label>
-                            <input type="number" name="max_person" min="1" class="form-control form-control-rounded"
-                                placeholder="Ví dụ: 20">
-                        </div>
-
                         <div class="col-12">
                             <label class="form-label">Chính sách hủy tour</label>
-                            <textarea name="cancellation_p" rows="3" class="form-control form-control-rounded"
+                            <textarea name="cancellation_policy" rows="3" class="form-control form-control-rounded"
                                 placeholder="Quy định về hoàn/huỷ/đổi tour..."></textarea>
                         </div>
                     </div>
@@ -129,7 +119,8 @@
         </div>
 
         <div class="text-end mt-3">
-            <button style="color: white; background-color:#ff8a65; border:none;" class="btn btn-primary px-4 py-2">Thêm
+            <button type="submit" style="color: white; background-color:#ff8a65; border:none;"
+                class="btn btn-primary px-4 py-2">Thêm
                 Tour Mới</button>
         </div>
     </form>

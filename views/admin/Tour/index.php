@@ -26,10 +26,10 @@
         <table class="table align-middle">
             <thead>
                 <tr>
+                    <th>STT</th>
                     <th>Tên Tour</th>
                     <th>Loại</th>
                     <th>Giá</th>
-                    <th>Chỗ</th>
                     <th>Trạng thái</th>
                     <th>Thao tác</th>
                 </tr>
@@ -37,19 +37,19 @@
 
             <tbody>
 
-                <?php foreach ($tours as $tour): ?>
+                <?php foreach ($tours as $index => $tour): ?>
                     <tr>
+                        <td><?= $index + 1 ?></td>
                         <td><?= $tour['tour_name'] ?></td>
-                        <td>Trong nước</td>
+                        <td><?= $tour['category_name'] ?></td>
                         <td><strong> <?= number_format($tour['price'], 0, ',', '.') . ' ₫' ?></td>
-                        <td>20</td>
                         <td><span
                                 class="<?= $tour['status'] === "active" ? "status-active" : "status-stop"; ?>"><?= $tour['status'] === "active" ? "Hoạt động" : "Ngừng hoạt động"; ?></span>
                         </td>
                         <td>
-                            <a href="tours/detail?id=<?= $tour['id'] ?>" class="text-primary mx-2"><i
+                            <a href="tours-manager/detail?id=<?= $tour['id'] ?>" class="text-primary mx-2"><i
                                     class="fa-solid fa-eye"></i></a>
-                            <a href="tours/edit?id=<?= $tour['id'] ?>" class="text-success mx-2"><i
+                            <a href="tours-manager/edit?id=<?= $tour['id'] ?>" class="text-success mx-2"><i
                                     class="fa-solid fa-pen"></i></a>
                             <a href="#" class="text-danger mx-2"><i class="fa-solid fa-trash"></i></a>
                         </td>
