@@ -6,6 +6,7 @@
   integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
   integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <?php
 // session_start();
 
@@ -38,10 +39,10 @@ match ($route) {
   // Categories
   '/categories' => (new AuthController())->SignUP(),
   //CategoryCotroller
-  '/category' =>(new CategoryController())->All(),
-  '/created' => (new CategoryController())->created(),
-  '/delete'=>(new CategoryController())->Delete($id),
-  '/update'=>(new CategoryController())->Update($id),
+  '/All_category' =>(new CategoryController())->All_category(),
+  '/Created_category' => (new CategoryController())->Created_category(),
+  '/Delete_category'=>(new CategoryController())->Delete_category($id),
+  '/Update_category'=>(new CategoryController())->Update_category($id),
 
   '/' => (new DashboardController())->Dashboard(),
 

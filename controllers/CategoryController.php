@@ -8,12 +8,12 @@ class CategoryController
         $this->CategoryModel = new CategoryModel();
     }
 
-    public function All()
+    public function All_category()
     {
         $danhsach = $this->CategoryModel->All();
         require_once __DIR__ . '/../views/admin/Category/index.php';
     }
-    public function created()
+    public function Created_category()
     {
         $cate = new Category();
         if (isset($_POST["submit"])) {
@@ -24,18 +24,18 @@ class CategoryController
 
             $data = $this->CategoryModel->create($cate);
             if ($data) {
-                header("location:?route=category");
+                header("location:?route=All_category");
                 exit();
             }
         }
         require_once __DIR__ . '/../views/admin/Category/create.php';
     }
-    public function Delete($id){
+    public function Delete_category($id){
     if($id != ""){
         $data = $this->CategoryModel->delete($id);
 
         if($data > 0){
-            header("location:?route=category");
+            header("location:?route=All_category");
             exit();
         } else {
             echo "<script>alert('Không tồn tại dữ liệu để xóa');</script>";
@@ -43,7 +43,7 @@ class CategoryController
     }
 }
 
-public function Update($id){
+public function Update_category($id){
     if($id !==""){
         $data = $this->CategoryModel->All();
         $cate = $this->CategoryModel->detail($id);
@@ -55,7 +55,7 @@ public function Update($id){
 
             $data = $this->CategoryModel->update($cate);
             if ($data) {
-                header("location:?route=category");
+                header("location:?route=All_category");
                 exit();
             }
         }
