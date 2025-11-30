@@ -60,8 +60,6 @@
     '/dashboard/tours-manager' => (new TourController())->index(),
     '/dashboard/tours-manager/new-tour' => (new TourController())->addNewTour(),
 
-
-
     '/dashboard' => (new DashboardController())->Dashboard(),
 
 

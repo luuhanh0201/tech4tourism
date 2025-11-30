@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-<div class="container py-5">
-ád
-</div>
-=======
 <div class="container new-tour-page py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
@@ -272,4 +267,3 @@
         margin-bottom: 12px;
     }
 </style>
->>>>>>> feat/tours-manager
