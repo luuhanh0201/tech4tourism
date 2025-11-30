@@ -7,9 +7,9 @@
     </div>
     <div class="header-right">
         <div class="user-info">
-            <div class="user-avatar">H</div>
+            <div class="user-avatar"><?= strtoupper(substr($_SESSION['user']['fullName'], 0, 1)); ?></div>
             <div class="user-details">
-                <div class="user-name">HDV - <?= isset($_SESSION['user']['fullName']) ? $_SESSION['user']['fullName'] : 'Nguyễn Văn A' ?></div>
+                <div class="user-name"><?= isset($_SESSION['user']['fullName']) ? $_SESSION['user']['fullName'] : 'Nguyễn Văn A' ?></div>
                 <div class="user-role">Hướng dẫn viên</div>
             </div>
         </div>

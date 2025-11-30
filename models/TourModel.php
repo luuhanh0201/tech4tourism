@@ -67,6 +67,21 @@ class TourModel
         ]);
     }
 
+    function editTourModel(
+        $id,
+        $tourName,
+        $category,
+        $price,
+        $durationDay,
+        $durationNight,
+        $startLocation,
+        $endLocation,
+        $description,
+        $cancellationPolicy
+    ) {
+        $sql = "";
+    }
+
 }
 
 ?>

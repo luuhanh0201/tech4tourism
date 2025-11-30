@@ -9,10 +9,10 @@
 
     <div class="header-right">
         <div class="user-info">
-            <div class="user-avatar">A</div>
+            <div class="user-avatar"> <?= strtoupper(substr($_SESSION['user']['fullName'], 0, 1)); ?></div>
             <div class="user-details">
-                <div class="user-name">Admin User</div>
-                <div class="user-role">Admin</div>
+                <div class="user-name"><?= isset($_SESSION['user']['fullName']) ? $_SESSION['user']['fullName'] : 'Admin' ?></div>
+                <div class="user-role"><?= isset($_SESSION['user']['role']) ? $_SESSION['user']['role'] : 'admin' ?></div>
             </div>
         </div>
     </div>

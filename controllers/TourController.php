@@ -73,8 +73,8 @@ class TourController
 
 
 
-        include "./views/admin/Tour/addTour.php";
-        // renderLayoutAdmin("admin/Tour/addTour.php", ["categories" => $categories], "Thêm tour mới");
+        // include "./views/admin/Tour/addTour.php";
+        renderLayoutAdmin("admin/Tour/addTour.php", ["categories" => $categories], "Thêm tour mới");
 
     }
     function getDetailTour()
@@ -85,6 +85,9 @@ class TourController
         $tour = $this->TourModel->getDetailTourModel($_GET['id']);
         // var_dump($tour);
         renderLayoutAdmin("admin/Tour/detailTour.php", ['tour' => $tour], "Chi tiết tour");
+
+    }
+    function editTour(){
 
     }
 }
