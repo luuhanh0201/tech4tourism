@@ -68,18 +68,49 @@ class TourModel
     }
 
     function editTourModel(
-        $id,
-        $tourName,
         $category,
+        $tourName,
         $price,
         $durationDay,
         $durationNight,
         $startLocation,
         $endLocation,
         $description,
-        $cancellationPolicy
+        $cancellationPolicy,
+        $id
     ) {
-        $sql = "";
+        $sql = "UPDATE tours SET
+            category_id = :category_id,
+            tour_name = :tour_name,
+            price = :price,
+            duration_day = :duration_day,
+            duration_night = :duration_night,
+            start_location = :start_location,
+            end_location = :end_location,
+            description = :description,
+            cancellation_policy = :cancellation_policy
+        WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            "category_id" => $category,
+            "tour_name" => $tourName,
+            "price" => $price,
+            "duration_day" => $durationDay,
+            "duration_night" => $durationNight,
+            "start_location" => $startLocation,
+            "end_location" => $endLocation,
+            "description" => $description,
+            "cancellation_policy" => $cancellationPolicy,
+            "id" => $id
+        ]);
+    }
+
+    function deleteTourModel($id)
+    {
+        $sql = "DELETE FROM tours WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        return $stmt->execute();
     }
 
 }

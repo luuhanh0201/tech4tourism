@@ -1,12 +1,9 @@
-<script>
-    document.title = "Quản lý tours"
-</script>
 </script>
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold">Quản Lý Tour</h2>
+        <h2 class="fw-bold">Quản Lý Booking</h2>
         <a href="tours-manager/new-tour" style="color: white; background-color:#ff8a65; border:none;"
-            class="btn btn-primary px-4 py-2">Thêm Tour Mới</a>
+            class="btn btn-primary px-4 py-2">Tạo booking</a>
 
     </div>
     <div class="tours-toolbar d-flex flex-wrap align-items-center mb-3">
@@ -26,9 +23,10 @@
             <thead>
                 <tr>
                     <th>STT</th>
-                    <th>Tên Tour</th>
-                    <th>Loại</th>
-                    <th>Giá</th>
+                    <th>Booking code</th>
+                    <th>Đại diện</th>
+                    <th>Số lượng</th>
+                    <th>Tổng thanh toán</th>
                     <th>Trạng thái</th>
                     <th>Thao tác</th>
                 </tr>
@@ -36,21 +34,23 @@
 
             <tbody>
 
-                <?php foreach ($tours as $index => $tour): ?>
+                <?php foreach ($bookings as $index => $booking): ?>
                     <tr>
                         <td><?= $index + 1 ?></td>
-                        <td><?= $tour['tour_name'] ?></td>
-                        <td><?= $tour['category_name'] ?></td>
-                        <td><strong> <?= number_format($tour['price'], 0, ',', '.') . ' ₫' ?></td>
+                        <td><?= $booking['booking_code'] ?></td>
+                        <td><?= $booking['contact_name'] ?></td>
+                        <td><?= $booking['max_person'] ?></td>
+                        <td><strong> <?= number_format($booking['price'] ?? 1000, 0, ',', '.') . ' ₫' ?></td>
                         <td><span
-                                class="<?= $tour['status'] === "active" ? "status-active" : "status-stop"; ?>"><?= $tour['status'] === "active" ? "Hoạt động" : "Ngừng hoạt động"; ?></span>
+                                class="<?= $booking['status'] === "active" ? "status-active" : "status-stop"; ?>"><?= $booking['status'] === "active" ? "Hoạt động" : "Ngừng hoạt động"; ?></span>
                         </td>
                         <td>
-                            <a href="tours-manager/detail?id=<?= $tour['id'] ?>" class="text-primary mx-2"><i
+                            <a href="booking-manager/detail?id=<?= $booking['id'] ?>" class="text-primary mx-2"><i
                                     class="fa-solid fa-eye"></i></a>
-                            <a href="tours-manager/edit-tour?id=<?= $tour['id'] ?>" class="text-success mx-2"><i
+                            <a href="booking-manager/edit-booking?id=<?= $booking['id'] ?>" class="text-success mx-2"><i
                                     class="fa-solid fa-pen"></i></a>
-                            <a href="tours-manager/delete-tour?id=<?= $tour['id'] ?>" class="text-danger mx-2"><i class="fa-solid fa-trash"></i></a>
+                            <a href="booking-manager/delete-booking?id=<?= $booking['id'] ?>" class="text-danger mx-2"><i
+                                    class="fa-solid fa-trash"></i></a>
                         </td>
                     </tr>
 

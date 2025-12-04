@@ -1,5 +1,5 @@
 <?php
-function renderLayoutAdmin($viewPath, $data = [], $active = "", $title = "")
+function renderLayoutAdmin($viewPath, $data = [], $title = "")
 {
     extract($data);
 
@@ -7,16 +7,16 @@ function renderLayoutAdmin($viewPath, $data = [], $active = "", $title = "")
     include "./views/$viewPath";
     $content = ob_get_clean();
 
-    include "./views/layoutAdmin.php";
+    include "./views/layouts/layoutAdmin.php";
 }
-function renderLayoutGuide($viewPath, $data = [], $active = "", $title = "")
-{
-    extract($data);
+// function renderLayoutGuide($viewPath, $data = [], $active = "", $title = "")
+// {
+//     extract($data);
 
-    ob_start();
-    include "./views/$viewPath";
-    $content = ob_get_clean();
+//     ob_start();
+//     include "./views/$viewPath";
+//     $content = ob_get_clean();
 
-    include "./views/layoutGuide.php";
-}
+//     include "./views/layouts/layoutAdmin.php";
+// }
 ?>

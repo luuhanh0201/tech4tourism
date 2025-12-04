@@ -5,6 +5,6 @@ class GuideController
     public $GuideModel;
     public function index()
     {
-        renderLayoutGuide("guideViews/index.php", [], "Sửa thông tin hướng dẫn viên");
+        renderLayoutAdmin("guideViews/index.php", [], title: "Sửa thông tin hướng dẫn viên");
     }
 }
