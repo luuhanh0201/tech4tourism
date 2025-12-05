@@ -58,10 +58,8 @@
     '/dashboard/tours-manager/edit-tour' => $tourController->editTour(),
     '/dashboard/tours-manager/delete-tour' => $tourController->deleteTour(),
     '/dashboard/booking-manager' => $bookingController->index(),
-
+    '/dashboard/booking-manager/create-booking' => $bookingController->createBooking(),
     '/dashboard' => $dashboardController->Dashboard(),
-
-
     "/guide" => $guideController->index(),
     default => include './views/errorPage.php',
   };

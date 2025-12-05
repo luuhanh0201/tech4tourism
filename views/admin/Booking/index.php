@@ -1,8 +1,10 @@
-</script>
+<?php
+
+?>
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">Quản Lý Booking</h2>
-        <a href="tours-manager/new-tour" style="color: white; background-color:#ff8a65; border:none;"
+        <a href="booking-manager/create-booking" style="color: white; background-color:#ff8a65; border:none;"
             class="btn btn-primary px-4 py-2">Tạo booking</a>
 
     </div>
@@ -35,14 +37,29 @@
             <tbody>
 
                 <?php foreach ($bookings as $index => $booking): ?>
+                    <?php
+                    $status = $booking['status'];
+
+                    $mapStatus = [
+                        'confirmed' => ['class' => 'status-confirmed', 'label' => 'Đã xác nhận'],
+                        'pending' => ['class' => 'status-pending', 'label' => 'Đang chờ'],
+                        'done' => ['class' => 'status-done', 'label' => 'Đã hoàn thành'],
+                        'canceled' => ['class' => 'status-canceled', 'label' => 'Đã Huỷ'],
+                    ];
+
+                    $data = $mapStatus[$status] ?? ['class' => 'status-unknown', 'label' => $status];
+                    ?>
                     <tr>
                         <td><?= $index + 1 ?></td>
                         <td><?= $booking['booking_code'] ?></td>
                         <td><?= $booking['contact_name'] ?></td>
                         <td><?= $booking['max_person'] ?></td>
-                        <td><strong> <?= number_format($booking['price'] ?? 1000, 0, ',', '.') . ' ₫' ?></td>
-                        <td><span
-                                class="<?= $booking['status'] === "active" ? "status-active" : "status-stop"; ?>"><?= $booking['status'] === "active" ? "Hoạt động" : "Ngừng hoạt động"; ?></span>
+                        <td><strong> <?= number_format($booking['price'] * $booking['max_person'], 0, ',', '.') . ' ₫' ?>
+                        </td>
+                        <td>
+                            <span class="status-badge <?= $data['class'] ?>">
+                                <?= htmlspecialchars($data['label']) ?>
+                            </span>
                         </td>
                         <td>
                             <a href="booking-manager/detail?id=<?= $booking['id'] ?>" class="text-primary mx-2"><i
@@ -62,21 +79,40 @@
     </div>
 </div>
 <style>
-    .status-active {
-        background: #D6F5D6;
-        color: #1A8F1A;
-        padding: 6px 16px;
-        border-radius: 20px;
-        font-weight: 600;
+    .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
     }
 
-    .status-stop {
-        background: #FFD6D6;
-        color: #CC3333;
-        padding: 6px 16px;
-        border-radius: 20px;
-        font-weight: 600;
+    .status-confirmed {
+        background-color: #d1fae5;
+        color: #065f46;
     }
+
+    .status-pending {
+        background-color: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-done {
+        background-color: #dbeafe;
+        color: #1e3a8a;
+    }
+
+    .status-canceled {
+        background-color: #da463eff;
+        color: #fff;
+
+    }
+
+    .status-unknown {
+        background-color: #e5e7eb;
+        color: #374151;
+    }
+
 
     .table-container {
         border-radius: 12px;

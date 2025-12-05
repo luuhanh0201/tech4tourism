@@ -37,7 +37,6 @@ class GuiderManagerController
         if (isset($_GET['id'])) {
             $guide = $this->GuiderManagerModel->getDetailGuide($_GET['id']);
             renderLayoutAdmin("admin/GuideManager/editGuide.php", ["guide" => $guide], "Sửa thông tin hướng dẫn viên");
-
         } else {
             echo "Không tìm thấy id";
         }
