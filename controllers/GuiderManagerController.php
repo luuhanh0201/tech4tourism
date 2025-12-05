@@ -34,13 +34,11 @@ class GuiderManagerController
     }
     public function editGuide()
     {
-        if (isset($_GET['id'])) {
-            $guide = $this->GuiderManagerModel->getDetailGuide($_GET['id']);
-            renderLayoutAdmin("admin/GuideManager/editGuide.php", ["guide" => $guide], "Sửa thông tin hướng dẫn viên");
-
-        } else {
+        if (!isset($_GET['id']) || empty($_GET['id'])) {
             echo "Không tìm thấy id";
+            return;
         }
+        $id = $_GET['id'];
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $dateOfBirth = $_POST['date_of_birth'];
             $gender = $_POST['gender'];
@@ -51,13 +49,24 @@ class GuiderManagerController
             $bio = $_POST['bio'];
 
             if ($this->GuiderManagerModel->updateProfileGuide($_GET['id'], $dateOfBirth, $gender, $phone, $address, $certifications, $language, $bio)) {
-                $_SESSION['success'] = "";
+                $_SESSION['success'] = "Cập nhật hướng dẫn viên thành công";
+                header('location:/dashboard/guide-manager/profile-guide/edit?id=' . $id . '');
             } else {
                 echo "FALSE";
             }
         }
-        // include "./views/admin/GuideManager/editGuide.php";
 
+        $guide = $this->GuiderManagerModel->getDetailGuide($id);
+        if (!$guide) {
+            echo "Không tìm thấy hướng dẫn viên";
+            return;
+        }
+
+        renderLayoutAdmin(
+            "admin/GuideManager/editGuide.php",
+            ["guide" => $guide],
+            "Sửa thông tin hướng dẫn viên"
+        );
     }
 
 }

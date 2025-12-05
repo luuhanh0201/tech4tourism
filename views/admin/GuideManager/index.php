@@ -73,7 +73,7 @@
                                 class="fa-solid fa-eye"></i></a>
                         <a href="guide-manager/profile-guide/edit?id=<?= $guide['id'] ?>" class="text-success mx-2"><i
                                 class="fa-solid fa-pen"></i></a>
-                        <a href="#" class="text-danger mx-2"><i class="fa-solid fa-trash"></i></a>
+                        <!-- <a href="#" class="text-danger mx-2"><i class="fa-solid fa-trash"></i></a> -->
                     </td>
                 </tr>
             <?php endforeach; ?>

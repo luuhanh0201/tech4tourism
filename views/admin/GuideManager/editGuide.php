@@ -7,9 +7,9 @@
         </div> -->
         <!-- Header -->
         <div class="header-section text-center">
-           
+
             <h2 class="mb-2">
-                
+
                 <i class="bi bi-pencil-square" style="color: #FF8B6A;"></i>
                 Chỉnh Sửa Thông Tin Hướng Dẫn Viên
             </h2>
@@ -137,16 +137,22 @@
                     </small>
                 </div>
             </div>
+            <p class="text-center"> <?php if (isset($_SESSION['success'])): ?>
+                    <?php echo $_SESSION['success']; ?>
+                    <?php unset($_SESSION['success']); ?>
+                <?php endif; ?>
+            </p>
             <div class="d-flex justify-content-between align-items-center pt-4 border-top">
-                <button type="button" onclick="history.back()" class="btn btn-secondary">
+                <a href="/dashboard/guide-manager" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i> Quay Lại
-                </button>
+                </a>
                 <div>
                     <button type="button" class="btn btn-outline-danger me-2">
                         <i class="bi bi-trash"></i> Xóa HDV
                     </button>
-                    <button type="submit" class="btn btn-success">
-                        Cập Nhật
+
+                    <button class="btn btn-success">
+                        <i class="fa-solid fa-floppy-disk me-2"></i>Cập Nhật
                     </button>
                 </div>
             </div>
