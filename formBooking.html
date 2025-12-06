@@ -1,0 +1,368 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Tạo Booking Mới</h2>
+        <a href="booking-manager" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-arrow-left me-2"></i>Quay lại
+        </a>
+    </div>
+
+    <form method="POST" action="booking-manager/store">
+        <div class="row">
+            <!-- Cột trái - Thông tin Tour -->
+            <div class="col-lg-8">
+                <!-- Thông tin Tour -->
+                <div class="card-section mb-4">
+                    <h5 class="section-title">
+                        <i class="fa-solid fa-map-location-dot me-2"></i>Thông Tin Tour
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Chọn Tour <span class="text-danger">*</span></label>
+                            <select class="form-select" name="tour_id" id="tourSelect" required>
+                                <option value="">-- Chọn tour --</option>
+                                <option value="1" data-price="12000000" data-days="3">Tour Hà Nội - Sapa 3N2Đ -
+                                    12,000,000đ</option>
+                                <option value="2" data-price="8500000" data-days="4">Tour Đà Nẵng - Hội An 4N3Đ -
+                                    8,500,000đ</option>
+                                <option value="3" data-price="18000000" data-days="5">Tour Phú Quốc 5N4Đ - 18,000,000đ
+                                </option>
+                                <option value="4" data-price="9500000" data-days="3">Tour Nha Trang 3N2Đ - 9,500,000đ
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Ngày Khởi Hành <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" name="departure_date" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Ngày Kết Thúc</label>
+                            <input type="date" class="form-control" name="return_date" id="returnDate" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thông tin Khách Hàng -->
+                <div class="card-section mb-4">
+                    <h5 class="section-title">
+                        <i class="fa-solid fa-user me-2"></i>Thông Tin Khách Hàng
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Họ và Tên <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="customer_name" placeholder="Nguyễn Văn A"
+                                required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Số Điện Thoại <span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control" name="customer_phone" placeholder="0912345678"
+                                required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="customer_email"
+                                placeholder="example@email.com">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">CMND/CCCD</label>
+                            <input type="text" class="form-control" name="customer_id_card" placeholder="001234567890">
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Địa Chỉ</label>
+                            <textarea class="form-control" name="customer_address" rows="2"
+                                placeholder="Số nhà, đường, phường, quận, thành phố"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Danh Sách Khách Tham Gia -->
+                <div class="card-section mb-4">
+                    <h5 class="section-title">
+                        <i class="fa-solid fa-users me-2"></i>Danh Sách Khách Tham Gia
+                    </h5>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Người Lớn <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" name="adult_count" id="adultCount" min="1"
+                                value="1" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Trẻ Em (5-11 tuổi)</label>
+                            <input type="number" class="form-control" name="child_count" id="childCount" min="0"
+                                value="0">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Trẻ Nhỏ (&lt;5 tuổi)</label>
+                            <input type="number" class="form-control" name="infant_count" id="infantCount" min="0"
+                                value="0">
+                        </div>
+                    </div>
+
+                    <div id="guestList">
+                        <div class="guest-item mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <strong>Khách #1 (Người Lớn)</strong>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <input type="text" class="form-control" name="guests[0][name]"
+                                        placeholder="Họ và tên" required>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <select class="form-select" name="guests[0][gender]">
+                                        <option value="male">Nam</option>
+                                        <option value="female">Nữ</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <input type="date" class="form-control" name="guests[0][dob]"
+                                        placeholder="Ngày sinh">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm" id="addGuestBtn">
+                        <i class="fa-solid fa-plus me-2"></i>Thêm Khách
+                    </button>
+                </div>
+
+                <!-- Ghi Chú Đặc Biệt -->
+                <div class="card-section mb-4">
+                    <h5 class="section-title">
+                        <i class="fa-solid fa-clipboard me-2"></i>Ghi Chú Đặc Biệt
+                    </h5>
+                    <div class="mb-3">
+                        <label class="form-label">Yêu Cầu Đặc Biệt</label>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="special_notes[]" value="vegetarian"
+                                id="vegetarian">
+                            <label class="form-check-label" for="vegetarian">
+                                Ăn chay
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="special_notes[]" value="allergy"
+                                id="allergy">
+                            <label class="form-check-label" for="allergy">
+                                Dị ứng thực phẩm
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="special_notes[]" value="wheelchair"
+                                id="wheelchair">
+                            <label class="form-check-label" for="wheelchair">
+                                Cần xe lăn / Hỗ trợ di chuyển
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" name="special_notes[]" value="elderly"
+                                id="elderly">
+                            <label class="form-check-label" for="elderly">
+                                Người cao tuổi cần chăm sóc
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ghi Chú Chi Tiết</label>
+                        <textarea class="form-control" name="notes" rows="4"
+                            placeholder="Nhập các yêu cầu đặc biệt khác..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột phải - Tổng Kết và Thanh Toán -->
+            <div class="col-lg-4">
+                <!-- Tổng Kết Booking -->
+                <div class="card-section summary-card sticky-top mb-4">
+                    <h5 class="section-title">
+                        <i class="fa-solid fa-file-invoice-dollar me-2"></i>Tổng Kết
+                    </h5>
+
+                    <div class="summary-item">
+                        <span>Tour đã chọn:</span>
+                        <strong id="selectedTour">--</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Ngày khởi hành:</span>
+                        <strong id="selectedDate">--</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Số lượng khách:</span>
+                        <strong id="totalGuests">1 người</strong>
+                    </div>
+
+                    <hr>
+
+                    <div class="summary-item">
+                        <span>Người lớn:</span>
+                        <span id="adultPrice">0đ × 0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Trẻ em:</span>
+                        <span id="childPrice">0đ × 0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Trẻ nhỏ:</span>
+                        <span id="infantPrice">0đ × 0</span>
+                    </div>
+
+                    <hr>
+
+                    <div class="summary-total">
+                        <span>Tổng Cộng:</span>
+                        <strong id="totalPrice">0đ</strong>
+                    </div>
+
+                    <div class="mb-3 mt-3">
+                        <label class="form-label">Đã Thanh Toán</label>
+                        <input type="number" class="form-control" name="paid_amount" id="paidAmount" min="0" value="0">
+                    </div>
+
+                    <div class="summary-item text-danger">
+                        <span>Còn Lại:</span>
+                        <strong id="remainingAmount">0đ</strong>
+                    </div>
+
+                    <hr>
+
+                    <div class="mb-3">
+                        <label class="form-label">Phương Thức Thanh Toán</label>
+                        <select class="form-select" name="payment_method">
+                            <option value="cash">Tiền mặt</option>
+                            <option value="transfer">Chuyển khoản</option>
+                            <option value="card">Thẻ tín dụng</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Trạng Thái</label>
+                        <select class="form-select" name="status">
+                            <option value="pending">Chờ xác nhận</option>
+                            <option value="confirmed">Đã xác nhận</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fa-solid fa-save me-2"></i>Tạo Booking
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary">
+                            <i class="fa-solid fa-rotate-left me-2"></i>Nhập Lại
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .card-section {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+    }
+
+    .section-title {
+        color: #333;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .section-title i {
+        color: #ff8a65;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 8px;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        padding: 10px 15px;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #ff8a65;
+        box-shadow: 0 0 0 0.2rem rgba(255, 138, 101, 0.25);
+    }
+
+    .guest-item {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #ff8a65;
+    }
+
+    .summary-card {
+        background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+        border: 2px solid #ff8a65;
+    }
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        font-size: 0.95rem;
+    }
+
+    .summary-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #ff8a65;
+    }
+
+    .btn-primary {
+        background-color: #ff8a65;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-weight: 600;
+    }
+
+    .btn-primary:hover {
+        background-color: #ff6f47;
+    }
+
+    .btn-outline-primary {
+        border-color: #ff8a65;
+        color: #ff8a65;
+        border-radius: 8px;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #ff8a65;
+        color: white;
+    }
+
+    .btn-outline-secondary {
+        border-radius: 8px;
+    }
+
+    .sticky-top {
+        top: 20px;
+    }
+
+    @media (max-width: 991px) {
+        .sticky-top {
+            position: relative !important;
+            top: 0 !important;
+        }
+    }
+</style>
+
