@@ -10,25 +10,13 @@ class CategoryModel
         $this->conn = connectDB();
     }
 
-    function All()
+    function All(): array
     {
         try {
-            $sql = "SELECT * FROM `categories` ";
-            $data = $this->conn->query($sql)->fetchAll();
-            $danhsach = [];
-
-            foreach ($data as $cate) {
-                $pro = new Category;
-                $pro->id = $cate["id"];
-                $pro->name = $cate["name"];
-                $pro->description = $cate["description"];
-                $pro->created_at = $cate["created_at"];
-                $pro->updated_at = $cate["updated_at"];
-
-                $danhsach[] = $pro;
-            }
-
-            return $danhsach;
+            $sql = "SELECT * FROM `categories`";
+            $data = $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+            // $data lúc này đã là mảng các array ['id' => ..., 'name' => ...]
+            return $data;
         } catch (Exception $r) {
             echo $r->getMessage();
         }
@@ -86,7 +74,7 @@ class CategoryModel
         try {
             $sql = "SELECT * FROM `categories` WHERE `id`= $id";
             $data = $this->conn->query($sql)->fetch();
-            if($data){
+            if ($data) {
                 $pro = new Category;
                 $pro->id = $data["id"];
                 $pro->name = $data["name"];

@@ -58,7 +58,7 @@ function startSession()
 // @param User $user Đối tượng User cần lưu vào session
 function loginUser($user)
 {
-    startSession(); 
+    startSession();
     $_SESSION['user_id'] = $user->id;
     $_SESSION['user_fullName'] = $user->fullName;
     $_SESSION['user_email'] = $user->email;
@@ -100,7 +100,7 @@ function getCurrentUser()
         'name' => $_SESSION['user_fullName'],
         'email' => $_SESSION['user_email'],
         'role' => $_SESSION['user_role'],
-        'avatar'=>$_SESSION['user_avatar']
+        'avatar' => $_SESSION['user_avatar']
     ]);
 }
 
@@ -151,4 +151,12 @@ function requireGuideOrAdmin()
         header('Location: ' . BASE_URL);
         exit;
     }
+}
+
+function generateBookingCode(): string
+{
+    $numberPart = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+    $charPart = chr(random_int(65, 90)); // 65-90 = A-Z
+
+    return 'BK' . $numberPart . $charPart;
 }

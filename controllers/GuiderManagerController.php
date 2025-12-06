@@ -6,7 +6,6 @@ class GuiderManagerController
     public function __construct()
     {
         $this->GuiderManagerModel = new GuiderManagerModel();
-        // require_once './views/layout/headerAdminLayout.php';
     }
     public function index()
     {
@@ -19,7 +18,6 @@ class GuiderManagerController
         }
         renderLayoutAdmin("admin/GuideManager/index.php", ["guides" => $guides], "Quản lý hướng dẫn viên");
 
-        // include "./views/admin/GuideManager/index.php";
     }
     public function detailGuide()
     {
@@ -48,6 +46,9 @@ class GuiderManagerController
             $language = $_POST['language'];
             $bio = $_POST['bio'];
 
+            if ($gender === "male") {
+                $_SESSION['errorMale'] = "TEST Cái";
+            }
             if ($this->GuiderManagerModel->updateProfileGuide($_GET['id'], $dateOfBirth, $gender, $phone, $address, $certifications, $language, $bio)) {
                 $_SESSION['success'] = "Cập nhật hướng dẫn viên thành công";
                 header('location:/dashboard/guide-manager/profile-guide/edit?id=' . $id . '');

@@ -1,17 +1,29 @@
 <?php
+// require './models/BookingModel.php';
 
 class DashboardController
 {
-    public $ProductModel;
+    protected $BookingModel;
+    protected $TourModel;
+    protected $GuiderManagerModel;
+
 
     public function __construct()
     {
-
+        $this->BookingModel = new BookingModel();
+        $this->GuiderManagerModel = new GuiderManagerModel();
+        $this->TourModel = new TourModel();
     }
     public function Dashboard()
     {
-
-        renderLayoutAdmin("admin/Dashboard/index.php", [], "Bảng điều khiển");
+        $bookings = $this->BookingModel->getAllBookingModel();
+        $tours = $this->TourModel->getAllToursModel();
+        $guides = $this->GuiderManagerModel->getAllGuider();
+        renderLayoutAdmin("admin/Dashboard/index.php", [
+            'bookings' => $bookings,
+            'tours' => $tours,
+            'guides'=>$guides
+        ], "Bảng điều khiển");
 
     }
 }

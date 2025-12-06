@@ -6,7 +6,7 @@
             <div class="stat-card stat-tour">
                 <div>
                     <div class="stat-label">Tổng Tour</div>
-                    <div class="stat-value">24</div>
+                    <div class="stat-value"><?= count($tours) ?></div>
                 </div>
                 <div class="stat-icon">
                     <i class="fa-solid fa-box"></i>
@@ -19,7 +19,7 @@
             <div class="stat-card stat-booking">
                 <div>
                     <div class="stat-label">Booking</div>
-                    <div class="stat-value">156</div>
+                    <div class="stat-value"><?= count($bookings) ?></div>
                 </div>
                 <div class="stat-icon">
                     <i class="fa-solid fa-users"></i>
@@ -32,7 +32,7 @@
             <div class="stat-card stat-guide">
                 <div>
                     <div class="stat-label">Hướng Dẫn Viên</div>
-                    <div class="stat-value">18</div>
+                    <div class="stat-value"><?=count($guides)?></div>
                 </div>
                 <div class="stat-icon">
                     <i class="fa-solid fa-user"></i>
@@ -45,7 +45,7 @@
             <div class="stat-card stat-revenue">
                 <div>
                     <div class="stat-label">Doanh Thu Tháng</div>
-                    <div class="stat-value">2.4B</div>
+                    <div class="stat-value">-</div>
                 </div>
                 <div class="stat-icon">
                     <i class="fa-solid fa-arrow-trend-up"></i>

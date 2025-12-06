@@ -58,15 +58,15 @@
     '/dashboard/tours-manager/detail' => $tourController->getDetailTour(),
     '/dashboard/tours-manager/edit-tour' => $tourController->editTour(),
     '/dashboard/tours-manager/delete-tour' => $tourController->deleteTour(),
-    '/dashboard/booking-manager' => $bookingController->index(),
     '/dashboard/categories-manager' => $categoryController->All_category(),
     '/dashboard/categories-manager/new-category' => $categoryController->Created_category(),
     '/dashboard/categories-manager/delete-category' => $categoryController->Delete_category(),
     '/dashboard/categories-manager/edit-category' => $categoryController->Update_category(),
-
+  
+    '/dashboard/booking-manager' => $bookingController->index(),
+    '/dashboard/booking-manager/create-booking' => $bookingController->createBooking(),
+    '/dashboard/booking-manager/edit-booking' => $bookingController->editBooking(),
     '/dashboard' => $dashboardController->Dashboard(),
-
-
     "/guide" => $guideController->index(),
     default => include './views/errorPage.php',
   };

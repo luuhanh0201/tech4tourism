@@ -49,7 +49,7 @@ class TourController
 
                 exit;
             } else {
-                $tour = $this->TourModel->addNewTourModel(
+                $this->TourModel->addNewTourModel(
                     $category,
                     $tourName,
                     $price,
@@ -68,13 +68,15 @@ class TourController
 
 
         }
-        $categories = $this->CategoryModel->getAllCategory();
+        $categories = $this->CategoryModel->All();
 
 
 
 
         // include "./views/admin/Tour/addTour.php";
-        renderLayoutAdmin("admin/Tour/addTour.php", ["categories" => $categories], "Thêm tour mới");
+        renderLayoutAdmin("admin/Tour/addTour.php", [
+            "categories" => $categories,
+        ], "Thêm tour mới");
 
     }
     function getDetailTour()
@@ -93,7 +95,8 @@ class TourController
         if (!isset($_GET['id'])) {
             exit;
         }
-        $categories = $this->CategoryModel->getAllCategory();
+        $categories = $this->CategoryModel->All();
+        
         $tour = $this->TourModel->getDetailTourModel($_GET['id']);
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $tourName = $_POST['tour_name'];

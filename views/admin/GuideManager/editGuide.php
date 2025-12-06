@@ -70,6 +70,10 @@
                         <option value="Nam" <?= $guide['gender'] == 'Nam' ? 'selected' : '' ?>>Nam</option>
                         <option value="Nu" <?= $guide['gender'] == 'Nữ' ? 'selected' : '' ?>>Nữ</option>
                     </select>
+                    <?php if (!empty($_SESSION['errorMale'])): ?>
+                        <p class="text-danger"><?= $_SESSION['errorMale'] ?></p>
+                        <?php unset($_SESSION['errorMale']); ?>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="section-title">
@@ -151,7 +155,7 @@
                         <i class="bi bi-trash"></i> Xóa HDV
                     </button>
 
-                    <button class="btn btn-success">
+                    <button type="submit" class="btn btn-success">
                         <i class="fa-solid fa-floppy-disk me-2"></i>Cập Nhật
                     </button>
                 </div>
