@@ -47,14 +47,14 @@
             <tbody>
                 <?php foreach ($filteredData as $pro): ?>
                     <tr>
-                        <td><?= $pro->name ?></td>
-                        <td><?= $pro->description ?></td>
+                        <td><?= $pro['name'] ?></td>
+                        <td><?= $pro['description'] ?></td>
                         <td class="text-center" style="gap: 20px;">
                             <a class="text-primary mx-2"
-                                href="/dashboard/categories-manager/edit-category?id=<?= $pro->id ?>">
+                                href="/dashboard/categories-manager/edit-category?id=<?= $pro['id'] ?>">
                                 <i class="fa-solid fa-pen"></i>
                             </a>
-                            <a href="/dashboard/categories-manager/delete-category?id=<?= $pro->id ?>"
+                            <a href="/dashboard/categories-manager/delete-category?id=<?= $pro['id'] ?>"
                                 onclick="return confirm('Bạn có chắc muốn xóa không?')">
                                 <i class="fa-solid fa-trash-can" style="color:red"></i>
                             </a>
