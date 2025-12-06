@@ -1,8 +1,8 @@
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold mb-1">Chỉnh sửa danh mục</h2>
-            <p class="text-muted mb-0">Cập nhật thông tin danh mục tour</p>
+            <h2 class="fw-bold mb-1">Cập nhật lại danh mục Tour</h2>
+           
         </div>
         <a href="/dashboard/categories-manager" class="btn btn-outline-secondary">
             <i class="fa-solid fa-arrow-left me-2"></i>Quay lại danh sách
@@ -26,7 +26,7 @@
 
                 <div class="d-flex justify-content-end mt-4">
                     <button type="submit" class="btn btn-success px-4" name="submit">
-                        <i class="fa-solid fa-floppy-disk me-2"></i>Lưu thay đổi
+                      Cập nhật
                     </button>
                 </div>
             </form>

@@ -31,7 +31,7 @@
 
                     <div class="d-flex justify-content-end mt-4">
                         <button name="submit" type="submit" class="btn btn-success">
-                            Tạo mới
+                           Thêm
                         </button>
                     </div>
                 </form>
