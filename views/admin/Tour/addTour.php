@@ -117,8 +117,8 @@
         </div>
 
        <div class="text-end mt-3">
-            <button type="submit" style="color: white; background-color:#ff8a65; border:none;"
-                class="btn btn-primary px-4 py-2">Submit</button>
+            <button style="color: white; background-color:#ff8a65; border:none;"
+                class="btn btn-primary px-4 py-2">Thêm tour</button>
         </div>
     </form>
 </div>
@@ -470,8 +470,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
+       
         let isValid = true;
 
    

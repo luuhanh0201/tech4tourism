@@ -9,13 +9,12 @@
             <i class="fa-solid fa-arrow-left me-2"></i>Quay lại danh sách
         </a>
     </div>
-
     <div class="row g-4">
         <!-- CỘT ẢNH + THÔNG TIN CƠ BẢN -->
         <div class="col-md-4">
             <div class="card shadow-sm border-0 h-100">
                 <!-- Ảnh tour -->
-                <img src="https://via.placeholder.com/600x350?text=Anh+Tour" class="card-img-top" alt="Tên tour">
+                <img src="<?= BASE_URL . $tour['image_url'] ?>" class="card-img-top" alt="Tên tour">
 
                 <div class="card-body">
                     <!-- Tên tour -->

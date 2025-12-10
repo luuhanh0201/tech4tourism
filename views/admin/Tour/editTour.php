@@ -29,8 +29,7 @@
                             <select name="category_id" class="form-select form-control-rounded">
                                 <option value="0">Chọn danh mục</option>
                                 <?php foreach ($categories as $category): ?>
-                                    <option value="<?= $category['id'] ?>" 
-                                        <?= ($category['name'] == $tour['category_name']) ? 'selected' : '' ?>>
+                                    <option value="<?= $category['id'] ?>" <?= ($category['name'] == $tour['category_name']) ? 'selected' : '' ?>>
                                         <?= $category['name'] ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -106,11 +105,11 @@
 
                     <div class="upload-box-inner text-center">
                         <input type="file" name="image" id="tourImage" class="d-none" accept="image/*">
-                        
+
                         <?php if (!empty($tour['image_url'])): ?>
                             <label for="tourImage" class="upload-inner" id="uploadLabel">
                                 <div class="upload-preview">
-                                    <img src="<?= $tour['image_url'] ?>" alt="Current Image" id="currentImage">
+                                    <img src="<?= BASE_URL . $tour['image_url'] ?>" alt="Current Image" id="currentImage">
                                     <div class="mt-2 upload-text-sub">Click để thay đổi ảnh</div>
                                 </div>
                             </label>
@@ -120,7 +119,6 @@
                                     <i class="fa-solid fa-cloud-arrow-up"></i>
                                 </div>
                                 <div class="upload-text-main">Tải ảnh đại diện cho tour</div>
-                                <div class="upload-text-sub">Kéo thả vào đây hoặc nhấn để chọn file</div>
                             </label>
                         <?php endif; ?>
                     </div>
@@ -131,7 +129,7 @@
         <div class="text-end mt-3">
             <button type="submit" style="color: white; background-color:#ff8a65; border:none;"
                 class="btn btn-primary px-4 py-2" id="submitBtn">
-              </i> Cập nhật
+                </i> Cập nhật
             </button>
         </div>
     </form>
@@ -275,6 +273,7 @@
             opacity: 0;
             transform: translateY(-5px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -301,215 +300,215 @@
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('editTourForm');
-    
-    // Các trường input
-    const tourName = document.querySelector('input[name="tour_name"]');
-    const categoryId = document.querySelector('select[name="category_id"]');
-    const description = document.querySelector('textarea[name="description"]');
-    const durationDay = document.querySelector('input[name="duration_day"]');
-    const durationNight = document.querySelector('input[name="duration_night"]');
-    const startLocation = document.querySelector('input[name="start_location"]');
-    const endLocation = document.querySelector('input[name="end_location"]');
-    const price = document.querySelector('input[name="price"]');
-    const cancellationPolicy = document.querySelector('textarea[name="cancellation_policy"]');
-    const imageInput = document.querySelector('input[name="image"]');
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('editTourForm');
 
-    // Hàm hiển thị lỗi
-    function showError(element, message) {
-        const parent = element.closest('.col-12, .col-md-8, .col-md-6, .col-md-4') || element.parentElement;
-        
-        // Xóa lỗi cũ
-        const oldError = parent.querySelector('.error-message');
-        if (oldError) oldError.remove();
+        // Các trường input
+        const tourName = document.querySelector('input[name="tour_name"]');
+        const categoryId = document.querySelector('select[name="category_id"]');
+        const description = document.querySelector('textarea[name="description"]');
+        const durationDay = document.querySelector('input[name="duration_day"]');
+        const durationNight = document.querySelector('input[name="duration_night"]');
+        const startLocation = document.querySelector('input[name="start_location"]');
+        const endLocation = document.querySelector('input[name="end_location"]');
+        const price = document.querySelector('input[name="price"]');
+        const cancellationPolicy = document.querySelector('textarea[name="cancellation_policy"]');
+        const imageInput = document.querySelector('input[name="image"]');
 
-        // Thêm class lỗi
-        element.classList.add('is-invalid');
+        // Hàm hiển thị lỗi
+        function showError(element, message) {
+            const parent = element.closest('.col-12, .col-md-8, .col-md-6, .col-md-4') || element.parentElement;
 
-        // Tạo thông báo lỗi
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.textContent = message;
-        parent.appendChild(errorDiv);
-    }
+            // Xóa lỗi cũ
+            const oldError = parent.querySelector('.error-message');
+            if (oldError) oldError.remove();
 
-    // Hàm xóa lỗi
-    function clearError(element) {
-        element.classList.remove('is-invalid');
-        const parent = element.closest('.col-12, .col-md-8, .col-md-6, .col-md-4') || element.parentElement;
-        const errorDiv = parent.querySelector('.error-message');
-        if (errorDiv) errorDiv.remove();
-    }
+            // Thêm class lỗi
+            element.classList.add('is-invalid');
 
-    // Validate từng trường
-    function validateField(field) {
-        clearError(field);
-
-        if (!field.value.trim()) {
-            showError(field, 'Vui lòng nhập trường này');
-            return false;
+            // Tạo thông báo lỗi
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            parent.appendChild(errorDiv);
         }
 
-        // Validate đặc biệt
-        if (field.name === 'tour_name' && field.value.trim().length < 5) {
-            showError(field, 'Tên tour phải có ít nhất 5 ký tự');
-            return false;
+        // Hàm xóa lỗi
+        function clearError(element) {
+            element.classList.remove('is-invalid');
+            const parent = element.closest('.col-12, .col-md-8, .col-md-6, .col-md-4') || element.parentElement;
+            const errorDiv = parent.querySelector('.error-message');
+            if (errorDiv) errorDiv.remove();
         }
 
-        if (field.name === 'category_id' && field.value === '0') {
-            showError(field, 'Vui lòng chọn danh mục');
-            return false;
-        }
+        // Validate từng trường
+        function validateField(field) {
+            clearError(field);
 
-        if (field.name === 'description' && field.value.trim().length < 20) {
-            showError(field, 'Mô tả phải có ít nhất 20 ký tự');
-            return false;
-        }
+            if (!field.value.trim()) {
+                showError(field, 'Vui lòng nhập trường này');
+                return false;
+            }
 
-        if (field.name === 'duration_day' && field.value < 1) {
-            showError(field, 'Số ngày phải lớn hơn 0');
-            return false;
-        }
+            // Validate đặc biệt
+            if (field.name === 'tour_name' && field.value.trim().length < 5) {
+                showError(field, 'Tên tour phải có ít nhất 5 ký tự');
+                return false;
+            }
 
-        if (field.name === 'duration_night' && field.value < 0) {
-            showError(field, 'Số đêm không được âm');
-            return false;
-        }
+            if (field.name === 'category_id' && field.value === '0') {
+                showError(field, 'Vui lòng chọn danh mục');
+                return false;
+            }
 
-        if (field.name === 'price' && field.value <= 0) {
-            showError(field, 'Giá tour phải lớn hơn 0');
-            return false;
-        }
+            if (field.name === 'description' && field.value.trim().length < 20) {
+                showError(field, 'Mô tả phải có ít nhất 20 ký tự');
+                return false;
+            }
 
-        return true;
-    }
+            if (field.name === 'duration_day' && field.value < 1) {
+                showError(field, 'Số ngày phải lớn hơn 0');
+                return false;
+            }
 
-    // Validate image (optional cho edit)
-    function validateImage(input) {
-        const uploadBox = input.closest('.card-section');
-        const parent = uploadBox.querySelector('.upload-box-inner') || uploadBox;
-        
-        // Xóa lỗi cũ
-        const oldError = uploadBox.querySelector('.error-message');
-        if (oldError) oldError.remove();
-        uploadBox.classList.remove('is-invalid');
+            if (field.name === 'duration_night' && field.value < 0) {
+                showError(field, 'Số đêm không được âm');
+                return false;
+            }
 
-        // Nếu không chọn file mới thì không validate (vì đang edit)
-        if (!input.files || !input.files[0]) {
+            if (field.name === 'price' && field.value <= 0) {
+                showError(field, 'Giá tour phải lớn hơn 0');
+                return false;
+            }
+
             return true;
         }
 
-        const file = input.files[0];
-        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-        const maxSize = 5 * 1024 * 1024; // 5MB
+        // Validate image (optional cho edit)
+        function validateImage(input) {
+            const uploadBox = input.closest('.card-section');
+            const parent = uploadBox.querySelector('.upload-box-inner') || uploadBox;
 
-        if (!allowedTypes.includes(file.type)) {
-            uploadBox.classList.add('is-invalid');
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'error-message text-center mt-2';
-            errorDiv.textContent = 'Chỉ chấp nhận file ảnh (JPG, PNG, GIF)';
-            parent.appendChild(errorDiv);
-            input.value = '';
-            return false;
-        }
+            // Xóa lỗi cũ
+            const oldError = uploadBox.querySelector('.error-message');
+            if (oldError) oldError.remove();
+            uploadBox.classList.remove('is-invalid');
 
-        if (file.size > maxSize) {
-            uploadBox.classList.add('is-invalid');
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'error-message text-center mt-2';
-            errorDiv.textContent = 'Kích thước ảnh không được vượt quá 5MB';
-            parent.appendChild(errorDiv);
-            input.value = '';
-            return false;
-        }
+            // Nếu không chọn file mới thì không validate (vì đang edit)
+            if (!input.files || !input.files[0]) {
+                return true;
+            }
 
-        // Preview ảnh mới
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const label = document.getElementById('uploadLabel');
-            label.innerHTML = `
+            const file = input.files[0];
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+            const maxSize = 5 * 1024 * 1024; // 5MB
+
+            if (!allowedTypes.includes(file.type)) {
+                uploadBox.classList.add('is-invalid');
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message text-center mt-2';
+                errorDiv.textContent = 'Chỉ chấp nhận file ảnh (JPG, PNG, GIF)';
+                parent.appendChild(errorDiv);
+                input.value = '';
+                return false;
+            }
+
+            if (file.size > maxSize) {
+                uploadBox.classList.add('is-invalid');
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message text-center mt-2';
+                errorDiv.textContent = 'Kích thước ảnh không được vượt quá 5MB';
+                parent.appendChild(errorDiv);
+                input.value = '';
+                return false;
+            }
+
+            // Preview ảnh mới
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const label = document.getElementById('uploadLabel');
+                label.innerHTML = `
                 <div class="upload-preview">
                     <img src="${e.target.result}" alt="Preview">
                     <div class="mt-2 upload-text-sub">Click để thay đổi ảnh</div>
                 </div>
             `;
-        };
-        reader.readAsDataURL(file);
+            };
+            reader.readAsDataURL(file);
 
-        return true;
-    }
+            return true;
+        }
 
-    // Lắng nghe sự kiện blur
-    const inputs = [tourName, categoryId, description, durationDay, durationNight, startLocation, endLocation, price, cancellationPolicy];
-    
-    inputs.forEach(input => {
-        input.addEventListener('blur', function() {
-            validateField(this);
-        });
+        // Lắng nghe sự kiện blur
+        const inputs = [tourName, categoryId, description, durationDay, durationNight, startLocation, endLocation, price, cancellationPolicy];
 
-        input.addEventListener('input', function() {
-            if (this.classList.contains('is-invalid')) {
-                clearError(this);
-            }
-        });
-    });
-
-    // Validate image khi chọn
-    imageInput.addEventListener('change', function() {
-        validateImage(this);
-    });
-
-    // Format giá tiền
-    price.addEventListener('input', function() {
-        this.value = this.value.replace(/[^0-9]/g, '');
-    });
-
-    // Giới hạn số ngày/đêm
-    durationDay.addEventListener('input', function() {
-        if (this.value > 365) this.value = 365;
-        if (this.value < 0) this.value = 0;
-    });
-
-    durationNight.addEventListener('input', function() {
-        if (this.value > 365) this.value = 365;
-        if (this.value < 0) this.value = 0;
-    });
-
-    // Submit form
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        let isValid = true;
-
-        // Validate tất cả các trường bắt buộc
         inputs.forEach(input => {
-            if (!validateField(input)) {
-                isValid = false;
-            }
+            input.addEventListener('blur', function () {
+                validateField(this);
+            });
+
+            input.addEventListener('input', function () {
+                if (this.classList.contains('is-invalid')) {
+                    clearError(this);
+                }
+            });
         });
 
-        // Validate image (nếu có chọn file mới)
-        if (imageInput.files && imageInput.files[0]) {
-            if (!validateImage(imageInput)) {
-                isValid = false;
-            }
-        }
+        // Validate image khi chọn
+        imageInput.addEventListener('change', function () {
+            validateImage(this);
+        });
 
-        if (isValid) {
-            // Loading
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Đang cập nhật...';
-            form.submit();
-        } else {
-            // Scroll to first error
-            const firstError = document.querySelector('.is-invalid');
-            if (firstError) {
-                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                firstError.focus();
+        // Format giá tiền
+        price.addEventListener('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        // Giới hạn số ngày/đêm
+        durationDay.addEventListener('input', function () {
+            if (this.value > 365) this.value = 365;
+            if (this.value < 0) this.value = 0;
+        });
+
+        durationNight.addEventListener('input', function () {
+            if (this.value > 365) this.value = 365;
+            if (this.value < 0) this.value = 0;
+        });
+
+        // Submit form
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            let isValid = true;
+
+            // Validate tất cả các trường bắt buộc
+            inputs.forEach(input => {
+                if (!validateField(input)) {
+                    isValid = false;
+                }
+            });
+
+            // Validate image (nếu có chọn file mới)
+            if (imageInput.files && imageInput.files[0]) {
+                if (!validateImage(imageInput)) {
+                    isValid = false;
+                }
             }
-        }
+
+            if (isValid) {
+                // Loading
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Đang cập nhật...';
+                form.submit();
+            } else {
+                // Scroll to first error
+                const firstError = document.querySelector('.is-invalid');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstError.focus();
+                }
+            }
+        });
     });
-});
 </script>

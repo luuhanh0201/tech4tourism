@@ -31,7 +31,10 @@ class TourController
             $endLocation = $_POST['end_location'];
             $description = $_POST['description'];
             $cancellationPolicy = $_POST['cancellation_policy'];
-
+            $imageUrl = $_FILES['image']['name'];
+            if (!empty($imageUrl)) {
+                $imageUrl = uploadFile($_FILES['image']);
+            }
             if (
                 !$tourName ||
                 !$category ||
@@ -43,7 +46,7 @@ class TourController
                 !$description ||
                 !$cancellationPolicy
             ) {
-                $_SESSION["error"] = "Vui lòng điền đủ các trường";
+                // $_SESSION["error"] = "Vui lòng điền đủ các trường";
 
                 header("Location: /dashboard/tours-manager/new-tour");
 
@@ -58,7 +61,8 @@ class TourController
                     $startLocation,
                     $endLocation,
                     $description,
-                    $cancellationPolicy
+                    $cancellationPolicy,
+                    $imageUrl
                 );
 
                 $_SESSION["success"] = "Tạo tour thành công";
@@ -96,7 +100,7 @@ class TourController
             exit;
         }
         $categories = $this->CategoryModel->All();
-        
+
         $tour = $this->TourModel->getDetailTourModel($_GET['id']);
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $tourName = $_POST['tour_name'];
@@ -109,7 +113,31 @@ class TourController
             $description = $_POST['description'];
             $cancellationPolicy = $_POST['cancellation_policy'];
             $id = $_GET['id'];
-            if ($this->TourModel->editTourModel($category, $tourName, $price, $durationDay, $durationNight, $startLocation, $endLocation, $description, $cancellationPolicy, $id)) {
+            $imageUrl = $tour['image_url'] ?? null;
+            if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $uploadPath = uploadFile($_FILES['image']);   // dùng hàm bạn đã có
+                if ($uploadPath) {
+                    $imageUrl = $uploadPath;
+
+            
+                }
+            }
+
+            if (
+                $this->TourModel->editTourModel(
+                    $category,
+                    $tourName,
+                    $price,
+                    $durationDay,
+                    $durationNight,
+                    $startLocation,
+                    $endLocation,
+                    $description,
+                    $cancellationPolicy,
+                    $id,
+                    $imageUrl
+                )
+            ) {
                 $_SESSION["success"] = "Sửa tour thành công";
                 header("Location: /dashboard/tours-manager");
             } else {

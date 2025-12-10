@@ -18,6 +18,7 @@
 
   require_once './commons/env.php'; // Khai báo biến môi trường
   require_once './commons/function.php'; // Hàm hỗ trợ
+  require_once './models/User.php';
   
   require_once './models/User.php';
   require_once __DIR__ . '/controllers/AuthController.php';

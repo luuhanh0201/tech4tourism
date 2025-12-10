@@ -32,14 +32,17 @@ class TourModel
         $startLocation,
         $endLocation,
         $description,
-        $cancellationPolicy
+        $cancellationPolicy,
+        $imageUrl
     ) {
+
         $sql = "INSERT INTO tours (
                         category_id,
                         tour_name,
                         price,
                         duration_day,
                         duration_night,
+                        image_url,
                         start_location,
                         end_location,
                         description,
@@ -49,6 +52,7 @@ class TourModel
                         :price,
                         :duration_day,
                         :duration_night,
+                        :image_url,
                         :start_location,
                         :end_location,
                         :description,
@@ -60,6 +64,7 @@ class TourModel
             "price" => $price,
             "duration_day" => $durationDay,
             "duration_night" => $durationNight,
+            "image_url" => $imageUrl,
             "start_location" => $startLocation,
             "end_location" => $endLocation,
             "description" => $description,
@@ -77,7 +82,8 @@ class TourModel
         $endLocation,
         $description,
         $cancellationPolicy,
-        $id
+        $id,
+        $imageUrl
     ) {
         $sql = "UPDATE tours SET
             category_id = :category_id,
@@ -88,7 +94,8 @@ class TourModel
             start_location = :start_location,
             end_location = :end_location,
             description = :description,
-            cancellation_policy = :cancellation_policy
+            cancellation_policy = :cancellation_policy,
+            image_url = :image_url
         WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
@@ -101,6 +108,7 @@ class TourModel
             "end_location" => $endLocation,
             "description" => $description,
             "cancellation_policy" => $cancellationPolicy,
+            "image_url" => $imageUrl,
             "id" => $id
         ]);
     }
