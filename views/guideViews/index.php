@@ -1,331 +1,9 @@
-
-  <style>
-    .guide-schedule-page {
-      padding-top: 24px;
-      padding-bottom: 40px;
-    }
-    .page-title {
-      font-size: 28px;
-      font-weight: 800;
-      color: #111827;
-    }
-    .btn-toggle-status {
-      border-radius: 999px;
-      padding: 8px 18px;
-      font-size: 14px;
-      font-weight: 600;
-      background: #4b5563;
-      color: #fff;
-      border: none;
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.25);
-    }
-    .btn-toggle-status:hover {
-      background: #374151;
-      color: #fff;
-    }
-    .status-card {
-      background: linear-gradient(90deg, #ff8c00, #ff6b00);
-      color: #ffffff;
-      border-radius: 20px;
-      padding: 22px 28px;
-      box-shadow: 0 12px 32px rgba(148, 64, 0, 0.3);
-      margin-bottom: 28px;
-    }
-    .status-icon-circle {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.14);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      margin-right: 16px;
-    }
-    .status-subtitle {
-      font-size: 14px;
-      font-weight: 500;
-      opacity: 0.95;
-    }
-    .status-title {
-      font-size: 22px;
-      font-weight: 800;
-    }
-    .status-right-label {
-      font-size: 14px;
-      font-weight: 500;
-      opacity: 0.9;
-      margin-bottom: 2px;
-    }
-    .status-right-value {
-      font-size: 24px;
-      font-weight: 800;
-    }
-    .tour-card {
-      border-radius: 22px;
-      border: none;
-      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.10);
-      margin-bottom: 28px;
-    }
-    .tour-title {
-      font-size: 22px;
-      font-weight: 800;
-      color: #111827;
-    }
-    .tour-sub {
-      color: #6b7280;
-      font-size: 14px;
-    }
-    .pill-day {
-      background: #d1fae5;
-      color: #047857;
-      border-radius: 999px;
-      padding: 6px 16px;
-      font-size: 13px;
-      font-weight: 600;
-    }
-    .summary-box {
-      border-radius: 18px;
-      padding: 14px 18px;
-      margin-top: 18px;
-      height: 100%;
-    }
-
-    .summary-label {
-      font-size: 14px;
-      color: #6b7280;
-      margin-bottom: 6px;
-    }
-    .summary-value-main {
-      font-size: 22px;
-      font-weight: 800;
-    }
-    .summary-box.blue {
-      background: #e5f0ff;
-      color: #1d4ed8;
-    }
-    .summary-box.green {
-      background: #ecfdf3;
-      color: #15803d;
-    }
-    .summary-box.purple {
-      background: #f5ebff;
-      color: #7c3aed;
-    }
-    .action-row {
-      margin-top: 22px;
-    }
-    .action-btn {
-      border-radius: 12px;
-      padding: 12px 18px;
-      font-weight: 600;
-      color: #fff;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-size: 14px;
-      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.18);
-    }
-
-    .action-btn i {
-      font-size: 16px;
-    }
-
-    .action-blue {
-      background: #2563eb;
-    }
-
-    .action-green {
-      background: #16a34a;
-    }
-
-    .action-purple {
-      background: #8b5cf6;
-    }
-
-    .action-orange {
-      background: #f97316;
-    }
-
-    .action-btn:hover {
-      opacity: 0.93;
-      color: #fff;
-    }
-
-    /* Timeline card */
-    .timeline-card {
-      border-radius: 22px;
-      border: none;
-      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.12);
-      margin-bottom: 28px;
-    }
-
-    .timeline-title {
-      font-size: 20px;
-      font-weight: 800;
-      color: #111827;
-      margin-bottom: 18px;
-    }
-
-    .timeline-item {
-      border-radius: 16px;
-      padding: 14px 18px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      background: #f9fafb;
-      border-left: 5px solid #e5e7eb;
-    }
-
-    .timeline-time {
-      font-size: 14px;
-      font-weight: 700;
-      color: #111827;
-      min-width: 48px;
-    }
-
-    .timeline-main-title {
-      font-weight: 700;
-      color: #111827;
-      margin-bottom: 4px;
-      font-size: 15px;
-    }
-
-    .timeline-desc {
-      font-size: 13px;
-      color: #6b7280;
-    }
-
-    .timeline-badge {
-      border-radius: 999px;
-      padding: 4px 10px;
-      font-size: 12px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    /* trạng thái item */
-    .timeline-done {
-      background: #ecfdf3;
-      border-left-color: #22c55e;
-    }
-
-    .timeline-done .timeline-badge {
-      background: #bbf7d0;
-      color: #166534;
-    }
-
-    .timeline-running {
-      background: #e5f0ff;
-      border-left-color: #2563eb;
-    }
-
-    .timeline-running .timeline-badge {
-      background: #dbeafe;
-      color: #1d4ed8;
-    }
-
-    .timeline-upcoming {
-      background: #f9fafb;
-      border-left-color: #e5e7eb;
-    }
-
-    .timeline-upcoming .timeline-badge {
-      background: #e5e7eb;
-      color: #4b5563;
-    }
-
-    /* Notes & emergency cards */
-    .note-card,
-    .emergency-card {
-      border-radius: 22px;
-      border: none;
-      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.10);
-      margin-bottom: 24px;
-    }
-
-    .section-heading {
-      font-size: 20px;
-      font-weight: 800;
-      color: #111827;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .section-heading i {
-      color: #ff8c00;
-    }
-
-    .note-item {
-      border-radius: 14px;
-      padding: 12px 16px;
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-
-    .note-title {
-      font-weight: 700;
-      margin-bottom: 3px;
-    }
-
-    .note-desc {
-      font-size: 13px;
-      color: #6b7280;
-    }
-
-    .note-veg {
-      background: #fffbeb;
-      border-left: 4px solid #facc15;
-    }
-
-    .note-diabetes {
-      background: #fef2f2;
-      border-left: 4px solid #ef4444;
-    }
-
-    .note-room {
-      background: #eff6ff;
-      border-left: 4px solid #2563eb;
-    }
-
-    .note-kid {
-      background: #f5f3ff;
-      border-left: 4px solid #8b5cf6;
-    }
-
-    .emergency-item {
-      border-radius: 14px;
-      background: #f9fafb;
-      padding: 12px 16px;
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-
-    .emergency-label {
-      color: #6b7280;
-      margin-bottom: 4px;
-    }
-
-    .emergency-value {
-      font-weight: 700;
-      font-size: 15px;
-      color: #111827;
-    }
-  </style>
-
-
-
 <div class="container py-5">
 
   <!-- Title + toggle -->
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="page-title mb-0">Lịch Làm Việc - HDV</h1>
-    
+
   </div>
 
   <!-- Status card -->
@@ -551,5 +229,341 @@
 
 </div>
 
+<style>
+  .guide-schedule-page {
+    padding-top: 24px;
+    padding-bottom: 40px;
+  }
 
+  .page-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #111827;
+  }
 
+  .btn-toggle-status {
+    border-radius: 999px;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    background: #4b5563;
+    color: #fff;
+    border: none;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.25);
+  }
+
+  .btn-toggle-status:hover {
+    background: #374151;
+    color: #fff;
+  }
+
+  .status-card {
+    background: linear-gradient(90deg, #ff8c00, #ff6b00);
+    color: #ffffff;
+    border-radius: 20px;
+    padding: 22px 28px;
+    box-shadow: 0 12px 32px rgba(148, 64, 0, 0.3);
+    margin-bottom: 28px;
+  }
+
+  .status-icon-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin-right: 16px;
+  }
+
+  .status-subtitle {
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.95;
+  }
+
+  .status-title {
+    font-size: 22px;
+    font-weight: 800;
+  }
+
+  .status-right-label {
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.9;
+    margin-bottom: 2px;
+  }
+
+  .status-right-value {
+    font-size: 24px;
+    font-weight: 800;
+  }
+
+  .tour-card {
+    border-radius: 22px;
+    border: none;
+    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.10);
+    margin-bottom: 28px;
+  }
+
+  .tour-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #111827;
+  }
+
+  .tour-sub {
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  .pill-day {
+    background: #d1fae5;
+    color: #047857;
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .summary-box {
+    border-radius: 18px;
+    padding: 14px 18px;
+    margin-top: 18px;
+    height: 100%;
+  }
+
+  .summary-label {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 6px;
+  }
+
+  .summary-value-main {
+    font-size: 22px;
+    font-weight: 800;
+  }
+
+  .summary-box.blue {
+    background: #e5f0ff;
+    color: #1d4ed8;
+  }
+
+  .summary-box.green {
+    background: #ecfdf3;
+    color: #15803d;
+  }
+
+  .summary-box.purple {
+    background: #f5ebff;
+    color: #7c3aed;
+  }
+
+  .action-row {
+    margin-top: 22px;
+  }
+
+  .action-btn {
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-weight: 600;
+    color: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.18);
+  }
+
+  .action-btn i {
+    font-size: 16px;
+  }
+
+  .action-blue {
+    background: #2563eb;
+  }
+
+  .action-green {
+    background: #16a34a;
+  }
+
+  .action-purple {
+    background: #8b5cf6;
+  }
+
+  .action-orange {
+    background: #f97316;
+  }
+
+  .action-btn:hover {
+    opacity: 0.93;
+    color: #fff;
+  }
+
+  /* Timeline card */
+  .timeline-card {
+    border-radius: 22px;
+    border: none;
+    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.12);
+    margin-bottom: 28px;
+  }
+
+  .timeline-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 18px;
+  }
+
+  .timeline-item {
+    border-radius: 16px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: #f9fafb;
+    border-left: 5px solid #e5e7eb;
+  }
+
+  .timeline-time {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+    min-width: 48px;
+  }
+
+  .timeline-main-title {
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 4px;
+    font-size: 15px;
+  }
+
+  .timeline-desc {
+    font-size: 13px;
+    color: #6b7280;
+  }
+
+  .timeline-badge {
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* trạng thái item */
+  .timeline-done {
+    background: #ecfdf3;
+    border-left-color: #22c55e;
+  }
+
+  .timeline-done .timeline-badge {
+    background: #bbf7d0;
+    color: #166534;
+  }
+
+  .timeline-running {
+    background: #e5f0ff;
+    border-left-color: #2563eb;
+  }
+
+  .timeline-running .timeline-badge {
+    background: #dbeafe;
+    color: #1d4ed8;
+  }
+
+  .timeline-upcoming {
+    background: #f9fafb;
+    border-left-color: #e5e7eb;
+  }
+
+  .timeline-upcoming .timeline-badge {
+    background: #e5e7eb;
+    color: #4b5563;
+  }
+
+  /* Notes & emergency cards */
+  .note-card,
+  .emergency-card {
+    border-radius: 22px;
+    border: none;
+    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.10);
+    margin-bottom: 24px;
+  }
+
+  .section-heading {
+    font-size: 20px;
+    font-weight: 800;
+    color: #111827;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .section-heading i {
+    color: #ff8c00;
+  }
+
+  .note-item {
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+
+  .note-title {
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+
+  .note-desc {
+    font-size: 13px;
+    color: #6b7280;
+  }
+
+  .note-veg {
+    background: #fffbeb;
+    border-left: 4px solid #facc15;
+  }
+
+  .note-diabetes {
+    background: #fef2f2;
+    border-left: 4px solid #ef4444;
+  }
+
+  .note-room {
+    background: #eff6ff;
+    border-left: 4px solid #2563eb;
+  }
+
+  .note-kid {
+    background: #f5f3ff;
+    border-left: 4px solid #8b5cf6;
+  }
+
+  .emergency-item {
+    border-radius: 14px;
+    background: #f9fafb;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+
+  .emergency-label {
+    color: #6b7280;
+    margin-bottom: 4px;
+  }
+
+  .emergency-value {
+    font-weight: 700;
+    font-size: 15px;
+    color: #111827;
+  }
+</style>

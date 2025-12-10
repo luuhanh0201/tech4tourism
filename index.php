@@ -21,6 +21,8 @@
   require_once './models/User.php';
   
   require_once './models/User.php';
+   require_once __DIR__ . '/models/CustomerModel.php';
+
   require_once __DIR__ . '/controllers/AuthController.php';
   require_once __DIR__ . '/controllers/CategoryController.php';
   require_once __DIR__ . '/controllers/DashboardController.php';
@@ -67,6 +69,7 @@
     '/dashboard/booking-manager' => $bookingController->index(),
     '/dashboard/booking-manager/create-booking' => $bookingController->createBooking(),
     '/dashboard/booking-manager/edit-booking' => $bookingController->editBooking(),
+    '/dashboard/booking-manager/detail' => $bookingController->detailBooking(),
     '/dashboard' => $dashboardController->Dashboard(),
     "/guide" => $guideController->index(),
     default => include './views/errorPage.php',

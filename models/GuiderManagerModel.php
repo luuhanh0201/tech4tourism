@@ -7,7 +7,7 @@ class GuiderManagerModel
         $this->conn = connectDB();
     }
 
-    public function getAllGuider()
+    public function getAllGuider($status = null)
     {
         $sql = "SELECT
         users.id,
@@ -24,11 +24,26 @@ class GuiderManagerModel
         guide_profiles.certifications,
         guide_profiles.language,
         guide_profiles.rate,
-        guide_profiles.bio FROM users JOIN roles ON roles.user_id = users.id JOIN guide_profiles ON guide_profiles.user_id = users.id WHERE roles.role = 'guide'";
+        guide_profiles.bio
+    FROM users
+    JOIN roles ON roles.user_id = users.id
+    JOIN guide_profiles ON guide_profiles.user_id = users.id
+    WHERE roles.role = 'guide'";
+
+        if ($status !== null && $status !== '') {
+            $sql .= " AND guide_profiles.status = :status";
+        }
+
         $stmt = $this->conn->prepare($sql);
+
+        if ($status !== null && $status !== '') {
+            $stmt->bindValue(':status', $status, PDO::PARAM_STR);
+        }
+
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
     public function getDetailGuide($id)
     {
         $sql = "SELECT

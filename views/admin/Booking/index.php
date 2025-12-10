@@ -15,8 +15,10 @@
         <div class="mb-2 mb-sm-0">
             <select class="form-select tours-filter">
                 <option value="">Tất cả trạng thái</option>
-                <option value="active">Hoạt động</option>
-                <option value="inactive">Ngừng hoạt động</option>
+                <option value="pending">Chờ xác nhận</option>
+                <option value="confirmed">Đã xác nhận</option>
+                <option value="done">Đã hoàn thành</option>
+                <option value="canceled">Đã huỷ</option>
             </select>
         </div>
     </div>
@@ -27,7 +29,7 @@
                     <th>STT</th>
                     <th>Booking code</th>
                     <th>Đại diện</th>
-                    <th>Số lượng</th>
+                    <th>Số khách</th>
                     <th>Tổng thanh toán</th>
                     <th>Trạng thái</th>
                     <th>Thao tác</th>
@@ -42,7 +44,7 @@
 
                     $mapStatus = [
                         'confirmed' => ['class' => 'status-confirmed', 'label' => 'Đã xác nhận'],
-                        'pending' => ['class' => 'status-pending', 'label' => 'Đang chờ'],
+                        'pending' => ['class' => 'status-pending', 'label' => 'Chờ xác nhận'],
                         'done' => ['class' => 'status-done', 'label' => 'Đã hoàn thành'],
                         'canceled' => ['class' => 'status-canceled', 'label' => 'Đã Huỷ'],
                     ];
@@ -64,10 +66,15 @@
                         <td>
                             <a href="booking-manager/detail?id=<?= $booking['id'] ?>" class="text-primary mx-2"><i
                                     class="fa-solid fa-eye"></i></a>
-                            <a href="booking-manager/edit-booking?id=<?= $booking['id'] ?>" class="text-success mx-2"><i
-                                    class="fa-solid fa-pen"></i></a>
-                            <a href="booking-manager/delete-booking?id=<?= $booking['id'] ?>" class="text-danger mx-2"><i
-                                    class="fa-solid fa-trash"></i></a>
+                            <?php if ($booking['status'] === "done" || $booking['status'] === "canceled"): ?>
+                                <button class="icon-btn icon-btn--disabled" disabled title="Không thể chỉnh sửa đơn hàng này"
+                                    aria-label="Không thể chỉnh sửa đơn hàng này">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                            <?php else: ?>
+                                <a href="booking-manager/edit-booking?id=<?= $booking['id'] ?>" class="text-success mx-2"><i
+                                        class="fa-solid fa-pen"></i></a>
+                            <?php endif; ?>
                         </td>
                     </tr>
 
@@ -79,6 +86,37 @@
     </div>
 </div>
 <style>
+    .icon-btn {
+        border: none;
+        background: transparent;
+        color: #9ca3af;
+        padding: 6px 10px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        line-height: 1;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.1);
+        transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+    }
+
+    .icon-btn i {
+        pointer-events: none;
+    }
+
+    .icon-btn--disabled {
+        cursor: not-allowed;
+        opacity: 0.7;
+        box-shadow: none;
+    }
+
+    .icon-btn:not(:disabled):hover {
+        background: #e5e7eb;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(15, 23, 42, 0.12);
+    }
+
     .status-badge {
         display: inline-block;
         padding: 4px 10px;
