@@ -70,11 +70,8 @@ function loginUser($user)
 function logoutUser()
 {
     startSession();
-    unset($_SESSION['user_id']);
-    unset($_SESSION['user_fullName']);
-    unset($_SESSION['user_email']);
-    unset($_SESSION['user_role']);
-    unset($_SESSION['user_avatar']);
+    unset($_SESSION['user']);
+
     session_destroy();
 }
 
@@ -83,7 +80,7 @@ function logoutUser()
 function isLoggedIn()
 {
     startSession();
-    return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
+    return isset($_SESSION['user']) && !empty($_SESSION['user']);
 }
 
 // Lấy thông tin user hiệ
