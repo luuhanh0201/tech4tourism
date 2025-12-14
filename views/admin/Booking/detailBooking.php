@@ -302,7 +302,7 @@ $totalPrice = floatval($booking['total_price']);
     }
 
     .section-title i {
-        color: #ff8a65;
+        color: var(--color-primary);
     }
 
     .status-badge {
@@ -342,7 +342,7 @@ $totalPrice = floatval($booking['total_price']);
         background: #f8f9fa;
         padding: 20px;
         border-radius: 8px;
-        border-left: 4px solid #ff8a65;
+        border-left: 4px solid var(--color-primary);
     }
 
     .tour-header {
@@ -356,13 +356,13 @@ $totalPrice = floatval($booking['total_price']);
         flex-wrap: wrap;
         gap: 15px;
         font-size: 0.875rem;
-        color: #666;
+        color: var(--color-text-sub);
     }
 
     .tour-price {
         font-size: 1.5rem;
         font-weight: 700;
-        color: #ff8a65;
+        color: var(--color-primary);
     }
 
     .info-item {
@@ -378,7 +378,7 @@ $totalPrice = floatval($booking['total_price']);
     }
 
     .info-item .label {
-        color: #666;
+        color: var(--color-text-sub);
         font-weight: 500;
     }
 
@@ -397,7 +397,7 @@ $totalPrice = floatval($booking['total_price']);
 
     .summary-card {
         background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
-        border: 2px solid #ff8a65;
+        border: 2px solid var(--color-primary);
     }
 
     .summary-item {
@@ -415,11 +415,11 @@ $totalPrice = floatval($booking['total_price']);
         padding: 15px 0;
         font-size: 1.3rem;
         font-weight: 700;
-        color: #ff8a65;
+        color: var(--color-primary);
     }
 
     .btn-primary {
-        background-color: #ff8a65;
+        background-color: var(--color-primary);
         border: none;
         border-radius: 8px;
         padding: 10px 20px;
@@ -427,7 +427,7 @@ $totalPrice = floatval($booking['total_price']);
     }
 
     .btn-primary:hover {
-        background-color: #ff6f47;
+        background-color: var(--color-primary-dark);
     }
 
     .table {

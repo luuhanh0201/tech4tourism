@@ -1,6 +1,5 @@
 <?php
-require './models/TourModel.php';
-require './models/CategoryModel.php';
+
 class TourController
 {
     protected $TourModel;

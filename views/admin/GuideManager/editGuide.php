@@ -178,7 +178,7 @@
     }
 
     .btn-change-avatar:hover {
-        background: #ff8a65;
+        background: var(--color-primary);
         color: #fff;
     }
 

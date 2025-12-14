@@ -317,7 +317,7 @@
         }
 
         .feature-card p {
-            color: #666;
+            color: var(--color-text-sub);
             font-size: 1rem;
             line-height: 1.7;
         }

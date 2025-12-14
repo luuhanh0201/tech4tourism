@@ -1,5 +1,4 @@
 <?php
-require './models/GuiderManagerModel.php';
 class GuiderManagerController
 {
     protected $GuiderManagerModel;

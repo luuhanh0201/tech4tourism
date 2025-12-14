@@ -1,569 +1,454 @@
-<div class="container py-5">
-
-  <!-- Title + toggle -->
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="page-title mb-0">Lịch Làm Việc - HDV</h1>
-
-  </div>
-
-  <!-- Status card -->
-  <div class="status-card d-flex justify-content-between align-items-center flex-wrap">
-    <div class="d-flex align-items-center mb-2 mb-md-0">
-      <div class="status-icon-circle">
-        <i class="fa-solid fa-user-group"></i>
+  <div class="container py-5">
+  <div id="free-view" class="dashboard-view active">
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i style="font-size: 32px;" class="fa-solid fa-star"></i>
+        </div>
+        <div class="stat-value"><?= $guide['rate'] ?>/5</div>
+        <div class="stat-label">Đánh Giá Trung Bình</div>
       </div>
-      <div>
-        <div class="status-subtitle">Trạng thái hiện tại</div>
-        <div class="status-title">Đang dẫn tour</div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i style="font-size: 32px;" class="fa-solid fa-flag-checkered"></i>
+        </div>
+        <div class="stat-value">127</div>
+        <div class="stat-label">Tour Hoàn Thành</div>
       </div>
-    </div>
-    <div class="text-md-end">
-      <div class="status-right-label">Số khách</div>
-      <div class="status-right-value">22/25</div>
-    </div>
-  </div>
-
-  <!-- Tour card -->
-  <div class="card tour-card">
-    <div class="card-body p-4">
-      <div class="d-flex justify-content-between align-items-start mb-2">
-        <div>
-          <div class="tour-title">Tour Nhật Bản </div>
-          <div class="tour-sub">
-            20/12/2025 - 27/12/2025 (7 ngày 6 đêm)
-          </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i style="font-size: 32px;" class="fa-solid fa-calendar-check"></i>
         </div>
-        <div class="ms-3">
-          <span class="pill-day">Ngày 3/7</span>
-        </div>
-      </div>
-
-      <!-- Summary -->
-      <div class="row g-3">
-        <div class="col-md-4">
-          <div class="summary-box blue">
-            <div class="summary-label">Số khách</div>
-            <div class="summary-value-main">22</div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="summary-box green">
-            <div class="summary-label">Điểm tham quan</div>
-            <div class="summary-value-main">5/12</div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="summary-box purple">
-            <div class="summary-label">Còn lại</div>
-            <div class="summary-value-main">4 ngày</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div class="row g-3 action-row">
-        <div class="col-md-12">
-          <button class="w-100 action-btn action-blue">
-            <i class="fa-solid fa-users"></i>
-            Xem danh sách khách (22)
-          </button>
-        </div>
-        <div class="col-md-6">
-          <button class="w-100 action-btn action-green">
-            <i class="fa-solid fa-circle-check"></i>
-            Điểm danh
-          </button>
-        </div>
-        <div class="col-md-6">
-          <button class="w-100 action-btn action-purple">
-            <i class="fa-solid fa-book-open"></i>
-            Nhật ký tour
-          </button>
-        </div>
-        <div class="col-md-12">
-          <button class="w-100 action-btn action-orange">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            Báo cáo sự cố
-          </button>
-        </div>
+        <div class="stat-value">0</div>
+        <div class="stat-label">Tour Đang Thực Hiện</div>
       </div>
     </div>
-  </div>
 
-  <!-- Timeline today -->
-  <div class="card timeline-card">
-    <div class="card-body p-4">
-      <div class="timeline-title mb-3">Lịch Trình Hôm Nay - 22/12/2025</div>
-
-      <!-- item 1 -->
-      <div class="timeline-item timeline-done">
-        <div class="timeline-time text-center">
-          <div class="mb-1"><i class="fa-regular fa-clock"></i></div>
-          8:00
+    <!-- Empty State -->
+    <div class="card-section">
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i style="font-size: 100px;" class="fa-solid fa-calendar-day"></i>
         </div>
-        <div class="flex-grow-1">
-          <div class="timeline-main-title">
-            ✓ Tập trung khách sạn
-          </div>
-          <div class="timeline-desc">
-            Điểm danh: 22/22 khách có mặt
-          </div>
+        <div class="empty-title">Bạn Chưa Có Tour Nào</div>
+        <div class="empty-text">
+          Hiện tại bạn đang rảnh và sẵn sàng nhận tour mới.<br>
+          Admin sẽ phân công tour phù hợp cho bạn.
         </div>
-        <div>
-          <span class="timeline-badge">Hoàn thành</span>
-        </div>
+        <button class="btn-action btn-primary-custom">
+          <i class="fa-solid fa-bell me-2"></i>Bật Thông Báo
+        </button>
       </div>
+    </div>
 
-      <!-- item 2 -->
-      <div class="timeline-item timeline-running">
-        <div class="timeline-time text-center">
-          <div class="mb-1"><i class="fa-regular fa-clock"></i></div>
-          10:00
+    <!-- Tour được phân công -->
+    <?php if (!empty($detailAssignment)): ?>
+      <div class="card-section">
+        <h5 class="section-title">
+          <i class="fa-solid fa-clipboard-list"></i>
+          Tour Được Phân Công (<?=count($detailAssignment)?>)
+        </h5>
+
+        <div class="alert-custom alert-info-custom">
+          <i class="fa-solid fa-info-circle me-2"></i>
+          <strong>Có tour mới</strong> được admin phân công cho bạn. Hãy xác nhận nhận tour!
         </div>
-        <div class="flex-grow-1">
-          <div class="timeline-main-title">
-            <i class="fa-solid fa-circle-play text-primary me-1"></i>
-            Thăm Chùa Vàng (Kinkaku-ji)
+
+        <!-- Tour 1 -->
+        <div class="tour-card">
+          <div class="tour-header">
+            <div>
+              <div class="tour-title"><?= $detailAssignment['tour_name'] ?> (<?= $detailAssignment['tour_duration_day'] ?>
+                ngày <?= $detailAssignment['tour_duration_night'] ?> đêm)</div>
+              <div class="tour-code"><?= $detailAssignment['booking_code'] ?> - Được phân công bởi
+                <b><?= $detailAssignment['created_by_name'] ?></b>
+              </div>
+            </div>
+            <span class="tour-status status-assigned">
+              <i class="fa-solid fa-clock me-1"></i>Chờ Xác Nhận
+            </span>
           </div>
-          <div class="timeline-desc">
-            Hướng dẫn 2 tiếng, chú ý giữ trật tự
+
+          <div class="tour-info">
+            <div class="info-item">
+              <i class="fa-solid fa-calendar"></i>
+              <span><?= $detailAssignment['assignment_started_at'] ?> đến
+                <?= $detailAssignment['assignment_ended_at'] ?></span>
+            </div>
+            <div class="info-item">
+              <i class="fa-solid fa-users"></i>
+              <span>4 người</span>
+            </div>
+            <div class="info-item pb-4">
+              <i class="fa-solid fa-money-bill-wave"></i>
+              <span><?= number_format($detailAssignment['booking_total_price']) ?>đ</span>
+            </div>
           </div>
+          <?= $detailAssignment['assignment_notes'] ? '<div class="alert-custom alert-warning-custom"><i class="fa-solid fa-exclamation-triangle me-2"></i> <strong>Lưu ý:</strong></div>' . $detailAssignment['assignment_notes'] : "" ?>
+
+          <form method="post" class="tour-actions">
+            <button type="submit" class="btn-action btn-primary-custom">
+              <i class="fa-solid fa-check me-2"></i>Xác Nhận Nhận Tour
+            </button>
+            <a href="#" class="btn-action btn-outline-custom">
+              <i class="fa-solid fa-info-circle me-2"></i>Chi Tiết
+            </a>
+          </form>
         </div>
-        <div>
-          <span class="timeline-badge">Đang diễn ra</span>
-        </div>
+
+
       </div>
-
-      <!-- item 3 -->
-      <div class="timeline-item timeline-upcoming">
-        <div class="timeline-time text-center">
-          <div class="mb-1"><i class="fa-regular fa-clock"></i></div>
-          12:30
-        </div>
-        <div class="flex-grow-1">
-          <div class="timeline-main-title">
-            Ăn trưa - Nhà hàng Sakura
+    <?php endif; ?>
+    <div class="card-section">
+      <h5 class="section-title">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        Tour Gần Đây
+      </h5>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-marker completed"></div>
+          <div class="timeline-content completed">
+            <div class="timeline-time">05-08/12/2024</div>
+            <div class="timeline-text">
+              <strong>Tour Nha Trang 3N2Đ</strong> - Hoàn thành xuất sắc
+              <div class="mt-2">
+                <i class="fa-solid fa-star text-warning"></i>
+                <i class="fa-solid fa-star text-warning"></i>
+                <i class="fa-solid fa-star text-warning"></i>
+                <i class="fa-solid fa-star text-warning"></i>
+                <i class="fa-solid fa-star text-warning"></i>
+                <span class="ms-2">5.0 - "HDV rất nhiệt tình!"</span>
+              </div>
+            </div>
           </div>
-          <div class="timeline-desc">
-            Set menu đặc biệt, 3 khách ăn chay
-          </div>
-        </div>
-        <div>
-          <span class="timeline-badge">Sắp tới</span>
-        </div>
-      </div>
-
-      <!-- item 4 -->
-      <div class="timeline-item timeline-upcoming mb-1">
-        <div class="timeline-time text-center">
-          <div class="mb-1"><i class="fa-regular fa-clock"></i></div>
-          15:00
-        </div>
-        <div class="flex-grow-1">
-          <div class="timeline-main-title">
-            Tham quan Phố Cổ Gion
-          </div>
-          <div class="timeline-desc">
-            Tự do chụp ảnh, tập trung 17:30
-          </div>
-        </div>
-        <div>
-          <span class="timeline-badge">Sắp tới</span>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Important notes -->
-  <div class="card note-card">
-    <div class="card-body p-4">
-      <div class="section-heading">
-        <i class="fa-solid fa-triangle-exclamation"></i>
-        <span>Ghi Chú Quan Trọng</span>
-      </div>
-
-      <div class="note-item note-veg">
-        <div class="note-title">Ăn chay: 3 khách</div>
-        <div class="note-desc">Bà Lan (phòng 302), Chị Hoa, Anh Minh</div>
-      </div>
-
-      <div class="note-item note-diabetes">
-        <div class="note-title">Tiểu đường: 1 khách</div>
-        <div class="note-desc">Ông Tuấn (phòng 205) - cần ăn đúng giờ</div>
-      </div>
-
-      <div class="note-item note-room">
-        <div class="note-title">Phòng đơn: 2 yêu cầu</div>
-        <div class="note-desc">Phòng 401 và 402</div>
-      </div>
-
-      <div class="note-item note-kid mb-1">
-        <div class="note-title">Trẻ em: 4 em nhỏ</div>
-        <div class="note-desc">Độ tuổi: 5–10 tuổi, cần chú ý an toàn</div>
-      </div>
-    </div>
-  </div>
-  <div class="card emergency-card">
-    <div class="card-body p-4">
-      <div class="section-heading">
-        <i class="fa-solid fa-phone-volume"></i>
-        <span>Liên Hệ Khẩn Cấp</span>
-      </div>
-
-      <div class="emergency-item">
-        <div class="emergency-label">Văn phòng Hà Nội</div>
-        <div class="emergency-value">024-3456-7890</div>
-      </div>
-
-      <div class="emergency-item">
-        <div class="emergency-label">Đại diện Nhật Bản</div>
-        <div class="emergency-value">+81-3-1234-5678</div>
-      </div>
-
-      <div class="emergency-item mb-1">
-        <div class="emergency-label">Cấp cứu địa phương</div>
-        <div class="emergency-value">119</div>
-      </div>
-    </div>
-  </div>
-
 </div>
-
 <style>
-  .guide-schedule-page {
-    padding-top: 24px;
-    padding-bottom: 40px;
+  .dashboard-view {
+    display: none;
   }
 
-  .page-title {
-    font-size: 28px;
-    font-weight: 800;
-    color: #111827;
+  .dashboard-view.active {
+    display: block;
   }
 
-  .btn-toggle-status {
-    border-radius: 999px;
-    padding: 8px 18px;
-    font-size: 14px;
-    font-weight: 600;
-    background: #4b5563;
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
     color: #fff;
-    border: none;
-    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.25);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: var(--shadow-primary);
   }
 
-  .btn-toggle-status:hover {
-    background: #374151;
-    color: #fff;
+  .stat-icon {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+    opacity: 0.9;
   }
 
-  .status-card {
-    background: linear-gradient(90deg, #ff8c00, #ff6b00);
-    color: #ffffff;
-    border-radius: 20px;
-    padding: 22px 28px;
-    box-shadow: 0 12px 32px rgba(148, 64, 0, 0.3);
-    margin-bottom: 28px;
+  .stat-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 4px;
   }
 
-  .status-icon-circle {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.14);
+  .stat-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+
+  /* ==== CARD SECTION ==== */
+  .card-section {
+    background: #fff;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 22px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .card-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #333;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 26px;
-    margin-right: 16px;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f0f0f0;
   }
 
-  .status-subtitle {
-    font-size: 14px;
-    font-weight: 500;
-    opacity: 0.95;
+  .section-title i {
+    color: var(--color-primary);
   }
 
-  .status-title {
+  /* ==== EMPTY STATE ==== */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .empty-icon {
     font-size: 22px;
-    font-weight: 800;
+    color: var(--color-primary);
+    opacity: 0.3;
+    margin-bottom: 15px;
   }
 
-  .status-right-label {
-    font-size: 14px;
-    font-weight: 500;
-    opacity: 0.9;
-    margin-bottom: 2px;
+  .empty-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--color-text-sub);
+    margin-bottom: 8px;
   }
 
-  .status-right-value {
-    font-size: 24px;
-    font-weight: 800;
+  .empty-text {
+    color: #999;
+    margin-bottom: 20px;
   }
 
+  /* ==== TOUR CARD ==== */
   .tour-card {
-    border-radius: 22px;
-    border: none;
-    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.10);
-    margin-bottom: 28px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 16px;
+    border: 1.5px solid #f0f0f0;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .tour-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 3px 12px rgba(255, 138, 101, 0.2);
+  }
+
+  .tour-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
   }
 
   .tour-title {
-    font-size: 22px;
-    font-weight: 800;
-    color: #111827;
-  }
-
-  .tour-sub {
-    color: #6b7280;
-    font-size: 14px;
-  }
-
-  .pill-day {
-    background: #d1fae5;
-    color: #047857;
-    border-radius: 999px;
-    padding: 6px 16px;
-    font-size: 13px;
-    font-weight: 600;
-  }
-
-  .summary-box {
-    border-radius: 18px;
-    padding: 14px 18px;
-    margin-top: 18px;
-    height: 100%;
-  }
-
-  .summary-label {
-    font-size: 14px;
-    color: #6b7280;
-    margin-bottom: 6px;
-  }
-
-  .summary-value-main {
-    font-size: 22px;
-    font-weight: 800;
-  }
-
-  .summary-box.blue {
-    background: #e5f0ff;
-    color: #1d4ed8;
-  }
-
-  .summary-box.green {
-    background: #ecfdf3;
-    color: #15803d;
-  }
-
-  .summary-box.purple {
-    background: #f5ebff;
-    color: #7c3aed;
-  }
-
-  .action-row {
-    margin-top: 22px;
-  }
-
-  .action-btn {
-    border-radius: 12px;
-    padding: 12px 18px;
-    font-weight: 600;
-    color: #fff;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 14px;
-    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.18);
-  }
-
-  .action-btn i {
-    font-size: 16px;
-  }
-
-  .action-blue {
-    background: #2563eb;
-  }
-
-  .action-green {
-    background: #16a34a;
-  }
-
-  .action-purple {
-    background: #8b5cf6;
-  }
-
-  .action-orange {
-    background: #f97316;
-  }
-
-  .action-btn:hover {
-    opacity: 0.93;
-    color: #fff;
-  }
-
-  /* Timeline card */
-  .timeline-card {
-    border-radius: 22px;
-    border: none;
-    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.12);
-    margin-bottom: 28px;
-  }
-
-  .timeline-title {
-    font-size: 20px;
-    font-weight: 800;
-    color: #111827;
-    margin-bottom: 18px;
-  }
-
-  .timeline-item {
-    border-radius: 16px;
-    padding: 14px 18px;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    background: #f9fafb;
-    border-left: 5px solid #e5e7eb;
-  }
-
-  .timeline-time {
-    font-size: 14px;
+    font-size: 1.1rem;
     font-weight: 700;
-    color: #111827;
-    min-width: 48px;
-  }
-
-  .timeline-main-title {
-    font-weight: 700;
-    color: #111827;
+    color: #333;
     margin-bottom: 4px;
-    font-size: 15px;
   }
 
-  .timeline-desc {
-    font-size: 13px;
-    color: #6b7280;
+  .tour-code {
+    color: var(--color-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
   }
 
-  .timeline-badge {
-    border-radius: 999px;
-    padding: 4px 10px;
-    font-size: 12px;
+  .tour-status {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
     font-weight: 600;
     white-space: nowrap;
   }
 
-  /* trạng thái item */
-  .timeline-done {
-    background: #ecfdf3;
-    border-left-color: #22c55e;
+  .status-ongoing {
+    background: #d6f5d6;
+    color: #1a8f1a;
   }
 
-  .timeline-done .timeline-badge {
-    background: #bbf7d0;
-    color: #166534;
+  .status-upcoming {
+    background: #e3f2fd;
+    color: #1976d2;
   }
 
-  .timeline-running {
-    background: #e5f0ff;
-    border-left-color: #2563eb;
+  .status-assigned {
+    background: #fff4e6;
+    color: #f57c00;
   }
 
-  .timeline-running .timeline-badge {
-    background: #dbeafe;
-    color: #1d4ed8;
+  .tour-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 10px 16px;
+    margin-bottom: 12px;
   }
 
-  .timeline-upcoming {
-    background: #f9fafb;
-    border-left-color: #e5e7eb;
-  }
-
-  .timeline-upcoming .timeline-badge {
-    background: #e5e7eb;
-    color: #4b5563;
-  }
-
-  /* Notes & emergency cards */
-  .note-card,
-  .emergency-card {
-    border-radius: 22px;
-    border: none;
-    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.10);
-    margin-bottom: 24px;
-  }
-
-  .section-heading {
-    font-size: 20px;
-    font-weight: 800;
-    color: #111827;
+  .info-item {
     display: flex;
     align-items: center;
+    gap: 8px;
+    color: var(--color-text-sub);
+    font-size: 0.95rem;
+  }
+
+  .info-item i {
+    color: var(--color-primary);
+    width: 18px;
+    text-align: center;
+  }
+
+  .tour-actions {
+    display: flex;
+    flex-wrap: wrap;
     gap: 10px;
-    margin-bottom: 16px;
   }
 
-  .section-heading i {
-    color: #ff8c00;
+  /* ==== BUTTONS ==== */
+  .btn-action {
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
   }
 
-  .note-item {
-    border-radius: 14px;
-    padding: 12px 16px;
-    margin-bottom: 8px;
-    font-size: 14px;
+  .btn-primary-custom {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: #fff;
   }
 
-  .note-title {
-    font-weight: 700;
-    margin-bottom: 3px;
+  .btn-primary-custom:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(255, 138, 101, 0.4);
   }
 
-  .note-desc {
-    font-size: 13px;
-    color: #6b7280;
+  .btn-outline-custom {
+    background: #fff;
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
   }
 
-  .note-veg {
-    background: #fffbeb;
-    border-left: 4px solid #facc15;
+  .btn-outline-custom:hover {
+    background: var(--color-primary);
+    color: #fff;
   }
 
-  .note-diabetes {
-    background: #fef2f2;
-    border-left: 4px solid #ef4444;
+  /* ==== ALERTS ==== */
+  .alert-custom {
+    border-radius: 10px;
+    border-left: 4px solid;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
-  .note-room {
-    background: #eff6ff;
-    border-left: 4px solid #2563eb;
+  .alert-warning-custom {
+    background: #fff4e6;
+    border-color: #f57c00;
+    color: #f57c00;
   }
 
-  .note-kid {
-    background: #f5f3ff;
-    border-left: 4px solid #8b5cf6;
+  .alert-info-custom {
+    background: var(--color-primary-soft);
+    border-color: var(--color-primary);
+    color: var(--color-primary-dark);
   }
 
-  .emergency-item {
-    border-radius: 14px;
-    background: #f9fafb;
-    padding: 12px 16px;
-    margin-bottom: 8px;
-    font-size: 14px;
+  /* ==== TIMELINE ==== */
+  .timeline {
+    position: relative;
+    padding-left: 30px;
   }
 
-  .emergency-label {
-    color: #6b7280;
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e0e0e0;
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .timeline-marker {
+    position: absolute;
+    left: -26px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid var(--color-primary);
+  }
+
+  .timeline-marker.completed {
+    background: #4caf50;
+    border-color: #4caf50;
+  }
+
+  .timeline-marker.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(255, 138, 101, 0.2);
+  }
+
+  .timeline-content {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  .timeline-content.completed {
+    background: #d6f5d6;
+  }
+
+  .timeline-content.active {
+    background: var(--color-primary-soft);
+    border: 2px solid var(--color-primary);
+  }
+
+  .timeline-time {
+    font-size: 0.85rem;
+    color: #999;
     margin-bottom: 4px;
+    font-weight: 600;
   }
 
-  .emergency-value {
-    font-weight: 700;
-    font-size: 15px;
-    color: #111827;
+  .timeline-text {
+    color: #333;
+    font-size: 0.95rem;
+  }
+
+  /* ==== RESPONSIVE ==== */
+  @media (max-width: 576px) {
+    .tour-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .tour-status {
+      align-self: flex-start;
+    }
+
+    .card-section {
+      padding: 18px;
+    }
   }
 </style>

@@ -5,7 +5,7 @@
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">Quản Lý Tour</h2>
-        <a href="tours-manager/new-tour" style="color: white; background-color:#ff8a65; border:none;"
+        <a href="tours-manager/new-tour" style="color: white; background-color:var(--color-primary); border:none;"
             class="btn btn-primary px-4 py-2">Thêm Tour Mới</a>
 
     </div>

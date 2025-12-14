@@ -1,5 +1,4 @@
 <?php
-require './models/AuthModel.php';
 class AuthController
 {
     protected $authModel;

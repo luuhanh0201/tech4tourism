@@ -108,7 +108,7 @@
   .logo-icon {
     width: 36px;
     height: 36px;
-    background: linear-gradient(135deg, #d4660dff 100%);
+    background: linear-gradient(135deg, var(--color-primary) 100%);
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -141,7 +141,7 @@
   .user-avatar {
     width: 42px;
     height: 42px;
-    background: linear-gradient(135deg, #d4660dff 100%);
+    background: linear-gradient(135deg, var(--color-primary) 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -197,7 +197,7 @@
   .dropdown-avatar {
     width: 48px;
     height: 48px;
-    background: linear-gradient(135deg, #d4660dff 100%);
+    background: linear-gradient(135deg, var(--color-primary) 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -241,7 +241,7 @@
   .dropdown-item i {
     width: 20px;
     font-size: 16px;
-    color: #666;
+    color: var(--color-text-sub);
   }
 
   .dropdown-item.logout {

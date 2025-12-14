@@ -22,6 +22,12 @@
   
   require_once './models/User.php';
    require_once __DIR__ . '/models/CustomerModel.php';
+   require_once __DIR__ . '/models/AuthModel.php';
+   require_once __DIR__ . '/models/GuiderManagerModel.php';
+   require_once __DIR__ . '/models/BookingModel.php';
+   require_once __DIR__ . '/models/CategoryModel.php';
+   require_once __DIR__ . '/models/TourModel.php';
+
 
   require_once __DIR__ . '/controllers/AuthController.php';
   require_once __DIR__ . '/controllers/CategoryController.php';
@@ -72,6 +78,7 @@
     '/dashboard/booking-manager/detail' => $bookingController->detailBooking(),
     '/dashboard' => $dashboardController->Dashboard(),
     "/guide" => $guideController->index(),
+    "/guide/current-tour" =>$guideController->CurrentTour(),
     default => include './views/errorPage.php',
   };
   ?>

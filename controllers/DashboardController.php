@@ -1,6 +1,4 @@
 <?php
-// require './models/BookingModel.php';
-
 class DashboardController
 {
     protected $BookingModel;
@@ -22,7 +20,7 @@ class DashboardController
         renderLayoutAdmin("admin/Dashboard/index.php", [
             'bookings' => $bookings,
             'tours' => $tours,
-            'guides'=>$guides
+            'guides' => $guides
         ], "Bảng điều khiển");
 
     }

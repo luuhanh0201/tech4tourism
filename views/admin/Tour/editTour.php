@@ -127,7 +127,7 @@
         </div>
 
         <div class="text-end mt-3">
-            <button type="submit" style="color: white; background-color:#ff8a65; border:none;"
+            <button type="submit" style="color: white; background-color:var(--color-primary); border:none;"
                 class="btn btn-primary px-4 py-2" id="submitBtn">
                 </i> Cập nhật
             </button>

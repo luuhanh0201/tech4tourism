@@ -1,6 +1,5 @@
 <?php
 // require './models/CategoryModel.php';
-require './models/BookingModel.php';
 class BookingController
 {
     protected $TourModel;

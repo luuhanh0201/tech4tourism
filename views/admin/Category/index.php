@@ -5,7 +5,7 @@
                 <h2 class="fw-bold">Quản lý danh mục</h2>
             </div>
             <a href="/dashboard/categories-manager/new-category" class="btn btn-primary px-4 py-2"
-                style="background-color:#ff8a65; border:none;">
+                style="background-color:var(--color-primary); border:none;">
                 + Thêm danh mục
             </a>
         </div>

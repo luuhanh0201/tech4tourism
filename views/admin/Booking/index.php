@@ -4,7 +4,7 @@
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">Quản Lý Booking</h2>
-        <a href="booking-manager/create-booking" style="color: white; background-color:#ff8a65; border:none;"
+        <a href="booking-manager/create-booking" style="color: white; background-color:var(--color-primary); border:none;"
             class="btn btn-primary px-4 py-2">Tạo booking</a>
 
     </div>

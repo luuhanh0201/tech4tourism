@@ -513,7 +513,7 @@ $returnDate = isset($booking['ended_at']) ? date('d/m/Y', strtotime($booking['en
     }
 
     .section-title i {
-        color: #ff8a65;
+        color: var(--color-primary);
     }
 
     .status-badge {
@@ -548,7 +548,7 @@ $returnDate = isset($booking['ended_at']) ? date('d/m/Y', strtotime($booking['en
         background: #f8f9fa;
         padding: 20px;
         border-radius: 8px;
-        border-left: 4px solid #ff8a65;
+        border-left: 4px solid var(--color-primary);
     }
 
     .tour-header {
@@ -562,18 +562,18 @@ $returnDate = isset($booking['ended_at']) ? date('d/m/Y', strtotime($booking['en
         flex-wrap: wrap;
         gap: 15px;
         font-size: 0.875rem;
-        color: #666;
+        color: var(--color-text-sub);
     }
 
     .tour-price {
         font-size: 1.5rem;
         font-weight: 700;
-        color: #ff8a65;
+        color: var(--color-primary);
     }
 
     .summary-card {
         background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
-        border: 2px solid #ff8a65;
+        border: 2px solid var(--color-primary);
     }
 
     .summary-item {
@@ -591,7 +591,7 @@ $returnDate = isset($booking['ended_at']) ? date('d/m/Y', strtotime($booking['en
         padding: 15px 0;
         font-size: 1.3rem;
         font-weight: 700;
-        color: #ff8a65;
+        color: var(--color-primary);
     }
 
     .form-label {
@@ -602,12 +602,12 @@ $returnDate = isset($booking['ended_at']) ? date('d/m/Y', strtotime($booking['en
 
     .form-control:focus,
     .form-select:focus {
-        border-color: #ff8a65;
+        border-color: var(--color-primary);
         box-shadow: 0 0 0 0.2rem rgba(255, 138, 101, 0.25);
     }
 
     .btn-primary {
-        background-color: #ff8a65;
+        background-color: var(--color-primary);
         border: none;
         border-radius: 8px;
         padding: 10px 20px;
@@ -615,14 +615,14 @@ $returnDate = isset($booking['ended_at']) ? date('d/m/Y', strtotime($booking['en
     }
 
     .btn-primary:hover {
-        background-color: #ff6f47;
+        background-color: var(--color-primary-dark);
     }
 
     .guest-item {
         background: #f8f9fa;
         padding: 15px;
         border-radius: 8px;
-        border-left: 4px solid #ff8a65;
+        border-left: 4px solid var(--color-primary);
         transition: all 0.3s ease;
     }
 
@@ -636,13 +636,13 @@ $returnDate = isset($booking['ended_at']) ? date('d/m/Y', strtotime($booking['en
 
     .btn-link {
         text-decoration: none;
-        color: #ff8a65;
+        color: var(--color-primary);
         padding: 4px 8px;
         font-size: 0.875rem;
     }
 
     .btn-link:hover {
-        color: #ff6f47;
+        color: var(--color-primary-dark);
     }
 
     .btn-link.text-danger {
