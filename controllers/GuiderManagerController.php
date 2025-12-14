@@ -13,10 +13,8 @@ class GuiderManagerController
             $guides = $this->GuiderManagerModel->searchGuide($_GET['keyword']);
         } else {
             $guides = $this->GuiderManagerModel->getAllGuider();
-
         }
         renderLayoutAdmin("admin/GuideManager/index.php", ["guides" => $guides], "Quản lý hướng dẫn viên");
-
     }
     public function detailGuide()
     {
@@ -26,48 +24,94 @@ class GuiderManagerController
         } else {
             echo "Không tìm thấy id";
         }
-
-
     }
     public function editGuide()
-    {
-        if (!isset($_GET['id']) || empty($_GET['id'])) {
-            echo "Không tìm thấy id";
-            return;
-        }
-        $id = $_GET['id'];
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $dateOfBirth = $_POST['date_of_birth'];
-            $gender = $_POST['gender'];
-            $phone = $_POST['phone'];
-            $address = $_POST['address'];
-            $certifications = $_POST['certifications'];
-            $language = $_POST['language'];
-            $bio = $_POST['bio'];
-
-            if ($gender === "male") {
-                $_SESSION['errorMale'] = "TEST Cái";
-            }
-            if ($this->GuiderManagerModel->updateProfileGuide($_GET['id'], $dateOfBirth, $gender, $phone, $address, $certifications, $language, $bio)) {
-                $_SESSION['success'] = "Cập nhật hướng dẫn viên thành công";
-                header('location:/dashboard/guide-manager/profile-guide/edit?id=' . $id . '');
-            } else {
-                echo "FALSE";
-            }
-        }
-
-        $guide = $this->GuiderManagerModel->getDetailGuide($id);
-        if (!$guide) {
-            echo "Không tìm thấy hướng dẫn viên";
-            return;
-        }
-
-        renderLayoutAdmin(
-            "admin/GuideManager/editGuide.php",
-            ["guide" => $guide],
-            "Sửa thông tin hướng dẫn viên"
-        );
+{
+    if (!isset($_GET['id']) || empty($_GET['id'])) {
+        echo "Không tìm thấy id";
+        return;
     }
 
+    $id = $_GET['id'];
+    $errors = [];
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        $dateOfBirth = trim($_POST['date_of_birth']);
+        $gender = $_POST['gender'] ?? '';
+        $phone = trim($_POST['phone']);
+        $address = trim($_POST['address']);
+        $certifications = trim($_POST['certifications']);
+        $language = trim($_POST['language']);
+        $bio = trim($_POST['bio']);
+
+        if (empty($dateOfBirth)) {
+            $errors['date_of_birth'] = "Vui lòng nhập ngày sinh";
+        } elseif (!preg_match("/^\d{4}-\d{2}-\d{2}$/", $dateOfBirth)) {
+            $errors['date_of_birth'] = "Định dạng ngày sinh không hợp lệ (YYYY-MM-DD)";
+        }
+
+        $validGender = ['Nam', 'Nữ'];
+        if (!in_array($gender, $validGender)) {
+            $errors['gender'] = "Giới tính không hợp lệ";
+        }
+
+        if (empty($phone)) {
+            $errors['phone'] = "Vui lòng nhập số điện thoại";
+        } elseif (!preg_match("/^[0-9]{10,11}$/", $phone)) {
+            $errors['phone'] = "Số điện thoại không hợp lệ (10–11 số)";
+        }
+
+        if (empty($address)) {
+            $errors['address'] = "Vui lòng nhập địa chỉ";
+        }
+
+        if (strlen($certifications) > 255) {
+            $errors['certifications'] = "Chứng chỉ quá dài (tối đa 255 ký tự)";
+        }
+
+        if (empty($language)) {
+            $errors['language'] = "Vui lòng nhập ngôn ngữ";
+        }
+
+        if (empty($bio)) {
+            $errors['bio'] = "Vui lòng nhập mô tả";
+        } elseif (strlen($bio) < 20) {
+            $errors['bio'] = "Mô tả quá ngắn (tối thiểu 20 ký tự)";
+        }
+
+        if (!empty($errors)) {
+            $guide = $this->GuiderManagerModel->getDetailGuide($id);
+
+            return renderLayoutAdmin(
+                "admin/GuideManager/editGuide.php",
+                [
+                    "guide" => $guide,
+                    "errors" => $errors
+                ],
+                "Sửa thông tin hướng dẫn viên"
+            );
+        }
+
+        if ($this->GuiderManagerModel->updateProfileGuide($id, $dateOfBirth, $gender, $phone, $address, $certifications, $language, $bio)) {
+            $_SESSION['success'] = "Cập nhật hướng dẫn viên thành công";
+            header('location:/dashboard/guide-manager/profile-guide?id=' . $id);
+            exit;
+        } else {
+            echo "FALSE";
+        }
+    }
+
+    $guide = $this->GuiderManagerModel->getDetailGuide($id);
+
+    renderLayoutAdmin(
+        "admin/GuideManager/editGuide.php",
+        [
+            "guide" => $guide,
+            "errors" => []
+        ],
+        "Sửa thông tin hướng dẫn viên"
+    );
 }
-?>
+
+}

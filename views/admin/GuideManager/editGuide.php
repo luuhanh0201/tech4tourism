@@ -29,7 +29,7 @@
                         <?= strtoupper(substr($guide['full_name'], 0, 1)); ?>
                     </b>
                 </div>
-                <label for="editAvatar" style="background:;" class="btn-change-avatar">
+                <label for="editAvatar" style="background:#fff;" class="btn-change-avatar">
                     <i class="bi bi-upload"></i> Đổi Avatar
                 </label>
                 <input type="file" class="d-none" id="editAvatar" name="avatar" accept="image/*">
@@ -61,6 +61,10 @@
                     <label class="form-label">Ngày Sinh <span class="text-danger">*</span></label>
                     <input type="date" class="form-control" id="editDateOfBirth" name="date_of_birth"
                         value="<?= $guide['date_of_birth']; ?>" required>
+                    <?php if (!empty($errors['date_of_birth'])): ?>
+                        <small class="text-danger"><?= $errors['date_of_birth']; ?></small>
+                    <?php endif; ?>
+
                 </div>
 
                 <div class="col-md-6">
@@ -68,12 +72,12 @@
                     <select class="form-select" id="editGender" name="gender" required>
                         <option value="">-- Chọn giới tính --</option>
                         <option value="Nam" <?= $guide['gender'] == 'Nam' ? 'selected' : '' ?>>Nam</option>
-                        <option value="Nu" <?= $guide['gender'] == 'Nữ' ? 'selected' : '' ?>>Nữ</option>
+                        <option value="Nữ" <?= $guide['gender'] == 'Nữ' ? 'selected' : '' ?>>Nữ</option>
                     </select>
-                    <?php if (!empty($_SESSION['errorMale'])): ?>
-                        <p class="text-danger"><?= $_SESSION['errorMale'] ?></p>
-                        <?php unset($_SESSION['errorMale']); ?>
+                    <?php if (!empty($errors['gender'])): ?>
+                        <small class="text-danger"><?= $errors['gender']; ?></small>
                     <?php endif; ?>
+
                 </div>
             </div>
             <div class="section-title">
@@ -86,8 +90,11 @@
                         Số Điện Thoại <span class="required-text">*</span>
                     </label>
                     <input type="tel" class="form-control" id="editPhone" name="phone"
-                        value="<?php echo $guide['phone']; ?>" placeholder="0901234567" required>
+                        value="<?php echo $guide['phone']; ?>" placeholder="..." required>
                     <small class="text-muted">Số điện thoại di động 10 chữ số</small>
+                    <?php if (!empty($errors['phone'])): ?>
+                        <small class="text-danger"><?= $errors['phone']; ?></small>
+                    <?php endif; ?>
                 </div>
 
                 <div class="col-md-6">
@@ -97,6 +104,9 @@
                     <input type="text" class="form-control" id="editAddress" name="address"
                         value="<?php echo $guide['address']; ?>"
                         placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố" required>
+                    <?php if (!empty($errors['address'])): ?>
+                        <small class="text-danger"><?= $errors['address']; ?></small>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="section-title">
@@ -114,6 +124,9 @@
                         <i class="bi bi-info-circle"></i> Liệt kê các chứng chỉ, bằng cấp liên quan, phân cách bằng
                         dấu phẩy
                     </small>
+                    <?php if (!empty($errors['certifications'])): ?>
+                        <small class="text-danger"><?= $errors['certifications']; ?></small>
+                    <?php endif; ?>
                 </div>
 
                 <div class="col-12 pt-2">
@@ -127,6 +140,9 @@
                         <i class="bi bi-info-circle"></i> Nhập các ngôn ngữ có thể hướng dẫn, phân cách bằng dấu
                         phẩy
                     </small>
+                    <?php if (!empty($errors['date_of_birth'])): ?>
+                        <small class="text-danger"><?= $errors['date_of_birth']; ?></small>
+                    <?php endif; ?>
                 </div>
 
                 <div class="col-12 pt-2">
@@ -139,6 +155,7 @@
                         <i class="bi bi-info-circle"></i> Giới thiệu chi tiết giúp khách hàng hiểu rõ hơn về hướng
                         dẫn viên
                     </small>
+
                 </div>
             </div>
             <p class="text-center"> <?php if (isset($_SESSION['success'])): ?>
