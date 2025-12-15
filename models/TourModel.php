@@ -22,6 +22,16 @@ class TourModel
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    public function getTourItineraryByDay($tourId)
+    {
+        $sql = "SELECT * FROM tour_itineraries
+            WHERE tour_id = :tour_id
+            ORDER BY day_number ASC, sort_order ASC, start_time ASC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([":tour_id" => $tourId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     function addNewTourModel(
         $tourName,
@@ -133,9 +143,10 @@ class TourModel
         $description,
         $cancellationPolicy,
         $id,
-        $imageUrl
+        $imageUrl,
+        $tourItineraries = []
     ) {
-        $sql = "UPDATE tours SET
+        $sqlTour = "UPDATE tours SET
             category_id = :category_id,
             tour_name = :tour_name,
             price = :price,
@@ -147,20 +158,71 @@ class TourModel
             cancellation_policy = :cancellation_policy,
             image_url = :image_url
         WHERE id = :id";
-        $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([
-            "category_id" => $category,
-            "tour_name" => $tourName,
-            "price" => $price,
-            "duration_day" => $durationDay,
-            "duration_night" => $durationNight,
-            "start_location" => $startLocation,
-            "end_location" => $endLocation,
-            "description" => $description,
-            "cancellation_policy" => $cancellationPolicy,
-            "image_url" => $imageUrl,
-            "id" => $id
-        ]);
+
+        $sqlDeleteIt = "DELETE FROM tour_itineraries WHERE tour_id = :tour_id";
+        $sqlInsertIt = "INSERT INTO tour_itineraries (
+        tour_id, day_number, sort_order, title, description, start_time, end_time
+    ) VALUES (
+        :tour_id, :day_number, :sort_order, :title, :description, :start_time, :end_time
+    )";
+        try {
+            $this->conn->beginTransaction();
+
+            $stmtTour = $this->conn->prepare($sqlTour);
+            $stmtTour->execute([
+                "category_id" => $category,
+                "tour_name" => $tourName,
+                "price" => $price,
+                "duration_day" => $durationDay,
+                "duration_night" => $durationNight,
+                "start_location" => $startLocation,
+                "end_location" => $endLocation,
+                "description" => $description,
+                "cancellation_policy" => $cancellationPolicy,
+                "image_url" => $imageUrl,
+                "id" => $id
+            ]);
+
+            $stmtDel = $this->conn->prepare($sqlDeleteIt);
+            $stmtDel->execute(["tour_id" => $id]);
+
+            $stmtIt = $this->conn->prepare($sqlInsertIt);
+
+            foreach ($tourItineraries as $dayBlock) {
+                if (!isset($dayBlock['day_number']))
+                    continue;
+                $dayNumber = (int) $dayBlock['day_number'];
+
+                $sort = 0;
+                foreach ($dayBlock as $idx => $row) {
+                    if (!is_int($idx) || !is_array($row))
+                        continue;
+                    $sort++;
+                    $title = trim($row['title'] ?? '');
+                    $start = $row['start_time'] ?? null;
+                    $end = $row['end_time'] ?? null;
+                    $desc = $row['description'] ?? null;
+                    if ($title === '' && empty($start) && empty($end) && trim((string) $desc) === '') {
+                        continue;
+                    }
+                    $stmtIt->execute([
+                        "tour_id" => $id,
+                        "day_number" => $dayNumber,
+                        "sort_order" => $sort,
+                        "title" => $title ?: null,
+                        "description" => $desc,
+                        "start_time" => $start,
+                        "end_time" => $end
+                    ]);
+                }
+            }
+            $this->conn->commit();
+            return true;
+        } catch (\Throwable $e) {
+            $this->conn->rollBack();
+            throw $e;
+        }
+
     }
 
     function deleteTourModel($id)

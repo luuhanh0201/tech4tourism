@@ -79,8 +79,13 @@ class TourController
         }
 
         $tour = $this->TourModel->getDetailTourModel($_GET['id']);
-        // var_dump($tour);
-        renderLayoutAdmin("admin/Tour/detailTour.php", ['tour' => $tour], "Chi tiết tour");
+        $tourItineraries = $this->TourModel->getTourItineraryByDay($tour['id']);
+        // var_dump($tour)
+        // echo "<pre>";
+        // print_r($tourItineraries);
+        // echo "</pre>";
+        // die;
+        renderLayoutAdmin("admin/Tour/detailTour.php", ['tour' => $tour, 'tourItineraries' => $tourItineraries], "Chi tiết tour");
 
     }
     function editTour()
@@ -91,6 +96,8 @@ class TourController
         $categories = $this->CategoryModel->All();
 
         $tour = $this->TourModel->getDetailTourModel($_GET['id']);
+        $tourItinerariesData = $this->TourModel->getTourItineraryByDay($tour['id']);
+
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $tourName = $_POST['tour_name'];
             $category = $_POST['category_id'];
@@ -103,6 +110,7 @@ class TourController
             $cancellationPolicy = $_POST['cancellation_policy'];
             $id = $_GET['id'];
             $imageUrl = $tour['image_url'] ?? null;
+            $tourItineraries = $_POST['tour_itinerary'] ?? [];
             if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 $uploadPath = uploadFile($_FILES['image']);   // dùng hàm bạn đã có
                 if ($uploadPath) {
@@ -124,7 +132,8 @@ class TourController
                     $description,
                     $cancellationPolicy,
                     $id,
-                    $imageUrl
+                    $imageUrl,
+                    $tourItineraries
                 )
             ) {
                 $_SESSION["success"] = "Sửa tour thành công";
@@ -133,7 +142,7 @@ class TourController
                 echo "FALSE";
             }
         }
-        renderLayoutAdmin("admin/Tour/editTour.php", ['tour' => $tour, 'categories' => $categories], "Sửa tour");
+        renderLayoutAdmin("admin/Tour/editTour.php", ['tour' => $tour, 'categories' => $categories, 'tourItineraries' => $tourItinerariesData], "Sửa tour");
 
     }
     function deleteTour()

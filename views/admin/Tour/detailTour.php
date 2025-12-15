@@ -38,7 +38,7 @@
 
                     <!-- Mã tour + Danh mục -->
                     <div class="mt-3 small text-muted">
-                        <div><strong>Mã tour:</strong> #T001</div>
+
                         <div><strong>Danh mục:</strong><?= $tour['category_name'] ?></div>
                     </div>
                 </div>
@@ -90,6 +90,54 @@
                     </div>
                 </div>
             </div>
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <h5 class="section-title mb-4">
+                        <i class="fa-solid fa-route me-2"></i>Lịch trình chi tiết
+                    </h5>
+
+                    <?php
+
+                    if (isset($tourItineraries) && count($tourItineraries) > 0):
+                        foreach ($tourItineraries as $index => $day): ?>
+                            <div class="itinerary-day">
+                                <div class="day-marker">
+                                    <div class="day-circle">
+                                        <span><?= $day['day_number'] ?></span>
+                                    </div>
+                                    <?php if ($index < count($tourItineraries) - 1): ?>
+                                        <div class="day-line"></div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <!-- Nội dung chi tiết ngày -->
+                                <div class="day-content">
+                                    <div class="day-header">
+                                        <h6 class="day-title mb-1">
+                                            <span class="badge bg-primary me-2">Ngày <?= $day['day_number'] ?></span>
+                                            <?= htmlspecialchars($day['title']) ?>
+                                        </h6>
+                                        <div class="day-time">
+                                            <i class="fa-solid fa-clock me-1"></i>
+                                            <?= date('H:i', strtotime($day['start_time'])) ?> -
+                                            <?= date('H:i', strtotime($day['end_time'])) ?>
+                                        </div>
+                                    </div>
+                                    <p class="day-description">
+                                        <?= nl2br(htmlspecialchars($day['description'])) ?>
+                                    </p>
+                                </div>
+                            </div>
+                        <?php endforeach;
+                    else: ?>
+                        <!-- Trường hợp chưa có lịch trình -->
+                        <div class="text-center text-muted py-5">
+                            <i class="fa-solid fa-calendar-xmark fa-3x mb-3"></i>
+                            <p class="mb-0">Chưa có lịch trình chi tiết cho tour này</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
 
             <!-- Thông tin hệ thống -->
             <div class="card shadow-sm border-0">
@@ -135,5 +183,118 @@
         font-weight: 700;
         font-size: 14px;
         margin-bottom: 12px;
+    }
+
+    .section-title {
+        color: #ff8c00;
+        font-weight: 700;
+        font-size: 18px;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #ff8c00;
+        display: inline-block;
+    }
+
+    /* Itinerary timeline container */
+    .itinerary-day {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+    .itinerary-day:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Day marker (số ngày bên trái) */
+    .day-marker {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    .day-circle {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #ff8c00 0%, #ff6600 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 18px;
+        box-shadow: 0 4px 8px rgba(255, 140, 0, 0.3);
+        z-index: 2;
+        transition: transform 0.3s ease;
+    }
+
+    .day-circle:hover {
+        transform: scale(1.1);
+    }
+
+    .day-line {
+        width: 3px;
+        flex-grow: 1;
+        background: linear-gradient(180deg, #ff8c00 0%, #ffb84d 100%);
+        margin-top: 5px;
+        min-height: 30px;
+    }
+
+    /* Day content (nội dung bên phải) */
+    .day-content {
+        flex-grow: 1;
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+    .day-content:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateX(5px);
+        background: #ffffff;
+    }
+
+
+    .day-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #212529;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .day-title .badge {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .day-time {
+        font-size: 13px;
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .day-time i {
+        color: #ff8c00;
+    }
+
+    /* Day description */
+    .day-description {
+        color: #495057;
+        line-height: 1.7;
+        margin: 0;
+        font-size: 14px;
+        white-space: pre-line;
+    }
+
+    /* Empty state */
+    .text-center.text-muted i {
+        color: #dee2e6;
     }
 </style>

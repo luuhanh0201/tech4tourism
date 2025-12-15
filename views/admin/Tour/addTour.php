@@ -95,12 +95,6 @@
                     Thêm ngày mới
                 </button>
             </div>
-            <div class="text-end">
-                <button type="button" class="btn btn-outline-secondary me-2" onclick="previewItinerary()">
-                    <i class="fa-solid fa-eye me-2"></i>
-                    Xem trước
-                </button>
-            </div>
             <div class="col-lg-6 d-flex">
                 <div class="card-section h-100 w-100">
                     <h5 class="card-section-title section-header-bar">Thông tin khác</h5>
@@ -407,22 +401,47 @@
 </style>
 
 <script>
-    let dayCounter = 0;
-    const tourName = document.querySelector('input[name="tour_name"]');
+    // ===== Helpers =====
+    function getMaxDayKey() {
+        let max = 0;
+        document.querySelectorAll('.day-card').forEach(c => {
+            const k = parseInt(c.dataset.dayKey || '0', 10);
+            if (k > max) max = k;
+        });
+        return max;
+    }
+
+    function getDurationDay() {
+        const v = parseInt(document.querySelector('input[name="duration_day"]')?.value || '0', 10);
+        return isNaN(v) ? 0 : v;
+    }
 
     function updateDayCount() {
         const dayCountEl = document.getElementById('dayCount');
         const days = document.querySelectorAll('.day-card');
-        dayCountEl.textContent = `ngày ${days.length || 1}`;
+        dayCountEl.textContent = `${days.length} ngày`;
 
         const empty = document.querySelector('#daysContainer .empty-state');
         if (empty) empty.style.display = (days.length === 0) ? 'block' : 'none';
     }
 
+    // ===== Day / Activity =====
     function addNewDay() {
-        dayCounter++;
-        const dayKey = dayCounter;
+        const maxDays = getDurationDay();
+        const currentDays = document.querySelectorAll('.day-card').length;
 
+        if (!maxDays || maxDays < 1) {
+            alert('Vui lòng nhập số ngày trước khi thêm lịch trình!');
+            document.querySelector('input[name="duration_day"]').focus();
+            return;
+        }
+
+        if (currentDays >= maxDays) {
+            alert(`Bạn chỉ được tạo tối đa ${maxDays} ngày theo số ngày của tour!`);
+            return;
+        }
+
+        const dayKey = getMaxDayKey() + 1;
         const daysContainer = document.getElementById('daysContainer');
 
         const dayCard = document.createElement('div');
@@ -439,15 +458,13 @@
         </div>
 
         <div class="day-actions">
-         
           <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeDay(${dayKey})">
             <i class="fa-solid fa-trash me-1"></i>Xoá ngày
           </button>
         </div>
       </div>
-      <div class="activities" id="activities-${dayKey}">
-        <!-- activity items -->
-      </div>
+
+      <div class="activities" id="activities-${dayKey}"></div>
 
       <div class="text-end">
         <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addActivity(${dayKey})">
@@ -455,13 +472,14 @@
         </button>
       </div>
     `;
+
         daysContainer.appendChild(dayCard);
         updateDayCount();
     }
+
     function removeDay(dayKey) {
         const dayCard = document.querySelector(`.day-card[data-day-key="${dayKey}"]`);
         if (dayCard) dayCard.remove();
-        dayCounter--
         updateDayCount();
     }
 
@@ -518,10 +536,19 @@
         if (item) item.remove();
         updateDayCount();
     }
-    updateDayCount();
 
+    // expose to inline onclick
+    window.addNewDay = addNewDay;
+    window.addActivity = addActivity;
+    window.removeDay = removeDay;
+    window.removeActivity = removeActivity;
+
+    // ===== Form validation =====
     document.addEventListener('DOMContentLoaded', function () {
+        updateDayCount();
+
         const form = document.getElementById('tourForm');
+
         const tourName = document.querySelector('input[name="tour_name"]');
         const categoryId = document.querySelector('select[name="category_id"]');
         const description = document.querySelector('textarea[name="description"]');
@@ -533,24 +560,18 @@
         const cancellationPolicy = document.querySelector('textarea[name="cancellation_policy"]');
         const imageInput = document.querySelector('input[name="image"]');
 
-
         function showError(element, message) {
             const parent = element.closest('.col-12, .col-md-8, .col-md-6, .col-md-4') || element.parentElement;
-
-
             const oldError = parent.querySelector('.error-message');
             if (oldError) oldError.remove();
 
-
             element.classList.add('is-invalid');
-
 
             const errorDiv = document.createElement('div');
             errorDiv.className = 'error-message';
             errorDiv.textContent = message;
             parent.appendChild(errorDiv);
         }
-
 
         function clearError(element) {
             element.classList.remove('is-invalid');
@@ -559,7 +580,6 @@
             if (errorDiv) errorDiv.remove();
         }
 
-        // Validate từng trường
         function validateField(field) {
             clearError(field);
 
@@ -567,8 +587,6 @@
                 showError(field, 'Vui lòng nhập trường này');
                 return false;
             }
-
-
 
             if (field.name === 'tour_name' && field.value.trim().length < 5) {
                 showError(field, 'Tên tour phải có ít nhất 5 ký tự');
@@ -585,17 +603,17 @@
                 return false;
             }
 
-            if (field.name === 'duration_day' && field.value < 1) {
+            if (field.name === 'duration_day' && Number(field.value) < 1) {
                 showError(field, 'Số ngày phải lớn hơn 0');
                 return false;
             }
 
-            if (field.name === 'duration_night' && field.value < 0) {
+            if (field.name === 'duration_night' && Number(field.value) < 0) {
                 showError(field, 'Số đêm không được âm');
                 return false;
             }
 
-            if (field.name === 'price' && field.value <= 0) {
+            if (field.name === 'price' && Number(field.value) <= 0) {
                 showError(field, 'Giá tour phải lớn hơn 0');
                 return false;
             }
@@ -603,11 +621,9 @@
             return true;
         }
 
-
         function validateImage(input) {
             const uploadBox = input.closest('.card-section');
             const parent = uploadBox.querySelector('.upload-box-inner') || uploadBox;
-
 
             const oldError = uploadBox.querySelector('.error-message');
             if (oldError) oldError.remove();
@@ -646,22 +662,20 @@
                 return false;
             }
 
-
             const reader = new FileReader();
             reader.onload = function (e) {
                 const label = document.getElementById('uploadLabel');
                 label.innerHTML = `
-                <div class="upload-preview">
-                    <img src="${e.target.result}" alt="Preview">
-                    <div class="mt-2 upload-text-sub">Click để thay đổi ảnh</div>
-                </div>
-            `;
+          <div class="upload-preview">
+            <img src="${e.target.result}" alt="Preview">
+            <div class="mt-2 upload-text-sub">Click để thay đổi ảnh</div>
+          </div>
+        `;
             };
             reader.readAsDataURL(file);
 
             return true;
         }
-
 
         const inputs = [tourName, categoryId, description, durationDay, durationNight, startLocation, endLocation, price, cancellationPolicy];
 
@@ -677,16 +691,13 @@
             });
         });
 
-
         imageInput.addEventListener('change', function () {
             validateImage(this);
         });
 
-
         price.addEventListener('input', function () {
             this.value = this.value.replace(/[^0-9]/g, '');
         });
-
 
         durationDay.addEventListener('input', function () {
             if (this.value > 365) this.value = 365;
@@ -698,31 +709,52 @@
             if (this.value < 0) this.value = 0;
         });
 
+        // Bonus: nếu giảm duration_day nhỏ hơn số ngày đang có
+        durationDay.addEventListener('change', function () {
+            const maxDays = getDurationDay();
+            const currentDays = document.querySelectorAll('.day-card').length;
+
+            if (maxDays > 0 && currentDays > maxDays) {
+                alert(`Bạn đang có ${currentDays} ngày lịch trình nhưng số ngày tour là ${maxDays}. Vui lòng xoá bớt ngày.`);
+            }
+        });
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             let isValid = true;
 
-
             inputs.forEach(input => {
-                if (!validateField(input)) {
-                    isValid = false;
-                }
+                if (!validateField(input)) isValid = false;
             });
 
+            // Validate itinerary count == duration_day
+            const maxDays = getDurationDay();
+            const currentDays = document.querySelectorAll('.day-card').length;
 
+            if (!maxDays || maxDays < 1) {
+                showError(durationDay, 'Vui lòng nhập số ngày hợp lệ');
+                isValid = false;
+            } else if (currentDays !== maxDays) {
+                alert(`Lịch trình phải có đúng ${maxDays} ngày. Hiện tại bạn có ${currentDays} ngày.`);
+                isValid = false;
+            }
+
+            // Validate image required
             if (!imageInput.files || !imageInput.files[0]) {
                 const uploadBox = imageInput.closest('.card-section');
                 uploadBox.classList.add('is-invalid');
+
+                // tránh append lỗi nhiều lần
+                const old = uploadBox.querySelector('.error-message');
+                if (old) old.remove();
+
                 const errorDiv = document.createElement('div');
                 errorDiv.className = 'error-message text-center mt-2';
                 errorDiv.textContent = 'Vui lòng chọn hình ảnh';
                 uploadBox.querySelector('.upload-box-inner').appendChild(errorDiv);
                 isValid = false;
             } else {
-                if (!validateImage(imageInput)) {
-                    isValid = false;
-                }
+                if (!validateImage(imageInput)) isValid = false;
             }
 
             if (isValid) {
@@ -731,7 +763,6 @@
                 submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Đang xử lý...';
                 form.submit();
             } else {
-
                 const firstError = document.querySelector('.is-invalid');
                 if (firstError) {
                     firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });

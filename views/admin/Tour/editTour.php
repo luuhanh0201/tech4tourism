@@ -75,7 +75,117 @@
                     </div>
                 </div>
             </div>
+            <div class="col-12">
+                <div class="card-section">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="section-title mb-0">
+                            <i class="fa-solid fa-route me-2"></i>Lịch trình chi tiết
+                        </h5>
+                        <span class="badge bg-primary" id="dayCount">0 ngày</span>
+                    </div>
+                    <?php
+                    $grouped = [];
+                    $maxDay = 0;
 
+                    if (!empty($tourItineraries)) {
+                        foreach ($tourItineraries as $r) {
+                            $day = (int) $r['day_number'];
+                            if ($day > $maxDay)
+                                $maxDay = $day;
+                            $grouped[$day][] = $r;
+                        }
+                        ksort($grouped);
+                    }
+                    ?>
+
+                    <div id="daysContainer">
+                        <?php if (empty($grouped)): ?>
+                            <div class="empty-state">
+                                <i class="fa-solid fa-calendar-plus"></i>
+                                <h5>Chưa có lịch trình nào</h5>
+                                <p>Nhấn nút "Thêm ngày mới" để bắt đầu tạo lịch trình</p>
+                            </div>
+                        <?php else: ?>
+                            <?php foreach ($grouped as $dayKey => $activities): ?>
+                                <div class="day-card" data-day-key="<?= $dayKey ?>">
+                                    <div class="day-card-header">
+                                        <div class="day-badge"><?= $dayKey ?></div>
+
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                <input type="hidden" name="tour_itinerary[<?= $dayKey ?>][day_number]"
+                                                    value="<?= $dayKey ?>">
+                                                <span>Chi tiết hoạt động ngày <?= $dayKey ?></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="day-actions">
+                                            <button type="button" class="btn btn-sm btn-outline-danger"
+                                                onclick="removeDay(<?= $dayKey ?>)">
+                                                <i class="fa-solid fa-trash me-1"></i>Xoá ngày
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="activities" id="activities-<?= $dayKey ?>">
+                                        <?php foreach ($activities as $idx => $a): ?>
+                                            <div class="activity-item" data-index="<?= $idx ?>">
+                                                <div class="activity-row">
+                                                    <div class="d-flex gap-2 flex-wrap align-items-center">
+                                                        <label class="small text-muted mb-0">Giờ bắt đầu</label>
+                                                        <input type="time" class="form-control"
+                                                            name="tour_itinerary[<?= $dayKey ?>][<?= $idx ?>][start_time]"
+                                                            value="<?= htmlspecialchars(substr($a['start_time'], 0, 5)) ?>">
+                                                    </div>
+
+                                                    <div class="d-flex gap-2 flex-wrap align-items-center">
+                                                        <label class="small text-muted mb-0">Giờ kết thúc</label>
+                                                        <input type="time" class="form-control"
+                                                            name="tour_itinerary[<?= $dayKey ?>][<?= $idx ?>][end_time]"
+                                                            value="<?= htmlspecialchars(substr($a['end_time'], 0, 5)) ?>">
+                                                    </div>
+
+                                                    <div class="flex-grow-1">
+                                                        <label class="small text-muted mb-0">Tiêu đề hoạt động</label>
+                                                        <input type="text" class="form-control"
+                                                            name="tour_itinerary[<?= $dayKey ?>][<?= $idx ?>][title]"
+                                                            value="<?= htmlspecialchars($a['title']) ?>">
+                                                    </div>
+                                                </div>
+
+                                                <div class="mt-2">
+                                                    <label class="small text-muted mb-0">Mô tả</label>
+                                                    <textarea class="form-control" rows="2"
+                                                        name="tour_itinerary[<?= $dayKey ?>][<?= $idx ?>][description]"><?= htmlspecialchars($a['description']) ?></textarea>
+                                                </div>
+
+                                                <div class="activity-tools">
+                                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                                        onclick="removeActivity(this)">
+                                                        <i class="fa-solid fa-trash me-1"></i>Xoá hoạt động
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+
+                                    <div class="text-end">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                            onclick="addActivity(<?= $dayKey ?>)">
+                                            <i class="fa-solid fa-plus me-1"></i>Thêm hoạt động
+                                        </button>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+
+
+                    <button type="button" class="btn-add-day mt-3" onclick="addNewDay()">
+                        <i class="fa-solid fa-plus me-2"></i>Thêm ngày mới
+                    </button>
+                </div>
+            </div>
             <!-- Thông tin khác -->
             <div class="col-lg-6 d-flex">
                 <div class="card-section h-100 w-100">
@@ -136,6 +246,96 @@
 </div>
 
 <style>
+    .day-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 12px;
+        background: #fff;
+    }
+
+    .day-card-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .day-badge {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f3f4f6;
+        font-weight: 600;
+    }
+
+    .day-actions {
+        margin-left: auto;
+        display: flex;
+        gap: 8px;
+    }
+
+    .activity-item {
+        border: 1px dashed #d1d5db;
+        border-radius: 12px;
+        padding: 10px;
+        margin-bottom: 10px;
+        background: #fafafa;
+    }
+
+    .activity-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .activity-row .form-control,
+    .activity-row .form-select {
+        min-width: 140px;
+    }
+
+    .activity-tools {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-top: 8px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #9ca3af;
+    }
+
+    .empty-state i {
+        font-size: 64px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+
+    .btn-add-day {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-weight: 700;
+        font-size: 15px;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        transition: all 0.3s;
+        width: 100%;
+    }
+
+    .btn-add-day:hover {
+        background: linear-gradient(135deg, #059669, #047857);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+    }
+
+    /* Other styles */
     .upload-box {
         width: 100%;
         border-radius: 16px;
@@ -244,47 +444,6 @@
         margin-bottom: 12px;
     }
 
-    /* Validation styles */
-    .form-control.is-invalid,
-    .form-select.is-invalid {
-        border-color: #dc3545;
-        padding-right: calc(1.5em + 0.75rem);
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right calc(0.375em + 0.1875rem) center;
-        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-    }
-
-    .form-control.is-invalid:focus,
-    .form-select.is-invalid:focus {
-        border-color: #dc3545;
-        box-shadow: 0 0 0 0.15rem rgba(220, 53, 69, 0.25);
-    }
-
-    .error-message {
-        color: #dc3545;
-        font-size: 12px;
-        margin-top: 4px;
-        animation: slideDown 0.3s ease;
-    }
-
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-5px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .upload-box.is-invalid {
-        border-color: #dc3545;
-        background-color: #fff5f5;
-    }
-
     .upload-preview {
         text-align: center;
         width: 100%;
@@ -300,6 +459,131 @@
 </style>
 
 <script>
+    let dayCounter = 0;
+    const tourName = document.querySelector('input[name="tour_name"]');
+    function getMaxDayKey() {
+        const cards = document.querySelectorAll('.day-card');
+        let max = 0;
+        cards.forEach(c => {
+            const k = parseInt(c.dataset.dayKey || '0', 10);
+            if (k > max) max = k;
+        });
+        return max;
+    }
+    function updateDayCount() {
+        const dayCountEl = document.getElementById('dayCount');
+        const days = document.querySelectorAll('.day-card');
+        dayCountEl.textContent = `${days.length} ngày`;
+
+        const empty = document.querySelector('#daysContainer .empty-state');
+        if (empty) empty.style.display = (days.length === 0) ? 'block' : 'none';
+    }
+    function canAddMoreDays() {
+        const durationDayInput = document.querySelector('input[name="duration_day"]');
+        const maxDays = parseInt(durationDayInput?.value || '0', 10);
+        const currentDays = document.querySelectorAll('.day-card').length;
+
+        if (!maxDays || maxDays < 1) return false; // chưa nhập số ngày thì không cho add
+        return currentDays < maxDays;
+    }
+
+    function addNewDay() {
+        if (!canAddMoreDays()) {
+            alert('Số ngày lịch trình đã đủ theo số ngày của tour!');
+            return;
+        }
+
+        const dayKey = getMaxDayKey() + 1; // dùng hàm getMaxDayKey mình gửi trước
+        const daysContainer = document.getElementById('daysContainer');
+
+        const dayCard = document.createElement('div');
+        dayCard.className = 'day-card';
+        dayCard.dataset.dayKey = dayKey;
+        dayCard.innerHTML = `
+    <div class="day-card-header">
+      <div class="day-badge">${dayKey}</div>
+      <div class="flex-grow-1">
+        <div class="d-flex gap-2 flex-wrap">
+          <input type="hidden" name="tour_itinerary[${dayKey}][day_number]" value="${dayKey}">
+          <span>Chi tiết hoạt động ngày ${dayKey}</span>
+        </div>
+      </div>
+      <div class="day-actions">
+        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeDay(${dayKey})">
+          <i class="fa-solid fa-trash me-1"></i>Xoá ngày
+        </button>
+      </div>
+    </div>
+    <div class="activities" id="activities-${dayKey}"></div>
+    <div class="text-end">
+      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addActivity(${dayKey})">
+        <i class="fa-solid fa-plus me-1"></i>Thêm hoạt động
+      </button>
+    </div>
+  `;
+        daysContainer.appendChild(dayCard);
+        updateDayCount();
+    }
+    function removeDay(dayKey) {
+        const dayCard = document.querySelector(`.day-card[data-day-key="${dayKey}"]`);
+        if (dayCard) dayCard.remove();
+        updateDayCount();
+    }
+
+    function addActivity(dayKey) {
+        const list = document.getElementById(`activities-${dayKey}`);
+        const index = list.querySelectorAll('.activity-item').length;
+
+        const item = document.createElement('div');
+        item.className = 'activity-item';
+        item.dataset.index = index;
+
+        item.innerHTML = `
+      <div class="activity-row">
+        <div class="d-flex gap-2 flex-wrap align-items-center">
+          <label class="small text-muted mb-0">Giờ bắt đầu</label>
+          <input type="time" class="form-control"
+            name="tour_itinerary[${dayKey}][${index}][start_time]">
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap align-items-center">
+          <label class="small text-muted mb-0">Giờ kết thúc</label>
+          <input type="time" class="form-control"
+            name="tour_itinerary[${dayKey}][${index}][end_time]">
+        </div>
+
+        <div class="flex-grow-1">
+          <label class="small text-muted mb-0">Tiêu đề hoạt động</label>
+          <input type="text" class="form-control"
+            name="tour_itinerary[${dayKey}][${index}][title]"
+            placeholder="VD: Tham quan phố cổ">
+        </div>
+      </div>
+
+      <div class="mt-2">
+        <label class="small text-muted mb-0">Mô tả</label>
+        <textarea class="form-control" rows="2"
+          name="tour_itinerary[${dayKey}][${index}][description]"
+          placeholder="Mô tả chi tiết hoạt động..."></textarea>
+      </div>
+
+      <div class="activity-tools">
+        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeActivity(this)">
+          <i class="fa-solid fa-trash me-1"></i>Xoá hoạt động
+        </button>
+      </div>
+    `;
+
+        list.appendChild(item);
+        updateDayCount();
+    }
+
+    function removeActivity(btn) {
+        const item = btn.closest('.activity-item');
+        if (item) item.remove();
+        updateDayCount();
+    }
+    updateDayCount();
     document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('editTourForm');
 
