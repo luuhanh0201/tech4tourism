@@ -9,18 +9,31 @@
             class="btn btn-primary px-4 py-2">Thêm Tour Mới</a>
 
     </div>
-    <div class="tours-toolbar d-flex flex-wrap align-items-center mb-3">
+    <form method="post" action="" class="tours-toolbar d-flex flex-wrap align-items-center mb-3">
         <div class="flex-grow-1 me-2 mb-2 mb-sm-0">
-            <input type="search" class="form-control tours-search" placeholder="Tìm kiếm theo tên tour...">
+            <input type="search" name="keyword" class="form-control tours-search"
+                placeholder="Tìm kiếm theo tên tour..." value="<?= htmlspecialchars($_POST['keyword'] ?? '') ?>">
         </div>
-        <div class="mb-2 mb-sm-0">
-            <select class="form-select tours-filter">
-                <option value="">Tất cả trạng thái</option>
+        <div class="me-2 mb-2 mb-sm-0">
+            <select name="cate" class="form-select tours-filter">
+                <option value="">Phân loại tour</option>
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="me-2 mb-2 mb-sm-0">
+            <select name="status" class="form-select tours-filter">
+                <option value="" selected>Trạng thái tour</option>
                 <option value="active">Hoạt động</option>
                 <option value="inactive">Ngừng hoạt động</option>
             </select>
         </div>
-    </div>
+
+        <div class="mb-2 mb-sm-0">
+            <button type="submit" class="btn" style="background-color:var(--color-primary); color:#fff">Lọc</button>
+        </div>
+    </form>
     <div class="table-container">
         <table class="table align-middle">
             <thead>
@@ -50,7 +63,8 @@
                                     class="fa-solid fa-eye"></i></a>
                             <a href="tours-manager/edit-tour?id=<?= $tour['id'] ?>" class="text-success mx-2"><i
                                     class="fa-solid fa-pen"></i></a>
-                            <a href="tours-manager/delete-tour?id=<?= $tour['id'] ?>" class="text-danger mx-2"><i class="fa-solid fa-trash"></i></a>
+                            <a href="tours-manager/delete-tour?id=<?= $tour['id'] ?>" class="text-danger mx-2" onclick="return confirm('Bạn có chắc muốn xoá tour này?')"><i
+                                    class="fa-solid fa-trash"></i></a>
                         </td>
                     </tr>
 

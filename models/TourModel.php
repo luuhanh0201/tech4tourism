@@ -33,10 +33,11 @@ class TourModel
         $endLocation,
         $description,
         $cancellationPolicy,
-        $imageUrl
+        $imageUrl,
+        $tourItineraries = []
     ) {
 
-        $sql = "INSERT INTO tours (
+        $sqlTour = "INSERT INTO tours (
                         category_id,
                         tour_name,
                         price,
@@ -47,8 +48,9 @@ class TourModel
                         end_location,
                         description,
                         cancellation_policy)
-                                    VALUES (:tour_name,
+                                    VALUES (
                         :category_id,
+                        :tour_name,
                         :price,
                         :duration_day,
                         :duration_night,
@@ -57,19 +59,67 @@ class TourModel
                         :end_location,
                         :description,
                         :cancellation_policy)";
-        $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([
-            "category_id" => $category,
-            "tour_name" => $tourName,
-            "price" => $price,
-            "duration_day" => $durationDay,
-            "duration_night" => $durationNight,
-            "image_url" => $imageUrl,
-            "start_location" => $startLocation,
-            "end_location" => $endLocation,
-            "description" => $description,
-            "cancellation_policy" => $cancellationPolicy
-        ]);
+        $sqlTourItinerary = "INSERT INTO tour_itineraries (
+                        tour_id,
+                        day_number,
+                        sort_order,
+                        title,
+                        description,
+                        start_time,
+                        end_time    
+        ) VALUES (
+                        :tour_id,
+                        :day_number,
+                        :sort_order,
+                        :title,
+                        :description,
+                        :start_time,
+                        :end_time    
+        )";
+        try {
+            $this->conn->beginTransaction();
+            $stmtTour = $this->conn->prepare($sqlTour);
+            $stmtTour->execute([
+                "category_id" => $category,
+                "tour_name" => $tourName,
+                "price" => $price,
+                "duration_day" => $durationDay,
+                "duration_night" => $durationNight,
+                "image_url" => $imageUrl,
+                "start_location" => $startLocation,
+                "end_location" => $endLocation,
+                "description" => $description,
+                "cancellation_policy" => $cancellationPolicy
+            ]);
+            $tourId = $this->conn->lastInsertId();
+
+
+            $stmtTourItinerary = $this->conn->prepare($sqlTourItinerary);
+            foreach ($tourItineraries as $tourItinerary) {
+                if (!isset($tourItinerary['day_number']))
+                    continue;
+                $dayDetail = $tourItinerary['day_number'];
+                foreach ($tourItinerary as $index => $row) {
+                    if (!is_int($day) || !is_array($row))
+                        continue;
+
+                    $stmtTourItinerary->execute([
+                        "tour_id" => $tourId,
+                        "day_number" => $dayDetail,
+                        "sort_order" => $index + 1,
+                        "title" => $row['title'] ?? null,
+                        "description" => $row['description'] ?? null,
+                        "start_time" => $row['start_time'] ?? null,
+                        "end_time" => $row['end_time'] ?? null,
+                    ]);
+                }
+            }
+            $this->conn->commit();
+            return true;
+        } catch (\Throwable $th) {
+            $this->conn->rollBack();
+            throw $th;
+        }
     }
 
     function editTourModel(
@@ -120,7 +170,39 @@ class TourModel
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+    public function searchTour($keyword = '', $status = '', $categoryId = '')
+    {
+        $params = [];
+        $where = [];
 
+        if ($keyword !== '') {
+            $params['keyword'] = "%{$keyword}%";
+            $where[] = "tours.tour_name LIKE :keyword";
+        }
+
+        if ($status !== '') {
+            $params['status'] = $status;
+            $where[] = "tours.status = :status";
+        }
+
+        if ($categoryId !== '') {
+            $params['category_id'] = (int) $categoryId;
+            $where[] = "tours.category_id = :category_id";
+        }
+
+        $sql = "SELECT tours.*, categories.name as category_name FROM tours JOIN categories on categories.id = tours.category_id";
+
+        if (!empty($where)) {
+            $sql .= " WHERE " . implode(" AND ", $where);
+        }
+
+        $sql .= " ORDER BY CASE WHEN tours.status = 'active' THEN 0 ELSE 1 END ASC,
+                      tours.category_id ASC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 
 ?>

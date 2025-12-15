@@ -13,47 +13,38 @@ class TourController
     function index()
     {
         $tours = $this->TourModel->getAllToursModel();
-        renderLayoutAdmin("admin/Tour/index.php", ["tours" => $tours], "Quản lý tour");
+        $categories = $this->CategoryModel->All();
+        if ($_SERVER['REQUEST_METHOD'] === "POST") {
+            $keyword = $_POST['keyword'];
+            $status = $_POST['status'];
+            $category = $_POST['cate'];
+            $tours = $this->TourModel->searchTour($keyword ?? "", $status ?? null, $category ?? null);
 
 
-
+        }
+        renderLayoutAdmin("admin/Tour/index.php", ["tours" => $tours, 'categories' => $categories], "Quản lý tour");
     }
     function addNewTour()
     {
-        if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            $tourName = $_POST['tour_name'];
-            $category = $_POST['category_id'];
-            $price = $_POST['price'];
-            $durationDay = $_POST['duration_day'];
-            $durationNight = $_POST['duration_night'];
-            $startLocation = $_POST['start_location'];
-            $endLocation = $_POST['end_location'];
-            $description = $_POST['description'];
-            $cancellationPolicy = $_POST['cancellation_policy'];
-            $imageUrl = $_FILES['image']['name'];
-            if (!empty($imageUrl)) {
-                $imageUrl = uploadFile($_FILES['image']);
-            }
-            if (
-                !$tourName ||
-                !$category ||
-                !$price ||
-                !$durationDay ||
-                !$durationNight ||
-                !$startLocation ||
-                !$endLocation ||
-                !$description ||
-                !$cancellationPolicy
-            ) {
-                // $_SESSION["error"] = "Vui lòng điền đủ các trường";
-
-                header("Location: /dashboard/tours-manager/new-tour");
-
-                exit;
-            } else {
+        try {
+            if ($_SERVER["REQUEST_METHOD"] === "POST") {
+                $tourName = $_POST['tour_name'];
+                $category = $_POST['category_id'];
+                $price = $_POST['price'];
+                $durationDay = $_POST['duration_day'];
+                $durationNight = $_POST['duration_night'];
+                $startLocation = $_POST['start_location'];
+                $endLocation = $_POST['end_location'];
+                $description = $_POST['description'];
+                $cancellationPolicy = $_POST['cancellation_policy'];
+                $imageUrl = $_FILES['image']['name'];
+                $tourItineraries = $_POST['tour_itinerary'];
+                if (!empty($imageUrl)) {
+                    $imageUrl = uploadFile($_FILES['image']);
+                }
                 $this->TourModel->addNewTourModel(
-                    $category,
                     $tourName,
+                    $category,
                     $price,
                     $durationDay,
                     $durationNight,
@@ -61,22 +52,21 @@ class TourController
                     $endLocation,
                     $description,
                     $cancellationPolicy,
-                    $imageUrl
+                    $imageUrl,
+                    $tourItineraries
                 );
-
                 $_SESSION["success"] = "Tạo tour thành công";
                 header("Location: /dashboard/tours-manager");
-
+                exit;
             }
-
-
+            $categories = $this->CategoryModel->All();
+        } catch (\Throwable $th) {
+            throw $th;
         }
-        $categories = $this->CategoryModel->All();
 
 
 
 
-        // include "./views/admin/Tour/addTour.php";
         renderLayoutAdmin("admin/Tour/addTour.php", [
             "categories" => $categories,
         ], "Thêm tour mới");
@@ -118,7 +108,7 @@ class TourController
                 if ($uploadPath) {
                     $imageUrl = $uploadPath;
 
-            
+
                 }
             }
 
