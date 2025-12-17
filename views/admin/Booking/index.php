@@ -4,7 +4,8 @@
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">Quản Lý Booking</h2>
-        <a href="booking-manager/create-booking" style="color: white; background-color:var(--color-primary); border:none;"
+        <a href="booking-manager/create-booking"
+            style="color: white; background-color:var(--color-primary); border:none;"
             class="btn btn-primary px-4 py-2">Tạo booking</a>
 
     </div>
@@ -32,6 +33,7 @@
                     <th>Số khách</th>
                     <th>Tổng thanh toán</th>
                     <th>Trạng thái</th>
+                    <th>Hướng dẫn viên</th>
                     <th>Thao tác</th>
                 </tr>
             </thead>
@@ -59,9 +61,21 @@
                         <td><strong> <?= number_format($booking['price'] * $booking['max_person'], 0, ',', '.') . ' ₫' ?>
                         </td>
                         <td>
-                            <span class="status-badge <?= $data['class'] ?>">
+                            <span class="status-badge <?= htmlspecialchars($data['class']) ?>">
                                 <?= htmlspecialchars($data['label']) ?>
                             </span>
+
+
+                        </td>
+                        <td>
+                            <?php if ($status === 'canceled'): ?>
+                            <?php elseif (($booking['status'] ?? '') !== 'confirmed' && ($booking['status'] ?? '') !== 'done'): ?>
+                                Chờ xác nhận
+                            <?php elseif (!empty($booking['guide_full_name'])): ?>
+                                <b><?= $booking['guide_full_name'] ?></b>
+                            <?php else: ?>
+                                <span class="badge-unassigned status-badge">Chưa phân công</span>
+                            <?php endif; ?>
                         </td>
                         <td>
                             <a href="booking-manager/detail?id=<?= $booking['id'] ?>" class="text-primary mx-2"><i
@@ -115,6 +129,18 @@
         background: #e5e7eb;
         transform: translateY(-1px);
         box-shadow: 0 4px 6px rgba(15, 23, 42, 0.12);
+    }
+
+    .badge-assigned {
+        background: #e8fff2;
+        color: #16794c;
+        border-color: #b7f0cf;
+    }
+
+    .badge-unassigned {
+        background: #888888ff;
+        color: #ffffffff;
+        border-color: #424242ff;
     }
 
     .status-badge {

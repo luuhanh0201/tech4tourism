@@ -19,7 +19,10 @@ class BookingController
     function index()
     {
         $bookings = $this->BookingModel->getAllBookingModel();
-
+        // echo "<pre>";
+        // print_r($bookings);
+        // echo "</pre>";
+        // die;
         // $tours = $this->TourModel->getAllToursModel();
         renderLayoutAdmin("admin/Booking/index.php", ['bookings' => $bookings], "Danh sách booking");
     }
@@ -89,11 +92,16 @@ class BookingController
         $booking = $this->BookingModel->getDetailBooking($_GET['id']);
         $tour = $this->TourModel->getDetailTourModel($booking['tour_id']);
         $customers = $this->CustomerModel->getAllCustomerByBookingId($_GET['id']);
-        $guides = $this->GuiderManagerModel->getAllGuider('Trống lịch');
+        $guides = $this->GuiderManagerModel->getAllGuider('');
+        $oldGuideId = $booking['guide_id'] ?? null;
 
+        // echo "<pre>";
+        // print_r( $oldGuideId);
+        // echo "</pre>";
+        // die;
         try {
             if ($_SERVER['REQUEST_METHOD'] === "POST") {
-                $bookingId = (int) $_GET['id']; // hoặc lấy từ route
+                $bookingId = (int) $_GET['id'];
                 $contactName = $_POST['contact_name'] ?? '';
                 $contactPhone = $_POST['contact_phone'] ?? '';
                 $contactEmail = $_POST['contact_email'] ?? '';
@@ -106,8 +114,16 @@ class BookingController
                 $departureDate = $_POST['departure_date'] ?? null;
                 $endedAt = $_POST['ended_at'] ?? null;
                 $updatedBy = $_SESSION['user']['id'];
-                $guideId = $_POST['guide_id'];
+                $newGuideId = $_POST['guide_id'];
                 $guideNote = $_POST['guide_note'];
+                $isPayment = $_POST['is_payment'];
+                //          echo "<pre>";
+                // print_r( $_POST);
+                // echo "</pre>";
+                // die;
+                if($isPayment){
+                    $status = "confirmed";
+                }
                 if (
                     $this->BookingModel->updateBookingModel(
                         $bookingId,
@@ -122,11 +138,21 @@ class BookingController
                         $departureDate,
                         $updatedBy,
                         $endedAt,
-                        $guideId,
+                        $newGuideId,
                         $guideNote,
-                        $listCustomer,
+                        $isPayment,
+                        $listCustomer
                     )
                 ) {
+                    if ($newGuideId === "") {
+                        $this->BookingModel->changeStatusProfileGuideModel($oldGuideId, "Trống lịch");
+                    }
+                    if ($newGuideId && $newGuideId !== $oldGuideId) {
+                        if ($oldGuideId) {
+                            $this->BookingModel->changeStatusProfileGuideModel($oldGuideId, "Trống lịch");
+                        }
+                        $this->BookingModel->changeStatusProfileGuideModel($newGuideId, "Đang dẫn");
+                    }
                     header("Location: /dashboard/booking-manager");
                 } else {
                     echo "Lỗi";
@@ -154,14 +180,13 @@ class BookingController
         $booking = $this->BookingModel->getDetailBooking($_GET['id']);
         $tour = $this->TourModel->getDetailTourModel($booking['tour_id']);
         $customers = $this->CustomerModel->getAllCustomerByBookingId($_GET['id']);
-
+        $guide = $this->BookingModel->getGuideByDetailBookingModel($booking['id']);
         $idBooking = $_GET['id'];
         $idUser = $_SESSION['user']['id'];
-
+        // var_dump($guide);
+        // die;
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $action = $_POST['action'] ?? '';
-
-
             if ($action === 'cancel') {
                 $ok = $this->BookingModel->changeStatusBookingModel(
                     bookingId: $idBooking,
@@ -186,7 +211,8 @@ class BookingController
             'tour' => $tour,
             'booking' => $booking,
             'customers' => $customers,
-            'logBooking' => $logBooking
+            'logBooking' => $logBooking,
+            'guide' => $guide
         ], "Chi tiết booking");
 
     }

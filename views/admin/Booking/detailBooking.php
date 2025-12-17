@@ -60,7 +60,8 @@ $totalPrice = floatval($booking['total_price']);
                             <div class="tour-header">
                                 <div class="flex-grow-1">
                                     <h6 class="mb-2 fw-bold"><?= htmlspecialchars($tour['tour_name']) ?> -
-                                        <?= $tour['duration_day'] ?> ngày <?= $tour['duration_night'] ?> đêm</h6>
+                                        <?= $tour['duration_day'] ?> ngày <?= $tour['duration_night'] ?> đêm
+                                    </h6>
                                     <div class="tour-meta">
                                         <span><i class="fa-solid fa-calendar me-1"></i><?= $departureDate ?> -
                                             <?= $returnDate ?></span>
@@ -93,8 +94,8 @@ $totalPrice = floatval($booking['total_price']);
                         <div class="info-item">
                             <span class="label">Hướng dẫn viên:</span>
                             <span class="value">
-                                <?php if (isset($guide['full_name']) && !empty($guide['full_name'])): ?>
-                                    <a href="#" class="text-primary"><?= htmlspecialchars($guide['full_name']) ?></a>
+                                <?php if (isset($guide['guide_full_name']) && !empty($guide['guide_full_name'])): ?>
+                                    <a href="#" class="text-primary"><?= htmlspecialchars($guide['guide_full_name']) ?></a>
                                 <?php else: ?>
                                     <span class="text-muted">Chưa phân công</span>
                                 <?php endif; ?>
@@ -234,9 +235,15 @@ $totalPrice = floatval($booking['total_price']);
                 </div>
 
                 <div class="d-grid gap-2">
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#paymentModal">
-                        <i class="fa-solid fa-money-bill-wave me-2"></i>Xác Nhận Thanh Toán
-                    </button>
+                    <?php if (!empty($booking['is_payment']) && (int) $booking['is_payment'] === 1): ?>
+                        <button class="btn btn-success" type="button" disabled>
+                            <i class="fa-solid fa-circle-check me-2"></i>Đã thanh toán
+                        </button>
+                    <?php else: ?>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                            <i class="fa-solid fa-money-bill-wave me-2"></i>Xác Nhận Thanh Toán
+                        </button>
+                    <?php endif; ?>
                     <button class="btn btn-outline-secondary" onclick="window.print()">
                         <i class="fa-solid fa-receipt me-2"></i>In Hóa Đơn
                     </button>
@@ -302,7 +309,7 @@ $totalPrice = floatval($booking['total_price']);
     }
 
     .section-title i {
-        color: var(--color-primary);
+        color: #ff8a65;
     }
 
     .status-badge {
@@ -342,7 +349,7 @@ $totalPrice = floatval($booking['total_price']);
         background: #f8f9fa;
         padding: 20px;
         border-radius: 8px;
-        border-left: 4px solid var(--color-primary);
+        border-left: 4px solid #ff8a65;
     }
 
     .tour-header {
@@ -356,13 +363,13 @@ $totalPrice = floatval($booking['total_price']);
         flex-wrap: wrap;
         gap: 15px;
         font-size: 0.875rem;
-        color: var(--color-text-sub);
+        color: #666;
     }
 
     .tour-price {
         font-size: 1.5rem;
         font-weight: 700;
-        color: var(--color-primary);
+        color: #ff8a65;
     }
 
     .info-item {
@@ -378,7 +385,7 @@ $totalPrice = floatval($booking['total_price']);
     }
 
     .info-item .label {
-        color: var(--color-text-sub);
+        color: #666;
         font-weight: 500;
     }
 
@@ -397,7 +404,7 @@ $totalPrice = floatval($booking['total_price']);
 
     .summary-card {
         background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
-        border: 2px solid var(--color-primary);
+        border: 2px solid #ff8a65;
     }
 
     .summary-item {
@@ -415,11 +422,11 @@ $totalPrice = floatval($booking['total_price']);
         padding: 15px 0;
         font-size: 1.3rem;
         font-weight: 700;
-        color: var(--color-primary);
+        color: #ff8a65;
     }
 
     .btn-primary {
-        background-color: var(--color-primary);
+        background-color: #ff8a65;
         border: none;
         border-radius: 8px;
         padding: 10px 20px;
@@ -427,7 +434,7 @@ $totalPrice = floatval($booking['total_price']);
     }
 
     .btn-primary:hover {
-        background-color: var(--color-primary-dark);
+        background-color: #ff6f47;
     }
 
     .table {

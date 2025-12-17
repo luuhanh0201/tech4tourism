@@ -220,16 +220,32 @@ $returnDate = isset($booking['ended_at']) ? date('d/m/Y', strtotime($booking['en
                         <label class="form-label">Phân công hướng dẫn viên:</label>
                         <select class="form-select" name="guide_id">
                             <option value="">-- Chưa phân công --</option>
+
+                            <?php $selectedGuideId = (int) ($booking['guide_id'] ?? 0); ?>
+
                             <?php foreach ($guides as $guide): ?>
-                                <?php if ($guide['status'] === "Trống lịch"): ?>
-                                    <option value="<?= $guide['id'] ?>" <?= (isset($booking['guide_id']) && $booking['guide_id'] == $guide['id']) ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($guide['full_name']) ?> - <?= htmlspecialchars($guide['phone']) ?>
-                                    </option>
-                                <?php endif; ?>
-                            <?php endforeach ?>
+                                <?php
+                                $guideId = (int) ($guide['id'] ?? 0);
+                                $isSelected = ($guideId === $selectedGuideId);
+
+                                // Lưu ý: đảm bảo key 'status' đúng với data $guides của bạn
+                                $isFree = (($guide['status'] ?? '') === 'Trống lịch');
+
+                                // Chỉ hiển thị guide trống lịch hoặc guide đang được chọn sẵn
+                                if (!$isFree && !$isSelected) {
+                                    continue;
+                                }
+                                ?>
+
+                                <option value="<?= $guideId ?>" <?= $isSelected ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($guide['full_name'] ?? '') ?> -
+                                    <?= htmlspecialchars($guide['phone'] ?? '') ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
 
-                        <!-- Ghi chú nhỏ cho HDV -->
+
+                        <!-- Ghi chú cho HDV -->
                         <label class="form-label mb-1 mt-3">Ghi chú cho hướng dẫn viên:</label>
                         <textarea class="form-control" name="guide_note" rows="2"
                             placeholder="Ghi chú..."><?= htmlspecialchars($booking['guide_note'] ?? '') ?></textarea>
@@ -276,14 +292,23 @@ $returnDate = isset($booking['ended_at']) ? date('d/m/Y', strtotime($booking['en
 
                     <div class="mb-3">
                         <label class="form-label">Phương thức thanh toán:</label>
+                        <?php $isPaid = ((int) ($booking['is_payment'] ?? 0) === 1); ?>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" name="is_payment" value="1" id="is_payment"
+                                <?= $isPaid ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="is_payment">
+                                Đã thanh toán
+                            </label>
+                        </div>
                         <select class="form-select" name="payment_status">
-                            <option value="transfer" <?= $booking['payment_status'] === 'transfer' ? 'selected' : '' ?>>
-                                Chuyển khoản</option>
-                            <option value="cash" <?= $booking['payment_status'] === 'cash' ? 'selected' : '' ?>>Tiền mặt
-                            </option>
-                            <option value="card" <?= $booking['payment_status'] === 'card' ? 'selected' : '' ?>>Thẻ tín
-                                dụng</option>
+                            <option value="transfer" <?= ($booking['payment_status'] ?? '') === 'transfer' ? 'selected' : '' ?>>Chuyển khoản</option>
+                            <option value="cash" <?= ($booking['payment_status'] ?? '') === 'cash' ? 'selected' : '' ?>>
+                                Tiền mặt</option>
+                            <option value="card" <?= ($booking['payment_status'] ?? '') === 'card' ? 'selected' : '' ?>>Thẻ
+                                tín dụng</option>
                         </select>
+
+
                     </div>
                 </div>
 

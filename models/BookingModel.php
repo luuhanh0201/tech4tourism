@@ -11,11 +11,32 @@ class BookingModel
 
     function getAllBookingModel()
     {
-        $sql = "SELECT bookings.*,
-        tours.tour_name,
-        tours.price
-        FROM bookings
-        JOIN tours ON bookings.tour_id = tours.id";
+        $sql = "SELECT
+                bookings.*,
+                tours.tour_name,
+                tours.price,
+                users.full_name AS guide_full_name,
+                guide_profiles.phone AS guide_phone
+
+            FROM bookings
+            JOIN tours
+            ON bookings.tour_id = tours.id
+            LEFT JOIN guide_assignments
+            ON guide_assignments.id = (
+            SELECT guide_assignments_inner.id
+            FROM guide_assignments AS guide_assignments_inner
+            WHERE guide_assignments_inner.booking_id = bookings.id
+            ORDER BY
+                (guide_assignments_inner.status = 'progress') DESC,
+                guide_assignments_inner.id DESC
+            LIMIT 1
+        )
+            LEFT JOIN users
+            ON users.id = guide_assignments.guide_id
+
+    LEFT JOIN guide_profiles
+        ON guide_profiles.user_id = users.id
+";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -23,16 +44,67 @@ class BookingModel
 
     function getDetailBooking($id)
     {
-        $sql = "SELECT bookings.*,
+        $sql = "SELECT
+        bookings.*,
         tours.tour_name,
-        tours.price
-        FROM bookings
-        JOIN tours ON bookings.tour_id = tours.id WHERE bookings.id = :id";
+        tours.price,
+        guide_assignments.guide_id AS guide_id,
+        users.full_name AS guide_full_name,
+        guide_profiles.phone AS guide_phone
+    FROM bookings
+    JOIN tours
+        ON bookings.tour_id = tours.id
+    LEFT JOIN guide_assignments
+        ON guide_assignments.id = (
+            SELECT guide_assignments_inner.id
+            FROM guide_assignments AS guide_assignments_inner
+            WHERE guide_assignments_inner.booking_id = bookings.id
+            ORDER BY
+                (guide_assignments_inner.status = 'progress') DESC,
+                guide_assignments_inner.id DESC
+            LIMIT 1
+        )
+    LEFT JOIN users
+        ON users.id = guide_assignments.guide_id
+    LEFT JOIN guide_profiles
+        ON guide_profiles.user_id = users.id
+    WHERE bookings.id = :id
+    LIMIT 1";
+
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    public function getGuideByDetailBookingModel($bookingId)
+    {
+        $sql = "SELECT
+                users.full_name AS guide_full_name,
+                guide_profiles.phone AS guide_phone
+            FROM guide_assignments
+            LEFT JOIN users
+            ON users.id = guide_assignments.guide_id
+            LEFT JOIN guide_profiles
+            ON guide_profiles.user_id = users.id
 
+            WHERE guide_assignments.id = (
+            SELECT guide_assignments_inner.id
+            FROM guide_assignments AS guide_assignments_inner
+            WHERE guide_assignments_inner.booking_id = :booking_id
+            ORDER BY
+                (guide_assignments_inner.status = 'progress') DESC,
+                guide_assignments_inner.id DESC
+            LIMIT 1
+                )
+            LIMIT 1
+            ";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':booking_id' => $bookingId
+        ]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     function createBookingModel(
         $tourId,
         $bookingCode,
@@ -112,6 +184,7 @@ class BookingModel
         $endedAt,
         $guideId,
         $guideNote,
+        $isPayment,
         $customers = [],
     ): bool {
         echo $contactPhone;
@@ -127,6 +200,7 @@ class BookingModel
             max_person     = :max_person,
             total_price    = :total_price,
             departure_date = :departure_date,
+            is_payment = :is_payment,
             updated_by     = :updated_by
         WHERE id = :id
     ";
@@ -175,6 +249,7 @@ class BookingModel
             notes    = :notes
         WHERE booking_id = :booking_id
     ";
+        $sqlDeleteGuide = "DELETE FROM guide_assignments WHERE booking_id = :booking_id";
         try {
             $this->conn->beginTransaction();
 
@@ -189,6 +264,7 @@ class BookingModel
                 ':max_person' => $maxPerson,
                 ':total_price' => $totalPrice,
                 ':departure_date' => $departureDate,
+                ':is_payment' => $isPayment,
                 ':updated_by' => $updatedBy,
                 ':id' => $bookingId,
             ]);
@@ -259,32 +335,40 @@ class BookingModel
             }
 
 
-            $stmtSelectGuide = $this->conn->prepare($sqlSelectGuide);
-            $stmtSelectGuide->execute([':booking_id' => $bookingId]);
-            $guideAssignmentId = $stmtSelectGuide->fetchColumn();
-            $endedAt = $_POST['ended_at'] ?? null;
-            if ($endedAt === '') {
+            $guideId = ($guideId === '' || $guideId === null) ? null : (int) $guideId;
+            if ($endedAt === '' || $endedAt === null) {
                 $endedAt = null;
             }
-            if ($guideAssignmentId) {
-                $stmtUpdateGuide = $this->conn->prepare($sqlUpdateGuide);
-                $stmtUpdateGuide->execute([
-                    ':guide_id' => $guideId,
-                    ':booking_id' => $bookingId,
-                    ':started_at' => $departureDate,
-                    ':ended_at' => $endedAt,
-                    ':notes' => $guideNote,
-                ]);
+            if ($guideId !== null && $guideId > 0) {
+                $stmtSelectGuide = $this->conn->prepare($sqlSelectGuide);
+                $stmtSelectGuide->execute([':booking_id' => $bookingId]);
+                $guideAssignmentId = $stmtSelectGuide->fetchColumn();
+                if ($endedAt === '') {
+                    $endedAt = null;
+                }
+                if ($guideAssignmentId) {
+                    $stmtUpdateGuide = $this->conn->prepare($sqlUpdateGuide);
+                    $stmtUpdateGuide->execute([
+                        ':guide_id' => $guideId,
+                        ':booking_id' => $bookingId,
+                        ':started_at' => $departureDate,
+                        ':ended_at' => $endedAt,
+                        ':notes' => $guideNote,
+                    ]);
+                } else {
+                    $stmtInsertGuide = $this->conn->prepare($sqlInsertGuide);
+                    $stmtInsertGuide->execute([
+                        ':guide_id' => $guideId,
+                        ':created_by' => $updatedBy,
+                        ':booking_id' => $bookingId,
+                        ':started_at' => $departureDate,
+                        ':ended_at' => $endedAt,
+                        ':notes' => $guideNote,
+                    ]);
+                }
             } else {
-                $stmtInsertGuide = $this->conn->prepare($sqlInsertGuide);
-                $stmtInsertGuide->execute([
-                    ':guide_id' => $guideId,
-                    ':created_by' => $updatedBy,
-                    ':booking_id' => $bookingId,
-                    ':started_at' => $departureDate,
-                    ':ended_at' => $endedAt,
-                    ':notes' => $guideNote,
-                ]);
+                $this->conn->prepare($sqlDeleteGuide)
+                    ->execute([':booking_id' => $bookingId]);
             }
             $this->conn->commit();
             return true;
@@ -302,9 +386,15 @@ class BookingModel
                   VALUES
                   (:booking_id,:user_id,:old_value,:new_value)
         ";
-        $sqlUpdate = "UPDATE bookings 
-                SET status = :status, updated_by = :updated_by
-                WHERE id = :id";
+        $sqlUpdate = "UPDATE bookings
+                    SET
+                    status = :status,
+                    is_payment = CASE
+                    WHEN :status = 'done' THEN 1
+                    ELSE is_payment
+                    END,
+                    updated_by = :updated_by
+                    WHERE id = :id";
         try {
             $this->conn->beginTransaction();
             if (!$bookingId) {
@@ -334,6 +424,20 @@ class BookingModel
             $this->conn->rollBack();
             throw $th;
         }
+    }
+    function changeStatusProfileGuideModel($guideId, $status)
+    {
+        $allowedStatuses = ['Trống lịch', 'Đang dẫn', 'Tạm nghỉ'];
+        if (!in_array($status, $allowedStatuses, true)) {
+            return false;
+        }
+        $sql = "UPDATE guide_profiles SET status = :status WHERE user_id = :user_id LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+
+        return $stmt->execute([
+            ':status' => $status,
+            ':user_id' => $guideId,
+        ]);
     }
 }
 
