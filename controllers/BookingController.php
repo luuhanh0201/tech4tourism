@@ -29,6 +29,8 @@ class BookingController
     function createBooking()
     {
         try {
+            $services = $this->TourModel->getAllServicesModel();
+
             if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 // tour
                 $tourId = $_POST['tour_id'] ?? "";
@@ -44,8 +46,9 @@ class BookingController
                 $bookingNote = $_POST['booking_note'] ?? "";
                 $maxPerson = (count($customers) + 1);
                 $totalPrice = $price * (count($customers) + 1);
+                $serviceIds = $_POST['service_ids'];
                 // echo '<pre>';
-                // print_r($_POST);
+                // print_r($serviceIds);
                 // echo '</pre>';
                 // die;
                 if (!$tourId) {
@@ -66,10 +69,12 @@ class BookingController
                         $bookingNote,
                         $maxPerson,
                         $departureDate,
-                        $customers
+                        $serviceIds,
+                        $customers,
                     )
                 ) {
                     header("Location: /dashboard/booking-manager");
+                    exit;
                 } else {
                     echo "Lỗi";
                     die;
@@ -83,7 +88,7 @@ class BookingController
         }
         $tours = $this->TourModel->getAllToursModel();
         // include "views/admin/Booking/createBooking.php";
-        renderLayoutAdmin("admin/Booking/createBooking.php", ['tours' => $tours], "Tạo booking");
+        renderLayoutAdmin("admin/Booking/createBooking.php", ['tours' => $tours, "services" => $services], "Tạo booking");
 
     }
 
@@ -94,7 +99,8 @@ class BookingController
         $customers = $this->CustomerModel->getAllCustomerByBookingId($_GET['id']);
         $guides = $this->GuiderManagerModel->getAllGuider('');
         $oldGuideId = $booking['guide_id'] ?? null;
-
+        $services = $this->TourModel->getAllServicesWithTourModel($booking['tour_id']);
+        $serviceCurrent = $this->BookingModel->getAllServiceByBookingModel($booking['id']);
         // echo "<pre>";
         // print_r( $oldGuideId);
         // echo "</pre>";
@@ -116,12 +122,9 @@ class BookingController
                 $updatedBy = $_SESSION['user']['id'];
                 $newGuideId = $_POST['guide_id'];
                 $guideNote = $_POST['guide_note'];
-                $isPayment = $_POST['is_payment'];
-                //          echo "<pre>";
-                // print_r( $_POST);
-                // echo "</pre>";
-                // die;
-                if($isPayment){
+                $isPayment = $_POST['is_payment'] ?? 0;
+                $serviceIds = $_POST['service_ids'];
+                if ($isPayment) {
                     $status = "confirmed";
                 }
                 if (
@@ -141,6 +144,7 @@ class BookingController
                         $newGuideId,
                         $guideNote,
                         $isPayment,
+                        $serviceIds,
                         $listCustomer
                     )
                 ) {
@@ -170,7 +174,9 @@ class BookingController
             'booking' => $booking,
             'tour' => $tour,
             'customers' => $customers,
-            'guides' => $guides
+            'guides' => $guides,
+            'services' => $services,
+            'serviceCurrent' => $serviceCurrent
         ], "Sửa booking");
 
     }

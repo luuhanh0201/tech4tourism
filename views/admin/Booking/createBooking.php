@@ -40,6 +40,87 @@
                             <label class="form-label">Ngày Kết Thúc</label>
                             <input type="date" class="form-control" name="return_date" id="returnDate" readonly>
                         </div>
+                        <?php
+                        $carServices = [];
+                        $roomServices = [];
+
+                        foreach ($services as $s) {
+                            $type = $s['service_type'] ?? ''; // ví dụ: 'car' hoặc 'room'
+                            if ($type === 'car')
+                                $carServices[] = $s;
+                            if ($type === 'room')
+                                $roomServices[] = $s;
+                        }
+                        ?>
+                        <div class="card-section">
+                            <h5 class="card-section-title section-header-bar">
+                                <i class="fa-solid fa-concierge-bell me-2"></i>Dịch vụ đi kèm
+                            </h5>
+
+                            <div class="row g-3">
+                                <!-- Select xe -->
+                                <div class="col-12 col-lg-6">
+                                    <label class="form-label">Dịch vụ xe (car)</label>
+
+                                    <div class="border rounded p-2" style="max-height: 320px; overflow:auto;">
+                                        <?php if (empty($carServices)): ?>
+                                            <div class="text-muted">Không có dịch vụ xe</div>
+                                        <?php else: ?>
+                                            <?php foreach ($carServices as $s): ?>
+                                                <?php
+                                                $id = (int) ($s['id'] ?? 0);
+                                                $checked = !empty($selectedServiceIds[$id]) ? 'checked' : '';
+                                                $label = htmlspecialchars($s['service_name'] ?? '');
+                                                $price = number_format((int) ($s['base_price'] ?? 0), 0, ',', '.');
+                                                $cap = (int) ($s['capacity'] ?? 1);
+                                                ?>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="service_ids[]"
+                                                        id="svc_car_<?= $id ?>" value="<?= $id ?>" <?= $checked ?>>
+
+                                                    <label class="form-check-label" for="svc_car_<?= $id ?>">
+                                                        <?= $label ?> - <?= $price ?> ₫ - Chỗ: <?= $cap ?>
+                                                    </label>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="form-text">Bạn có thể chọn nhiều dịch vụ.</div>
+                                </div>
+
+                                <!-- Select phòng -->
+                                <div class="col-12 col-lg-6">
+                                    <label class="form-label">Dịch phòng/khách sạn (room)</label>
+
+                                    <div class="border rounded p-2" style="max-height: 320px; overflow:auto;">
+                                        <?php if (empty($roomServices)): ?>
+                                            <div class="text-muted">Không có dịch phòng/khách sạn</div>
+                                        <?php else: ?>
+                                            <?php foreach ($roomServices as $s): ?>
+                                                <?php
+                                                $id = (int) ($s['id'] ?? 0);
+                                                $checked = !empty($selectedServiceIds[$id]) ? 'checked' : '';
+                                                $label = htmlspecialchars($s['service_name'] ?? '');
+                                                $price = number_format((int) ($s['base_price'] ?? 0), 0, ',', '.');
+                                                $cap = (int) ($s['capacity'] ?? 1);
+                                                ?>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="service_ids[]"
+                                                        id="svc_room_<?= $id ?>" value="<?= $id ?>" <?= $checked ?>>
+
+                                                    <label class="form-check-label" for="svc_room_<?= $id ?>">
+                                                        <?= $label ?> - <?= $price ?> ₫ - Chỗ: <?= $cap ?>
+                                                    </label>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="form-text">Bạn có thể chọn nhiều dịch vụ.</div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="mb-3">
                             <label class="form-label">Ghi Chú</label>

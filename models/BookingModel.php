@@ -118,6 +118,7 @@ class BookingModel
         $notes,
         $maxPerson,
         $departureDate,
+        $serviceIds,
         $customers = []
     ) {
         $sqlBooking = "INSERT INTO bookings (tour_id,booking_code,contact_name,contact_phone,contact_email,created_by,status,payment_status,total_price,notes,max_person,departure_date
@@ -159,6 +160,7 @@ class BookingModel
                 ]);
 
             }
+            $this->addServicesToBookingDetailModel($bookingId, $serviceIds);
             $this->conn->commit();
             return true;
         } catch (\Throwable $e) {
@@ -185,6 +187,7 @@ class BookingModel
         $guideId,
         $guideNote,
         $isPayment,
+        $serviceIds,
         $customers = [],
     ): bool {
         echo $contactPhone;
@@ -370,6 +373,7 @@ class BookingModel
                 $this->conn->prepare($sqlDeleteGuide)
                     ->execute([':booking_id' => $bookingId]);
             }
+            $this->updateServicesToBookingModel($bookingId, $serviceIds);
             $this->conn->commit();
             return true;
         } catch (\Throwable $th) {
@@ -438,6 +442,198 @@ class BookingModel
             ':status' => $status,
             ':user_id' => $guideId,
         ]);
+    }
+    public function addServicesToBookingDetailModel($bookingId, $serviceIds = [])
+    {
+        $bookingId = (int) $bookingId;
+
+        if ($bookingId <= 0 || !is_array($serviceIds)) {
+            return false;
+        }
+        $uniqueServiceIds = [];
+        foreach ($serviceIds as $serviceId) {
+            $serviceId = (int) $serviceId;
+            if ($serviceId > 0) {
+                $uniqueServiceIds[$serviceId] = true;
+            }
+        }
+        $uniqueServiceIds = array_keys($uniqueServiceIds);
+        if (empty($uniqueServiceIds)) {
+            return true;
+        }
+        $placeholders = implode(',', array_fill(0, count($uniqueServiceIds), '?'));
+        $sqlGet = "SELECT id, service_name, service_type, base_price
+               FROM services
+               WHERE id IN ($placeholders)";
+        $stmtGet = $this->conn->prepare($sqlGet);
+        $stmtGet->execute($uniqueServiceIds);
+        $services = $stmtGet->fetchAll(PDO::FETCH_ASSOC);
+        $serviceMap = [];
+        foreach ($services as $s) {
+            $serviceMap[(int) $s['id']] = $s;
+        }
+        $sqlInsert = "
+        INSERT IGNORE INTO booking_details (
+            booking_id,
+            service_id,
+            service_name_current,
+            service_type_current,
+            unit_price,
+            quantity,
+            total_price
+        ) VALUES (
+            :booking_id,
+            :service_id,
+            :service_name_current,
+            :service_type_current,
+            :unit_price,
+            :quantity,
+            :total_price
+        )
+    ";
+        $stmtInsert = $this->conn->prepare($sqlInsert);
+
+        foreach ($uniqueServiceIds as $serviceId) {
+            if (empty($serviceMap[$serviceId])) {
+                continue;
+            }
+            $serviceName = $serviceMap[$serviceId]['service_name'] ?? null;
+            $serviceType = $serviceMap[$serviceId]['service_type'] ?? null;
+            $unitPrice = (int) ($serviceMap[$serviceId]['base_price'] ?? 0);
+
+            $quantity = 1;
+            $totalPrice = $unitPrice * $quantity;
+
+            $stmtInsert->execute([
+                ':booking_id' => $bookingId,
+                ':service_id' => $serviceId,
+                ':service_name_current' => $serviceName,
+                ':service_type_current' => $serviceType,
+                ':unit_price' => $unitPrice,
+                ':quantity' => $quantity,
+                ':total_price' => $totalPrice
+            ]);
+        }
+
+        return true;
+    }
+    public function getAllServiceByBookingModel($bookingId)
+    {
+        $bookingId = (int) $bookingId;
+        if ($bookingId <= 0) {
+            return [];
+        }
+
+        $sql = "SELECT
+            booking_detail.id,
+            booking_detail.booking_id,
+            booking_detail.service_id,
+            booking_detail.service_name_current,
+            booking_detail.service_type_current,
+            booking_detail.unit_price,
+            booking_detail.quantity,
+            booking_detail.total_price
+        FROM booking_details booking_detail
+        WHERE booking_detail.booking_id = :booking_id
+        
+    ";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':booking_id' => $bookingId]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function updateServicesToBookingModel($bookingId, $serviceIds = [])
+    {
+        $bookingId = (int) $bookingId;
+
+        if ($bookingId <= 0) {
+            return false;
+        }
+
+        if (!is_array($serviceIds)) {
+            $serviceIds = [];
+        }
+
+        // unique serviceIds
+        $uniqueServiceIds = [];
+        foreach ($serviceIds as $serviceId) {
+            $serviceId = (int) $serviceId;
+            if ($serviceId > 0) {
+                $uniqueServiceIds[$serviceId] = true;
+            }
+        }
+        $uniqueServiceIds = array_keys($uniqueServiceIds);
+
+        try {
+
+            $sqlDelete = "DELETE FROM booking_details WHERE booking_id = :booking_id";
+            $stmtDelete = $this->conn->prepare($sqlDelete);
+            $stmtDelete->execute([':booking_id' => $bookingId]);
+
+            if (empty($uniqueServiceIds)) {
+                return true;
+            }
+
+            $placeholders = implode(',', array_fill(0, count($uniqueServiceIds), '?'));
+            $sqlGet = "SELECT id, service_name, service_type, base_price
+                   FROM services
+                   WHERE id IN ($placeholders)";
+            $stmtGet = $this->conn->prepare($sqlGet);
+            $stmtGet->execute($uniqueServiceIds);
+            $services = $stmtGet->fetchAll(PDO::FETCH_ASSOC);
+
+            $serviceMap = [];
+            foreach ($services as $s) {
+                $serviceMap[(int) $s['id']] = $s;
+            }
+
+            $sqlInsert = "INSERT INTO booking_details (
+                booking_id,
+                service_id,
+                service_name_current,
+                service_type_current,
+                unit_price,
+                quantity,
+                total_price
+            ) VALUES (
+                :booking_id,
+                :service_id,
+                :service_name_current,
+                :service_type_current,
+                :unit_price,
+                :quantity,
+                :total_price
+            )
+        ";
+            $stmtInsert = $this->conn->prepare($sqlInsert);
+
+            foreach ($uniqueServiceIds as $serviceId) {
+                if (empty($serviceMap[$serviceId])) {
+                    continue;
+                }
+
+                $unitPrice = (int) ($serviceMap[$serviceId]['base_price'] ?? 0);
+                $quantity = 1;
+                $totalPrice = $unitPrice * $quantity;
+
+                $stmtInsert->execute([
+                    ':booking_id' => $bookingId,
+                    ':service_id' => $serviceId,
+                    ':service_name_current' => $serviceMap[$serviceId]['service_name'] ?? null,
+                    ':service_type_current' => $serviceMap[$serviceId]['service_type'] ?? null,
+                    ':unit_price' => $unitPrice,
+                    ':quantity' => $quantity,
+                    ':total_price' => $totalPrice,
+                ]);
+            }
+
+            return true;
+
+        } catch (Exception $e) {
+
+            return false;
+        }
     }
 }
 
