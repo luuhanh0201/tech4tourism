@@ -1,0 +1,357 @@
+
+
+    <div class="container-fluid">
+          <form class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label">📅 Chọn năm</label>
+                <input type="number" class="form-control" value="2024" min="2020" max="2030">
+            </div>
+             <div class="col-md-3">
+                    <label class="form-label">📆 Chọn tháng (tùy chọn)</label>
+                    <select class="form-select">
+                        <option value="">Tất cả các tháng</option>
+                        <option value="1">Tháng 1</option>
+                        <option value="2">Tháng 2</option>
+                        <option value="3">Tháng 3</option>
+                        <option value="4">Tháng 4</option>
+                        <option value="5">Tháng 5</option>
+                        <option value="6">Tháng 6</option>
+                        <option value="7">Tháng 7</option>
+                        <option value="8">Tháng 8</option>
+                        <option value="9">Tháng 9</option>
+                        <option value="10">Tháng 10</option>
+                        <option value="11">Tháng 11</option>
+                        <option value="12">Tháng 12</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">🗺️ Loại tour</label>
+                    <select class="form-select">
+                        <option value="">Tất cả</option>
+                        <option value="domestic">Tour trong nước</option>
+                        <option value="international">Tour quốc tế</option>
+                    </select>
+                </div>
+                  <div class="col-md-3">
+                    <button type="button" class="btn btn-orange w-100">
+                        🔍 Xem báo cáo
+                    </button>
+                </div>
+              </form>
+        </div>
+
+    <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="stat-card card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="stat-label mb-2">Tổng số khách hàng</p>
+                                <h3 class="stat-value">2,847</h3>
+                                <small class="trend-up">↑ 12.5% so với tháng trước</small>
+                            </div>
+                            <div class="stat-icon">
+                                👥
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="stat-card card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="stat-label mb-2">Tour đang mở</p>
+                                <h3 class="stat-value">156</h3>
+                                <small class="trend-up">↑ 8 tour mới</small>
+                            </div>
+                            <div class="stat-icon">
+                                🗺️
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <div class="stat-card card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="stat-label mb-2">Doanh thu</p>
+                                <h3 class="stat-value">8.5 tỷ</h3>
+                                <small class="trend-up">↑ 15.3% so với tháng trước</small>
+                            </div>
+                            <div class="stat-icon">
+                                💰
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <div class="row">
+            <div class="col-lg-8 mb-4">
+                <div class="chart-card card">
+                    <div class="card-header">
+                        📈 Doanh thu theo tháng
+                    </div>
+                    <div class="card-body">
+                        <canvas id="revenueChart" height="80"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="col-lg-4 mb-4">
+                <div class="chart-card card">
+                    <div class="card-header">
+                        🎯 Tour được đặt nhiều nhất
+                    </div>
+                    <div class="card-body">
+                        <canvas id="topToursChart" height="80"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="chart-card card">
+                    <div class="card-header">
+                        👥 Tổng số khách hàng theo tháng
+                    </div>
+                    <div class="card-body">
+                        <canvas id="customerChart" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="col-lg-6 mb-4">
+                <div class="chart-card card">
+                    <div class="card-header">
+                        ✅ Số tour được đặt
+                    </div>
+                    <div class="card-body">
+                        <canvas id="bookedToursChart" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+         <div class="row">
+            <div class="col-lg-12 mb-4">
+                <div class="chart-card card">
+                    <div class="card-header">
+                        🔥 Tour bán chạy nhất
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-2">
+                                <span>🏆 Đà Lạt - Thành phố ngàn hoa</span>
+                                <span class="badge bg-warning text-dark rounded-pill">342 đặt</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-2">
+                                <span>🥈 Phú Quốc - Đảo ngọc</span>
+                                <span class="badge bg-warning text-dark rounded-pill">298 đặt</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-2">
+                                <span>🥉 Hạ Long - Vịnh kỳ quan</span>
+                                <span class="badge bg-warning text-dark rounded-pill">267 đặt</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-2">
+                                <span>🎖️ Sapa - Miền sương mù</span>
+                                <span class="badge bg-warning text-dark rounded-pill">234 đặt</span>
+                            </div>
+                          
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+         const orangeColors = {
+            primary: 'rgba(240, 114, 10, 1)',
+            light: 'rgba(255, 140, 58, 1)',
+            gradient: 'rgba(240, 114, 10, 0.5)',
+            lightGradient: 'rgba(255, 140, 58, 0.5)'
+        };
+
+          const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        const gradient1 = revenueCtx.createLinearGradient(0, 0, 0, 400);
+        gradient1.addColorStop(0, orangeColors.gradient);
+        gradient1.addColorStop(1, 'rgba(240, 114, 10, 0.05)');
+
+
+        new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
+                datasets: [{
+                    label: 'Doanh thu (triệu VNĐ)',
+                    data: [520, 480, 650, 590, 720, 850, 920, 880, 790, 710, 760, 950],
+                    borderColor: orangeColors.primary,
+                    backgroundColor: gradient1,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: orangeColors.primary,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 3,
+                    pointRadius: 6,
+                    pointHoverRadius: 9,
+                    borderWidth: 3
+                }]
+            },
+
+             options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.85)',
+                        padding: 15,
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        cornerRadius: 12,
+                        titleFont: { size: 14, weight: 'bold' },
+                        bodyFont: { size: 13 }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#666', font: { size: 12 } },
+                        grid: { color: 'rgba(0,0,0,0.04)' }
+                    },
+                    x: {
+                        ticks: { color: '#666', font: { size: 12 } },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+
+           const customerCtx = document.getElementById('customerChart').getContext('2d');
+        const gradient2 = customerCtx.createLinearGradient(0, 0, 0, 400);
+        gradient2.addColorStop(0, orangeColors.lightGradient);
+        gradient2.addColorStop(1, 'rgba(255, 140, 58, 0.1)');
+
+
+         new Chart(customerCtx, {
+            type: 'bar',
+            data: {
+                labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
+                datasets: [{
+                    label: 'Số khách',
+                    data: [180, 165, 220, 200, 250, 290, 310, 295, 270, 240, 260, 320],
+                    backgroundColor: gradient2,
+                    borderColor: orangeColors.light,
+                    borderWidth: 2,
+                    borderRadius: 10,
+                    hoverBackgroundColor: orangeColors.light
+                }]
+            },
+
+
+               options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#666', font: { size: 12 } },
+                        grid: { color: 'rgba(0,0,0,0.04)' }
+                    },
+                    x: {
+                        ticks: { color: '#666', font: { size: 12 } },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+         new Chart(document.getElementById('topToursChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Đà Lạt', 'Phú Quốc', 'Hạ Long', 'Sapa', 'Khác'],
+                datasets: [{
+                    data: [342, 298, 267, 234, 445],
+                    backgroundColor: [
+                        orangeColors.primary,
+                        orangeColors.light,
+                        'rgba(240, 114, 10, 0.7)',
+                        'rgba(255, 140, 58, 0.7)',
+                        'rgba(255, 180, 100, 0.7)'
+                    ],
+                    borderWidth: 4,
+                    borderColor: '#fff',
+                    hoverOffset: 10
+                }]
+            },
+
+
+              options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { 
+                            padding: 15, 
+                            color: '#666',
+                            font: { size: 12, weight: '600' }
+                        }
+                    }
+                }
+            }
+        });
+
+
+           new Chart(document.getElementById('bookedToursChart'), {
+            type: 'line',
+            data: {
+                labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
+                datasets: [{
+                    label: 'Tour được đặt',
+                    data: [145, 132, 178, 165, 201, 234, 256, 243, 221, 198, 215, 267],
+                    borderColor: orangeColors.primary,
+                    backgroundColor: orangeColors.gradient,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointBackgroundColor: orangeColors.primary,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    borderWidth: 3
+                }]
+            },
+
+
+             options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { 
+                        beginAtZero: true, 
+                        ticks: { color: '#666', font: { size: 12 } }, 
+                        grid: { color: 'rgba(0,0,0,0.04)' } 
+                    },
+                    x: { 
+                        ticks: { color: '#666', font: { size: 12 } }, 
+                        grid: { display: false } 
+                    }
+                }
+            }
+        });
+    </script>

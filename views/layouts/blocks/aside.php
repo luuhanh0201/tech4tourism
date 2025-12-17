@@ -24,7 +24,7 @@
       <span>Quản lí hướng dẫn viên</span>
     </a>
 
-    <a href="#" class="menu-item <?= $active == 'statistic' ? 'active' : '' ?>">
+    <a href="/dashboard/report-manager" class="menu-item <?= $active == 'statistic' ? 'active' : '' ?>">
       <i class="fa-solid fa-chart-line"></i>
       <span>Báo cáo - Thống kê</span>
     </a>
