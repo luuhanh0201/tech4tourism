@@ -18,13 +18,21 @@ class BookingController
 
     function index()
     {
-        $bookings = $this->BookingModel->getAllBookingModel();
-        // echo "<pre>";
-        // print_r($bookings);
-        // echo "</pre>";
-        // die;
-        // $tours = $this->TourModel->getAllToursModel();
-        renderLayoutAdmin("admin/Booking/index.php", ['bookings' => $bookings], "Danh sách booking");
+        $keyword = trim($_GET['keyword'] ?? '');
+        $status = $_GET['status'] ?? '';
+        $sortPrice = $_GET['sort_price'] ?? ''; 
+        $sortDate = $_GET['sort_date'] ?? '';  
+
+        $bookings = $this->BookingModel->getAllBookingModel($keyword, $status, $sortPrice, $sortDate);
+        renderLayoutAdmin("admin/Booking/index.php", [
+            'bookings' => $bookings,
+            'filters' => [
+                'keyword' => $keyword,
+                'status' => $status,
+                'sort_price' => $sortPrice,
+                'sort_date' => $sortDate,
+            ]
+        ], "Danh sách booking");
     }
     function createBooking()
     {

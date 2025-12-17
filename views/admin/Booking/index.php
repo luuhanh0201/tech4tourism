@@ -10,18 +10,41 @@
 
     </div>
     <div class="tours-toolbar d-flex flex-wrap align-items-center mb-3">
-        <div class="flex-grow-1 me-2 mb-2 mb-sm-0">
-            <input type="search" class="form-control tours-search" placeholder="Tìm kiếm theo tên tour...">
-        </div>
-        <div class="mb-2 mb-sm-0">
-            <select class="form-select tours-filter">
+      
+        <?php $f = $filters ?? []; ?>
+
+        <form method="GET" class="tours-toolbar d-flex flex-wrap align-items-center mb-3 gap-2">
+
+            <div class="flex-grow-1" style="min-width:260px;">
+                <input type="search" class="form-control" name="keyword"
+                    placeholder="Tìm theo mã booking / tên tour / SĐT..."
+                    value="<?= htmlspecialchars($f['keyword'] ?? '') ?>">
+            </div>
+
+            <select class="form-select" name="status" style="width:220px">
                 <option value="">Tất cả trạng thái</option>
-                <option value="pending">Chờ xác nhận</option>
-                <option value="confirmed">Đã xác nhận</option>
-                <option value="done">Đã hoàn thành</option>
-                <option value="canceled">Đã huỷ</option>
+                <option value="pending" <?= (($f['status'] ?? '') === 'pending') ? 'selected' : '' ?>>Chờ xác nhận</option>
+                <option value="confirmed" <?= (($f['status'] ?? '') === 'confirmed') ? 'selected' : '' ?>>Đã xác nhận</option>
+                <option value="done" <?= (($f['status'] ?? '') === 'done') ? 'selected' : '' ?>>Đã hoàn thành</option>
+                <option value="canceled" <?= (($f['status'] ?? '') === 'canceled') ? 'selected' : '' ?>>Đã huỷ</option>
             </select>
-        </div>
+
+            <select class="form-select" name="sort_price" style="width:220px">
+                <option value="">Giá: mặc định</option>
+                <option value="asc" <?= (($f['sort_price'] ?? '') === 'asc') ? 'selected' : '' ?>>Giá thấp → cao</option>
+                <option value="desc" <?= (($f['sort_price'] ?? '') === 'desc') ? 'selected' : '' ?>>Giá cao → thấp</option>
+            </select>
+
+            <select class="form-select" name="sort_date" style="width:220px">
+                <option value="">Ngày tạo: mặc định</option>
+                <option value="desc" <?= (($f['sort_date'] ?? '') === 'desc') ? 'selected' : '' ?>>Mới → cũ</option>
+                <option value="asc" <?= (($f['sort_date'] ?? '') === 'asc') ? 'selected' : '' ?>>Cũ → mới</option>
+            </select>
+
+            <button class="btn btn-primary">Lọc</button>
+            <a class="btn btn-outline-secondary" href="?">Reset</a>
+        </form>
+
     </div>
     <div class="table-container">
         <table class="table align-middle">

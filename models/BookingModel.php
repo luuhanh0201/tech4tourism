@@ -9,39 +9,80 @@ class BookingModel
     }
 
 
-    function getAllBookingModel()
+    public function getAllBookingModel($keyword = '', $status = '', $sortPrice = '', $sortDate = '')
     {
+        $where = [];
+        $params = [];
+
+        // keyword
+        $keyword = trim((string) $keyword);
+        if ($keyword !== '') {
+            $where[] = "(tours.tour_name LIKE :kw
+                    OR bookings.booking_code LIKE :kw
+                    OR bookings.contact_phone LIKE :kw)";
+            $params[':kw'] = '%' . $keyword . '%';
+        }
+
+        // status
+        $status = trim((string) $status);
+        if ($status !== '') {
+            $where[] = "bookings.status = :status";
+            $params[':status'] = $status;
+        }
+
+        // order by
+        $orderParts = [];
+
+        $sortDate = strtolower(trim((string) $sortDate));
+        if ($sortDate === 'asc')
+            $orderParts[] = "bookings.booking_date ASC";   // cũ -> mới
+        if ($sortDate === 'desc')
+            $orderParts[] = "bookings.booking_date DESC";  // mới -> cũ
+
+        $sortPrice = strtolower(trim((string) $sortPrice));
+        if ($sortPrice === 'asc')
+            $orderParts[] = "bookings.total_price ASC";   // thấp -> cao
+        if ($sortPrice === 'desc')
+            $orderParts[] = "bookings.total_price DESC";  // cao -> thấp
+
+        if (empty($orderParts)) {
+            $orderParts[] = "bookings.id DESC";
+        } else {
+            $orderParts[] = "bookings.id DESC"; // tie-breaker
+        }
+
         $sql = "SELECT
                 bookings.*,
                 tours.tour_name,
                 tours.price,
                 users.full_name AS guide_full_name,
                 guide_profiles.phone AS guide_phone
-
             FROM bookings
-            JOIN tours
-            ON bookings.tour_id = tours.id
+            JOIN tours ON bookings.tour_id = tours.id
             LEFT JOIN guide_assignments
-            ON guide_assignments.id = (
-            SELECT guide_assignments_inner.id
-            FROM guide_assignments AS guide_assignments_inner
-            WHERE guide_assignments_inner.booking_id = bookings.id
-            ORDER BY
-                (guide_assignments_inner.status = 'progress') DESC,
-                guide_assignments_inner.id DESC
-            LIMIT 1
-        )
-            LEFT JOIN users
-            ON users.id = guide_assignments.guide_id
+                ON guide_assignments.id = (
+                    SELECT guide_assignments_inner.id
+                    FROM guide_assignments AS guide_assignments_inner
+                    WHERE guide_assignments_inner.booking_id = bookings.id
+                    ORDER BY
+                        (guide_assignments_inner.status = 'progress') DESC,
+                        guide_assignments_inner.id DESC
+                    LIMIT 1
+                )
+            LEFT JOIN users ON users.id = guide_assignments.guide_id
+            LEFT JOIN guide_profiles ON guide_profiles.user_id = users.id
+    ";
 
-    LEFT JOIN guide_profiles
-        ON guide_profiles.user_id = users.id
-";
+        if (!empty($where)) {
+            $sql .= " WHERE " . implode(" AND ", $where);
+        }
+
+        $sql .= " ORDER BY " . implode(", ", $orderParts);
+
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
+        $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
     function getDetailBooking($id)
     {
         $sql = "SELECT
