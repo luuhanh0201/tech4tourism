@@ -139,26 +139,119 @@
                 </div>
             </div>
 
-            <!-- Thông tin hệ thống -->
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h6 class="fw-bold mb-3 section-header-bar">Thông tin hệ thống</h6>
-                    <div class="row small text-muted">
-                        <div class="col-md-6 mb-2">
-                            <strong>Ngày tạo:</strong> <?= $tour['created_at'] ?>
+        </div>
+        <div class="card shadow-sm border-0">
+                    <h5 class="fw-bold mb-3 section-header-bar">Dịch vụ đi kèm</h5>
+
+            <div class="row g-3">
+                <?php if (!empty($services)): ?>
+                    <?php foreach ($services as $s): ?>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <div class="service-card h-100">
+                                <div class="service-card__name">
+                                    <?php if ($s['service_type'] == 'car'): ?>
+                                        <i class="fa-solid fa-car me-2"></i>
+                                    <?php else: ?>
+                                        <i class="fa-solid fa-hotel me-2"></i>
+                                    <?php endif ?>
+                                    <?= htmlspecialchars($s['service_name']) ?>
+                                </div>
+
+                                <div class="service-card__meta">
+                                    <span class="service-pill">
+                                        <i class="fa-solid fa-tag me-1"></i>
+                                        <?= number_format((int) $s['base_price'], 0, ',', '.') ?> ₫
+                                    </span>
+
+                                    <span class="service-pill">
+                                        <i class="fa-solid fa-users me-1"></i>
+                                        Khách tối đa: <?= (int) ($s['capacity'] ?? 1) ?>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6 mb-2">
-                            <strong>Cập nhật lần cuối:</strong> <?= $tour['updated_at'] ?>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="col-12">
+                        <div class="empty-services">
+                            <i class="fa-solid fa-box-open fa-2x mb-2"></i>
+                            <p class="mb-0">Chưa có dịch vụ nào</p>
                         </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- Thông tin hệ thống -->
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h6 class="fw-bold mb-3 section-header-bar">Thông tin hệ thống</h6>
+                <div class="row small text-muted">
+                    <div class="col-md-6 mb-2">
+                        <strong>Ngày tạo:</strong> <?= $tour['created_at'] ?>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <strong>Cập nhật lần cuối:</strong> <?= $tour['updated_at'] ?>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 </div>
 
 <style>
+    .service-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 14px 16px;
+        transition: all 0.2s ease;
+    }
+
+    .service-card:hover {
+        border-color: rgba(255, 140, 0, 0.55);
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+        transform: translateY(-2px);
+    }
+
+    .service-card__name {
+        font-size: 15px;
+        font-weight: 700;
+        color: #111827;
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .service-card__meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .service-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid #e5e7eb;
+        background: #f9fafb;
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+    .empty-services {
+        text-align: center;
+        padding: 28px 16px;
+        border-radius: 14px;
+        border: 1px dashed #e5e7eb;
+        background: #f9fafb;
+        color: #6b7280;
+    }
+
     .status-active {
         background: #D6F5D6;
         color: #1A8F1A;

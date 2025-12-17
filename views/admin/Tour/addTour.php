@@ -74,7 +74,46 @@
                     </div>
                 </div>
             </div>
+            <div class="card-section">
+                <h5 class="card-section-title section-header-bar">
+                    <i class="fa-solid fa-concierge-bell me-2"></i>Dịch vụ đi kèm
+                </h5>
+                <div class="row g-3">
+                    <?php if (!empty($services)): ?>
+                        <?php foreach ($services as $s): ?>
+                            <div class="service-item col-12 col-md-6 col-lg-4">
+                                <input class="service-checkbox" type="checkbox" name="service_ids[]"
+                                    value="<?= (int) $s['id'] ?>" id="service_<?= (int) $s['id'] ?>"
+                                    <?= !empty($s['is_selected']) ? 'checked' : '' ?>>
 
+                                <label class="service-label" for="service_<?= (int) $s['id'] ?>">
+                                    <div class="service-info">
+                                        <div class="service-name">
+                                            <i class="fa-solid fa-check-circle service-check-icon"></i>
+                                            <?= htmlspecialchars($s['service_name']) ?>
+                                        </div>
+                                        <div class="service-details">
+                                            <span class="service-price">
+                                                <i class="fa-solid fa-tag me-1"></i>
+                                                <?= number_format((int) $s['base_price'], 0, ',', '.') ?> ₫
+                                            </span>
+                                            <span class="service-capacity">
+                                                <i class="fa-solid fa-users me-1"></i>
+                                                Khách tối đa: <?= (int) ($s['capacity'] ?? 1) ?>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="empty-services">
+                            <i class="fa-solid fa-box-open fa-2x mb-2"></i>
+                            <p class="mb-0">Chưa có dịch vụ nào</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
             <div class="card-section">
                 <div class="section-header-bar">
                     <i class="fa-solid fa-calendar-days"></i>
@@ -143,6 +182,106 @@
 </div>
 
 <style>
+    .service-item {
+        position: relative;
+    }
+
+    .service-checkbox {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    .service-label {
+        display: block;
+        padding: 14px 16px;
+        background: #f8f9fa;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        margin: 0;
+    }
+
+    .service-label:hover {
+        background: #ffffff;
+        border-color: #ff8c00;
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(255, 140, 0, 0.15);
+    }
+
+    /* Checkbox được chọn */
+    .service-checkbox:checked+.service-label {
+        background: linear-gradient(135deg, #fff5e6 0%, #ffe6cc 100%);
+        border-color: #ff8c00;
+        box-shadow: 0 2px 8px rgba(255, 140, 0, 0.2);
+    }
+
+    .service-checkbox:checked+.service-label .service-check-icon {
+        opacity: 1;
+        transform: scale(1);
+        color: #ff8c00;
+    }
+
+    /* Service info layout */
+    .service-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .service-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #111827;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .service-check-icon {
+        font-size: 16px;
+        color: #d1d5db;
+        opacity: 0;
+        transform: scale(0.5);
+        transition: all 0.3s ease;
+    }
+
+    .service-details {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+    .service-price {
+        font-weight: 600;
+        color: #ef4444;
+        display: flex;
+        align-items: center;
+    }
+
+    .service-price i {
+        color: #ef4444;
+        font-size: 12px;
+    }
+
+    .service-capacity {
+        font-weight: 500;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+    }
+
+    .service-capacity i {
+        color: #6b7280;
+        font-size: 12px;
+    }
+
     .day-card {
         border: 1px solid #e5e7eb;
         border-radius: 12px;
@@ -226,11 +365,6 @@
         box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
     }
 
-    .empty-state {
-        text-align: center;
-        padding: 40px 20px;
-        color: #9ca3af;
-    }
 
     .empty-state i {
         font-size: 64px;
@@ -351,7 +485,6 @@
     .form-select.is-invalid {
         border-color: #dc3545;
         padding-right: calc(1.5em + 0.75rem);
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
         background-repeat: no-repeat;
         background-position: right calc(0.375em + 0.1875rem) center;
         background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);

@@ -44,6 +44,7 @@ class TourModel
         $description,
         $cancellationPolicy,
         $imageUrl,
+        $serviceIds = [],
         $tourItineraries = []
     ) {
 
@@ -106,24 +107,34 @@ class TourModel
 
             $stmtTourItinerary = $this->conn->prepare($sqlTourItinerary);
             foreach ($tourItineraries as $tourItinerary) {
-                if (!isset($tourItinerary['day_number']))
+                if (!isset($tourItinerary['day_number'])) {
                     continue;
-                $dayDetail = $tourItinerary['day_number'];
-                foreach ($tourItinerary as $index => $row) {
-                    if (!is_int($day) || !is_array($row))
-                        continue;
+                }
 
+                $dayNumber = (int) $tourItinerary['day_number'];
+                $sortOrder = 1;
+
+                foreach ($tourItinerary as $key => $row) {
+                    if ($key === 'day_number') {
+                        continue;
+                    }
+                    if (!is_array($row)) {
+                        continue;
+                    }
                     $stmtTourItinerary->execute([
                         "tour_id" => $tourId,
-                        "day_number" => $dayDetail,
-                        "sort_order" => $index + 1,
+                        "day_number" => $dayNumber,
+                        "sort_order" => $sortOrder,
                         "title" => $row['title'] ?? null,
                         "description" => $row['description'] ?? null,
                         "start_time" => $row['start_time'] ?? null,
                         "end_time" => $row['end_time'] ?? null,
                     ]);
+
+                    $sortOrder++;
                 }
             }
+            $this->addServicesToTourModel($tourId, $serviceIds);
             $this->conn->commit();
             return true;
         } catch (\Throwable $th) {
@@ -144,6 +155,7 @@ class TourModel
         $cancellationPolicy,
         $id,
         $imageUrl,
+        $services = [],
         $tourItineraries = []
     ) {
         $sqlTour = "UPDATE tours SET
@@ -216,6 +228,7 @@ class TourModel
                     ]);
                 }
             }
+            $this->updateServicesToTourModel($id, $services);
             $this->conn->commit();
             return true;
         } catch (\Throwable $e) {
@@ -265,6 +278,118 @@ class TourModel
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getAllServicesModel()
+    {
+        $sql = "SELECT * FROM services ORDER BY created_at DESC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    }
+    public function addServicesToTourModel($tourId, $serviceIds = [])
+    {
+        $tourId = (int) $tourId;
+
+        $sql = "INSERT IGNORE INTO tour_services (tour_id, service_id)
+            VALUES (:tour_id, :service_id)";
+
+        if (!is_array($serviceIds) || $tourId <= 0) {
+            return false;
+        }
+
+        $uniqueServiceIds = [];
+        foreach ($serviceIds as $serviceId) {
+            $serviceId = (int) $serviceId;
+            if ($serviceId > 0) {
+                $uniqueServiceIds[$serviceId] = true;
+            }
+        }
+        $uniqueServiceIds = array_keys($uniqueServiceIds);
+
+        if (empty($uniqueServiceIds)) {
+            return true;
+        }
+
+        $stmt = $this->conn->prepare($sql);
+
+        foreach ($uniqueServiceIds as $serviceId) {
+            $stmt->execute([
+                ':tour_id' => $tourId,
+                ':service_id' => (int) $serviceId
+            ]);
+        }
+
+        return true;
+    }
+    public function updateServicesToTourModel($tourId, $serviceIds = [])
+    {
+        $tourId = (int) $tourId;
+
+        if ($tourId <= 0) {
+            return false;
+        }
+
+        if (!is_array($serviceIds)) {
+            $serviceIds = [];
+        }
+
+        $uniqueServiceIds = [];
+        foreach ($serviceIds as $serviceId) {
+            $serviceId = (int) $serviceId;
+            if ($serviceId > 0) {
+                $uniqueServiceIds[$serviceId] = true;
+            }
+        }
+        $uniqueServiceIds = array_keys($uniqueServiceIds);
+
+        $sqlDelete = "DELETE FROM tour_services WHERE tour_id = :tour_id";
+        $stmtDelete = $this->conn->prepare($sqlDelete);
+        $stmtDelete->execute([':tour_id' => $tourId]);
+
+        if (empty($uniqueServiceIds)) {
+            return true;
+        }
+
+        $sqlInsert = "INSERT INTO tour_services (tour_id, service_id)
+                  VALUES (:tour_id, :service_id)";
+        $stmtInsert = $this->conn->prepare($sqlInsert);
+
+        foreach ($uniqueServiceIds as $serviceId) {
+            $stmtInsert->execute([
+                ':tour_id' => $tourId,
+                ':service_id' => (int) $serviceId
+            ]);
+        }
+
+        return true;
+    }
+    public function getAllServicesWithTourModel($tourId)
+    {
+        $tourId = (int) $tourId;
+
+        $sql = "SELECT
+                services.id,
+                services.service_name,
+                services.service_type,
+                services.capacity,
+                services.base_price
+            FROM services
+            INNER JOIN tour_services
+                ON tour_services.service_id = services.id
+            WHERE tour_services.tour_id = :tour_id
+            ORDER BY services.created_at DESC;
+
+    ";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':tour_id' => $tourId
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
 
 ?>

@@ -26,6 +26,7 @@ class TourController
     }
     function addNewTour()
     {
+        $services = $this->TourModel->getAllServicesModel();
         try {
             if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $tourName = $_POST['tour_name'];
@@ -39,6 +40,8 @@ class TourController
                 $cancellationPolicy = $_POST['cancellation_policy'];
                 $imageUrl = $_FILES['image']['name'];
                 $tourItineraries = $_POST['tour_itinerary'];
+                $serviceIds = $_POST['service_ids'];
+
                 if (!empty($imageUrl)) {
                     $imageUrl = uploadFile($_FILES['image']);
                 }
@@ -53,8 +56,10 @@ class TourController
                     $description,
                     $cancellationPolicy,
                     $imageUrl,
+                    $serviceIds,
                     $tourItineraries
                 );
+
                 $_SESSION["success"] = "Tạo tour thành công";
                 header("Location: /dashboard/tours-manager");
                 exit;
@@ -69,6 +74,7 @@ class TourController
 
         renderLayoutAdmin("admin/Tour/addTour.php", [
             "categories" => $categories,
+            'services' => $services
         ], "Thêm tour mới");
 
     }
@@ -80,12 +86,13 @@ class TourController
 
         $tour = $this->TourModel->getDetailTourModel($_GET['id']);
         $tourItineraries = $this->TourModel->getTourItineraryByDay($tour['id']);
+        $services = $this->TourModel->getAllServicesWithTourModel($tour['id']);
         // var_dump($tour)
         // echo "<pre>";
         // print_r($tourItineraries);
         // echo "</pre>";
         // die;
-        renderLayoutAdmin("admin/Tour/detailTour.php", ['tour' => $tour, 'tourItineraries' => $tourItineraries], "Chi tiết tour");
+        renderLayoutAdmin("admin/Tour/detailTour.php", ['tour' => $tour, 'tourItineraries' => $tourItineraries, 'services' => $services], "Chi tiết tour");
 
     }
     function editTour()
@@ -94,8 +101,9 @@ class TourController
             exit;
         }
         $categories = $this->CategoryModel->All();
-
+        $services = $this->TourModel->getAllServicesModel();
         $tour = $this->TourModel->getDetailTourModel($_GET['id']);
+        $serviceWithTour = $this->TourModel->getAllServicesWithTourModel($tour['id']);
         $tourItinerariesData = $this->TourModel->getTourItineraryByDay($tour['id']);
 
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
@@ -110,16 +118,15 @@ class TourController
             $cancellationPolicy = $_POST['cancellation_policy'];
             $id = $_GET['id'];
             $imageUrl = $tour['image_url'] ?? null;
+            $services = $_POST['service_ids'] ?? [];
             $tourItineraries = $_POST['tour_itinerary'] ?? [];
+
             if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 $uploadPath = uploadFile($_FILES['image']);   // dùng hàm bạn đã có
                 if ($uploadPath) {
                     $imageUrl = $uploadPath;
-
-
                 }
             }
-
             if (
                 $this->TourModel->editTourModel(
                     $category,
@@ -133,6 +140,7 @@ class TourController
                     $cancellationPolicy,
                     $id,
                     $imageUrl,
+                    $services,
                     $tourItineraries
                 )
             ) {
@@ -142,7 +150,13 @@ class TourController
                 echo "FALSE";
             }
         }
-        renderLayoutAdmin("admin/Tour/editTour.php", ['tour' => $tour, 'categories' => $categories, 'tourItineraries' => $tourItinerariesData], "Sửa tour");
+        renderLayoutAdmin("admin/Tour/editTour.php", [
+            'tour' => $tour,
+            'categories' => $categories,
+            'tourItineraries' => $tourItinerariesData,
+            'services' => $services,
+            'serviceWithTour' => $serviceWithTour
+        ], "Sửa tour");
 
     }
     function deleteTour()
