@@ -15,8 +15,9 @@ class DashboardController
     public function Dashboard()
     {
         $bookings = $this->BookingModel->getAllBookingModel("", "", "", "desc");
+        $totalAmount = $this->BookingModel->totalAmount();
         // echo "<pre>";
-        // print_r($bookings);
+        // print_r($totalAmount);
         // echo "</pre>";
         // die;
         $tours = $this->TourModel->getAllToursModel();
@@ -24,7 +25,8 @@ class DashboardController
         renderLayoutAdmin("admin/Dashboard/index.php", [
             'bookings' => $bookings,
             'tours' => $tours,
-            'guides' => $guides
+            'guides' => $guides,
+            'totalAmount' => $totalAmount
         ], "Bảng điều khiển");
 
     }

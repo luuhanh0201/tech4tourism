@@ -45,8 +45,8 @@
         <div class="col-12 col-sm-6 col-lg-3">
             <div class="stat-card stat-revenue">
                 <div>
-                    <div class="stat-label">Doanh Thu Tháng</div>
-                    <div class="stat-value">-</div>
+                    <div class="stat-label">Doanh Thu</div>
+                    <div class="stat-value"><?= number_format($totalAmount) . 'đ' ?></div>
                 </div>
                 <div class="stat-icon">
                     <i class="fa-solid fa-arrow-trend-up"></i>
@@ -60,23 +60,24 @@
     <div class="row g-4">
         <div class="col-12">
             <div class="card section-card">
-                <div class="card-header">
-                    Tour Sắp Khởi Hành
-                </div>
-                <div class="card-body">
-                    <?php foreach ($bookings as $index => $booking): ?>
-                        <?php
-                        $status = $booking['status'];
+                <?php foreach ($bookings as $index => $booking): ?>
+                    <?php
+                    $status = $booking['status'];
 
-                        $mapStatus = [
-                            'confirmed' => ['class' => 'status-confirmed', 'label' => 'Đã xác nhận'],
-                            'pending' => ['class' => 'status-pending', 'label' => 'Chờ xác nhận'],
-                            'done' => ['class' => 'status-done', 'label' => 'Đã hoàn thành'],
-                            'canceled' => ['class' => 'status-canceled', 'label' => 'Đã Huỷ'],
-                        ];
-                        $data = $mapStatus[$status] ?? ['class' => 'status-unknown', 'label' => $status];
-                        ?>
-                        <?php if ($index < 3 && $booking['status'] != "done" && $booking['status'] != 'canceled'): ?>
+                    $mapStatus = [
+                        'confirmed' => ['class' => 'status-confirmed', 'label' => 'Đã xác nhận'],
+                        'pending' => ['class' => 'status-pending', 'label' => 'Chờ xác nhận'],
+                        'done' => ['class' => 'status-done', 'label' => 'Đã hoàn thành'],
+                        'canceled' => ['class' => 'status-canceled', 'label' => 'Đã Huỷ'],
+                    ];
+                    $data = $mapStatus[$status] ?? ['class' => 'status-unknown', 'label' => $status];
+                    ?>
+                    <?php if ($index < 3 && $booking['status'] != "done" && $booking['status'] != 'canceled'): ?>
+                        <div class="card-header">
+                            Tour Sắp Khởi Hành
+                        </div>
+                        <div class="card-body">
+
                             <a href="/dashboard/booking-manager/edit-booking?id=<?= $booking['id'] ?>">
                                 <div class="tour-item">
                                     <div>
@@ -122,13 +123,13 @@
                                 <a href="/dashboard/booking-manager/edit-booking?id=<?= $booking['id'] ?>">
                                     <div class="booking-item">
                                         <div>
-                                            <div class="booking-name"><?=$booking['contact_name']?></div>
+                                            <div class="booking-name"><?= $booking['contact_name'] ?></div>
                                             <div class="booking-sub"><?= $booking['tour_name'] ?> </div>
                                         </div>
                                         <div class="booking-meta">
                                             <span class="status-badge <?= htmlspecialchars($data['class']) ?>">
-                                            <?= htmlspecialchars($data['label']) ?>
-                                        </span>
+                                                <?= htmlspecialchars($data['label']) ?>
+                                            </span>
                                         </div>
                                     </div>
                                 </a>

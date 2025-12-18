@@ -35,13 +35,13 @@ class BookingModel
 
         $sortDate = strtolower(trim((string) $sortDate));
         if ($sortDate === 'asc')
-            $orderParts[] = "bookings.booking_date ASC";   
+            $orderParts[] = "bookings.booking_date ASC";
         if ($sortDate === 'desc')
-            $orderParts[] = "bookings.booking_date DESC";  
+            $orderParts[] = "bookings.booking_date DESC";
 
         $sortPrice = strtolower(trim((string) $sortPrice));
         if ($sortPrice === 'asc')
-            $orderParts[] = "bookings.total_price ASC"; 
+            $orderParts[] = "bookings.total_price ASC";
         if ($sortPrice === 'desc')
             $orderParts[] = "bookings.total_price DESC";
 
@@ -675,6 +675,20 @@ class BookingModel
 
             return false;
         }
+    }
+
+    public function totalAmount(): float
+    {
+        $sql = "SELECT COALESCE(SUM(total_price), 0) AS total_done_amount
+            FROM bookings
+            WHERE status = 'done'";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return (float) ($row['total_done_amount'] ?? 0);
     }
 }
 
