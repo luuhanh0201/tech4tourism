@@ -58,7 +58,7 @@ class GuideController
             $bookingId = $currentTour['booking_id'];
 
             $this->GuiderManagerModel->successBookingModel($bookingId, $guideId, $assignmentId);
-
+            header("location: /guide");
         }
         renderLayoutAdmin("guideViews/working.php", [
             'currentTour' => $currentTour,

@@ -14,7 +14,11 @@ class DashboardController
     }
     public function Dashboard()
     {
-        $bookings = $this->BookingModel->getAllBookingModel();
+        $bookings = $this->BookingModel->getAllBookingModel("", "", "", "desc");
+        // echo "<pre>";
+        // print_r($bookings);
+        // echo "</pre>";
+        // die;
         $tours = $this->TourModel->getAllToursModel();
         $guides = $this->GuiderManagerModel->getAllGuider();
         renderLayoutAdmin("admin/Dashboard/index.php", [

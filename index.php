@@ -78,6 +78,7 @@
     '/dashboard/booking-manager/detail' => $bookingController->detailBooking(),
     '/dashboard' => $dashboardController->Dashboard(),
     "/guide" => $guideController->index(),
+    "/guide/profile" => $guiderManagerController->profileGuide(),
     "/guide/current-tour" =>$guideController->CurrentTour(),
     "/guide/current-tour/customers" =>$guideController->ListAndCheckInCustomer(),
     default => include './views/errorPage.php',

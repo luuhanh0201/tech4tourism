@@ -81,9 +81,9 @@ class AuthController
                 exit;
             }
 
-            if ($this->authModel->signUp($password, $email, $fullName)) {
-                $_SESSION['success'] = 'Đăng ký thành công! Vui lòng đăng nhập.';
-                header('Location: sign-in');
+            $id = $this->authModel->signUp($password, $email, $fullName);
+            if ($id) {
+                header('Location: /dashboard/guide-manager/profile-guide/edit?id=' . $id);
                 exit;
             } else {
                 $_SESSION['error'] = '<span style="color: red; ">Đã xảy ra lỗi! Vui lòng thử lại.</span>';

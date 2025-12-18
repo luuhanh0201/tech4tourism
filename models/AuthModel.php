@@ -51,9 +51,10 @@ class AuthModel
             $userId = $this->conn->lastInsertId();
             $this->createDefaultProfile($userId);
             $this->setRoleGuide($userId);
-            return true;
+            return $userId;
         }
-        return false;
+        $userId = (int) $this->conn->lastInsertId();
+        return $userId;
 
     }
 

@@ -94,7 +94,8 @@ SELECT
     }
     public function updateProfileGuide($id, $dateOfBirth, $gender, $phone, $address, $certifications, $language, $bio)
     {
-        $sql = "UPDATE guide_profiles 
+        try {
+            $sql = "UPDATE guide_profiles 
                 SET 
                     date_of_birth = :date_of_birth,
                     gender = :gender,
@@ -104,19 +105,21 @@ SELECT
                     language = :language,
                     bio = :bio
                 WHERE user_id = :user_id;";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([
-            ":user_id" => $id,
-            ":date_of_birth" => $dateOfBirth,
-            ":gender" => $gender,
-            ":phone" => $phone,
-            ":address" => $address,
-            ":certifications" => $certifications,
-            ":language" => $language,
-            ":bio" => $bio,
+            $stmt = $this->conn->prepare($sql);
+            return $stmt->execute([
+                ":user_id" => $id,
+                ":date_of_birth" => $dateOfBirth,
+                ":gender" => $gender,
+                ":phone" => $phone,
+                ":address" => $address,
+                ":certifications" => $certifications,
+                ":language" => $language,
+                ":bio" => $bio,
 
-        ]);
-        return $stmt->rowCount();
+            ]);
+        } catch (PDOException $e) {
+            die($e->getMessage());
+        }
 
     }
 
@@ -301,7 +304,7 @@ WHERE guide_assignments.guide_id = :guide_id
 
         } catch (\Throwable $e) {
             $this->conn->rollBack();
-           
+
         }
     }
 

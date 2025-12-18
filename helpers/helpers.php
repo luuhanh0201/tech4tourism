@@ -119,33 +119,34 @@ function isGuide()
 
 // Yêu cầu đăng nhập: nếu chưa đăng nhập thì chuyển hướng về trang login
 // @param string $redirectUrl URL chuyển hướng sau khi đăng nhập (mặc định là trang hiện tại)
-function requireLogin($redirectUrl = null)
+function requireLogin()
 {
     if (!isLoggedIn()) {
-        $redirect = $redirectUrl ?: $_SERVER['REQUEST_URI'];
-        header('Location: ' . BASE_URL . '?act=login&redirect=' . urlencode($redirect));
+        header("Location: /");
         exit;
     }
 }
+
 
 // Yêu cầu quyền admin: nếu không phải admin thì chuyển hướng về trang chủ
 function requireAdmin()
 {
     requireLogin();
 
-    if (!isAdmin()) {
-        header('Location: ' . BASE_URL);
+    if ($_SESSION['user']['role'] !== 'admin') {
+        header("Location: /guide"); // ép về giao diện guide
         exit;
     }
 }
 
 // Yêu cầu quyền hướng dẫn viên hoặc admin
-function requireGuideOrAdmin()
+
+function requireGuide()
 {
     requireLogin();
 
-    if (!isGuide() && !isAdmin()) {
-        header('Location: ' . BASE_URL);
+    if (!in_array($_SESSION['user']['role'], ['guide', 'admin'])) {
+        header("Location: /guide");
         exit;
     }
 }

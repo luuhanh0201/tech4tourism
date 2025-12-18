@@ -4,7 +4,7 @@
             <h2 class="fw-bold">Quản Lý Hướng Dẫn Viên</h2>
             <p class="text-muted">Quản lý thông tin và lịch làm việc của đội ngũ HDV</p>
         </div>
-        <a href="#" class="btn btn-primary px-4 py-2" style="background-color:var(--color-primary); border:none;">
+        <a href="/sign-up" class="btn btn-primary px-4 py-2" style="background-color:var(--color-primary); border:none;">
             + Thêm HDV
         </a>
     </div>
@@ -42,9 +42,19 @@
                         </div>
                     </td>
                     <td>
-                        <span
-                            class="ml-2 status-badge <?= $guide['status'] === 'Đang dẫn' ? 'status-running' : 'status-free' ?>">
-                            <?= $guide['status'] ?>
+                        <?php
+                        $status = $guide['status'];
+
+                        $mapStatus = [
+                            'Trống lịch' => ['class' => 'status-confirmed', 'label' => 'Trống lịch'],
+                            'Đang dẫn' => ['class' => 'status-pending', 'label' => 'Đang dẫn'],
+                            'Tạm nghỉ' => ['class' => 'status-canceled', 'label' => 'Tạm nghỉ'],
+                        ];
+
+                        $data = $mapStatus[$status] ?? ['class' => 'status-unknown', 'label' => $status];
+                        ?>
+                        <span class="ml-2 status-badge <?= $data['class'] ?>">
+                            <?= $data['label'] ?>
                         </span>
                     </td>
                     <td>
@@ -89,22 +99,29 @@
 <style>
     .status-badge {
         display: inline-block;
-        padding: 4px 12px;
-        font-size: 13px;
-        font-weight: 600;
-        border-radius: 30px;
-        letter-spacing: 0.3px;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
     }
 
-    .status-free {
+    .status-confirmed {
         background-color: #d1fae5;
-        color: #047857;
-        border: 1px solid #a7f3d0;
+        color: #065f46;
     }
 
-    .status-running {
-        background-color: #fef9c3;
+    .status-pending {
+        background-color: #fef3c7;
         color: #92400e;
-        border: 1px solid #fef3c7;
+    }
+
+    .status-done {
+        background-color: #dbeafe;
+        color: #1e3a8a;
+    }
+
+    .status-canceled {
+        background-color: #da463eff;
+        color: #fff;
     }
 </style>

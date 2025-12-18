@@ -1,81 +1,80 @@
 <div class="dropdown-overlay" id="dropdownOverlay"></div>
 
 <?php if ($_SESSION['user']['role'] === 'admin'): ?>
-<div class="header">
-  <div class="logo">
-    <div class="logo-icon">
-      <i class="fa-solid fa-plane"></i>
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">
+        <i class="fa-solid fa-plane"></i>
+      </div>
+      <h1>FPOLY Quản lý tour</h1>
     </div>
-    <h1>FPOLY Quản lý tour</h1>
-  </div>
 
-  <div class="header-right">
-    <div class="user-info">
-      <div class="user-avatar">
-        <?= strtoupper(substr($_SESSION['user']['fullName'], 0, 1)); ?>
-      </div>
-      <div class="user-details">
-        <div class="user-name">
-          <?= isset($_SESSION['user']['fullName']) ? $_SESSION['user']['fullName'] : 'Admin' ?>
+    <div class="header-right">
+      <div class="user-info">
+        <div class="user-avatar">
+          <?= strtoupper(substr($_SESSION['user']['fullName'], 0, 1)); ?>
         </div>
-        <div class="user-role">
-          <?= isset($_SESSION['user']['role']) ? $_SESSION['user']['role'] : '' ?>
+        <div class="user-details">
+          <div class="user-name">
+            <?= isset($_SESSION['user']['fullName']) ? $_SESSION['user']['fullName'] : 'Admin' ?>
+          </div>
+          <div class="user-role">
+            <?= isset($_SESSION['user']['role']) ? $_SESSION['user']['role'] : '' ?>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 <?php elseif ($_SESSION['user']['role'] === 'guide'): ?>
-<div class="header">
-  <div class="logo">
-    <div class="logo-icon">
-      <i class="fa-solid fa-plane"></i>
-    </div>
-    <h2>HDV - Quản lí Tour du lịch</h2>
-  </div>
-  <div class="header-right">
-    <div class="user-info" id="userInfo">
-      <div class="user-avatar">
-        <?= strtoupper(substr($_SESSION['user']['fullName'], 0, 1)); ?>
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">
+        <i class="fa-solid fa-plane"></i>
       </div>
-      <div class="user-details">
-        <div class="user-name">
-          <?= isset($_SESSION['user']['fullName']) ? $_SESSION['user']['fullName'] : 'Nguyễn Văn A' ?>
+      <h2>HDV - Quản lí Tour du lịch</h2>
+    </div>
+    <div class="header-right">
+      <div class="user-info" id="userInfo">
+        <div class="user-avatar">
+          <?= strtoupper(substr($_SESSION['user']['fullName'], 0, 1)); ?>
         </div>
-        <div class="user-role">Hướng dẫn viên</div>
-      </div>
-    </div>
-
-    <div class="dropdown-menu" id="dropdownMenu">
-      <div class="dropdown-header">
-        <div class="dropdown-user-info">
-          <div class="dropdown-avatar">
-            <?= strtoupper(substr($_SESSION['user']['fullName'], 0, 1)); ?>
+        <div class="user-details">
+          <div class="user-name">
+            <?= isset($_SESSION['user']['fullName']) ? $_SESSION['user']['fullName'] : 'Nguyễn Văn A' ?>
           </div>
-          <div class="dropdown-user-details">
-            <div class="name">
-              <?= isset($_SESSION['user']['fullName']) ? $_SESSION['user']['fullName'] : 'Nguyễn Văn A' ?>
+          <div class="user-role">Hướng dẫn viên</div>
+        </div>
+      </div>
+
+      <div class="dropdown-menu" id="dropdownMenu">
+        <div class="dropdown-header">
+          <div class="dropdown-user-info">
+            <div class="dropdown-avatar">
+              <?= strtoupper(substr($_SESSION['user']['fullName'], 0, 1)); ?>
             </div>
-            <div class="role">Hướng dẫn viên</div>
+            <div class="dropdown-user-details">
+              <div class="name">
+                <?= isset($_SESSION['user']['fullName']) ? $_SESSION['user']['fullName'] : 'Nguyễn Văn A' ?>
+              </div>
+              <div class="role">Hướng dẫn viên</div>
+            </div>
           </div>
         </div>
+        <div class="dropdown-body">
+          <a href="/guide/profile?id=<?=$_SESSION['user']['id']?>" class="dropdown-item">
+            <i class="fa-solid fa-user"></i>
+            <span>Thông tin cá nhân</span>
+          </a>
+          <a href="/sign-out" class="dropdown-item logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Đăng xuất</span>
+          </a>
+        </div>
       </div>
-      <div class="dropdown-body">
-        <a href="#" class="dropdown-item">
-          <i class="fa-solid fa-user"></i>
-          <span>Thông tin cá nhân</span>
-        </a>
 
-        <a href="/sign-out" class="dropdown-item logout">
-          <i class="fa-solid fa-right-from-bracket"></i>
-          <span>Đăng xuất</span>
-        </a>
-      </div>
+
     </div>
-
-
   </div>
-</div>
 
 <?php endif; ?>
 

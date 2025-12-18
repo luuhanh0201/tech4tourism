@@ -1,3 +1,4 @@
+<?php requireAdmin(); ?>
 <div class="container py-5">
     <h1 class="dashboard-title">Dashboard</h1>
     <div class="row g-3 mb-4">
@@ -32,7 +33,7 @@
             <div class="stat-card stat-guide">
                 <div>
                     <div class="stat-label">Hướng Dẫn Viên</div>
-                    <div class="stat-value"><?=count($guides)?></div>
+                    <div class="stat-value"><?= count($guides) ?></div>
                 </div>
                 <div class="stat-icon">
                     <i class="fa-solid fa-user"></i>
@@ -63,29 +64,35 @@
                     Tour Sắp Khởi Hành
                 </div>
                 <div class="card-body">
-                    <!-- Tour 1 -->
-                    <div class="tour-item">
-                        <div>
-                            <div class="tour-title">Tour Hà Nội - Hạ Long</div>
-                            <div class="tour-sub">HDV: Phạm Minh Tuấn</div>
-                        </div>
-                        <div class="tour-meta">
-                            <div class="date-text">15/12/2025</div>
-                            <span class="badge-soft-blue">Sắp khởi hành</span>
-                        </div>
-                    </div>
+                    <?php foreach ($bookings as $index => $booking): ?>
+                        <?php
+                        $status = $booking['status'];
 
-                    <!-- Tour 2 -->
-                    <div class="tour-item">
-                        <div>
-                            <div class="tour-title">Tour Nhật Bản</div>
-                            <div class="tour-sub">HDV: Hoàng Thu Hà</div>
-                        </div>
-                        <div class="tour-meta">
-                            <div class="date-text">20/12/2025</div>
-                            <span class="badge-soft-yellow">Đang diễn ra</span>
-                        </div>
-                    </div>
+                        $mapStatus = [
+                            'confirmed' => ['class' => 'status-confirmed', 'label' => 'Đã xác nhận'],
+                            'pending' => ['class' => 'status-pending', 'label' => 'Chờ xác nhận'],
+                            'done' => ['class' => 'status-done', 'label' => 'Đã hoàn thành'],
+                            'canceled' => ['class' => 'status-canceled', 'label' => 'Đã Huỷ'],
+                        ];
+                        $data = $mapStatus[$status] ?? ['class' => 'status-unknown', 'label' => $status];
+                        ?>
+                        <?php if ($index < 3 && $booking['status'] != "done" && $booking['status'] != 'canceled'): ?>
+                            <a href="/dashboard/booking-manager/edit-booking?id=<?= $booking['id'] ?>">
+                                <div class="tour-item">
+                                    <div>
+                                        <div class="tour-title"><?= $booking['tour_name'] ?></div>
+                                        <div class="tour-sub">HDV: <?= $booking['guide_full_name'] ?? "Chưa sắp xếp" ?></div>
+                                    </div>
+                                    <div class="tour-meta">
+                                        <div class="date-text"><?= $booking['departure_date'] ?></div>
+                                        <span class="status-badge <?= htmlspecialchars($data['class']) ?>">
+                                            <?= htmlspecialchars($data['label']) ?>
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+                        <?php endif ?>
+                    <?php endforeach ?>
                 </div>
             </div>
         </div>
@@ -98,36 +105,35 @@
                 </div>
                 <div class="card-body">
                     <!-- Booking 1 -->
-                    <div class="booking-item">
-                        <div>
-                            <div class="booking-name">Nguyễn Văn A</div>
-                            <div class="booking-sub">Tour Hà Nội - Hạ Long</div>
-                        </div>
-                        <div class="booking-meta">
-                            <span class="badge-soft-blue">Đã cọc</span>
-                        </div>
-                    </div>
+                    <div class="card-body">
+                        <?php foreach ($bookings as $index => $booking): ?>
+                            <?php
+                            $status = $booking['status'];
 
-                    <!-- Booking 2 -->
-                    <div class="booking-item">
-                        <div>
-                            <div class="booking-name">Trần Thị B</div>
-                            <div class="booking-sub">Tour Nhật Bản</div>
-                        </div>
-                        <div class="booking-meta">
-                            <span class="badge-soft-yellow">Chờ xác nhận</span>
-                        </div>
-                    </div>
-
-                    <!-- Booking 3 -->
-                    <div class="booking-item">
-                        <div>
-                            <div class="booking-name">Lê Văn C</div>
-                            <div class="booking-sub">Tour Đà Nẵng</div>
-                        </div>
-                        <div class="booking-meta">
-                            <span class="badge-soft-green">Hoàn tất</span>
-                        </div>
+                            $mapStatus = [
+                                'confirmed' => ['class' => 'status-confirmed', 'label' => 'Đã xác nhận'],
+                                'pending' => ['class' => 'status-pending', 'label' => 'Chờ xác nhận'],
+                                'done' => ['class' => 'status-done', 'label' => 'Đã hoàn thành'],
+                                'canceled' => ['class' => 'status-canceled', 'label' => 'Đã Huỷ'],
+                            ];
+                            $data = $mapStatus[$status] ?? ['class' => 'status-unknown', 'label' => $status];
+                            ?>
+                            <?php if ($index < 3): ?>
+                                <a href="/dashboard/booking-manager/edit-booking?id=<?= $booking['id'] ?>">
+                                    <div class="booking-item">
+                                        <div>
+                                            <div class="booking-name"><?=$booking['contact_name']?></div>
+                                            <div class="booking-sub"><?= $booking['tour_name'] ?> </div>
+                                        </div>
+                                        <div class="booking-meta">
+                                            <span class="status-badge <?= htmlspecialchars($data['class']) ?>">
+                                            <?= htmlspecialchars($data['label']) ?>
+                                        </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            <?php endif ?>
+                        <?php endforeach ?>
                     </div>
 
                 </div>
@@ -138,6 +144,34 @@
 </div>
 
 <style>
+    .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .status-confirmed {
+        background-color: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-pending {
+        background-color: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-done {
+        background-color: #dbeafe;
+        color: #1e3a8a;
+    }
+
+    .status-canceled {
+        background-color: #da463eff;
+        color: #fff;
+    }
+
     .dashboard-title {
         font-size: 28px;
         font-weight: 800;

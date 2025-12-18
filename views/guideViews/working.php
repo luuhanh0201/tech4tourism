@@ -79,7 +79,7 @@ function fmtTime($t)
         </div>
         <div class="text-md-end">
             <div class="status-right-label">Số khách</div>
-            <div class="status-right-value"><?= count($customers) . '/' . count($customers) ?></div>
+            <div class="status-right-value"><?= count($customers) + 1 . '/' . count($customers) + 1 ?></div>
         </div>
     </div>
 
@@ -106,7 +106,7 @@ function fmtTime($t)
                 <div class="col-md-6">
                     <div class="summary-box blue">
                         <div class="summary-label">Số khách</div>
-                        <div class="summary-value-main"><?= count($customers) ?></div>
+                        <div class="summary-value-main"><?= count($customers) + 1 ?></div>
                     </div>
                 </div>
 
@@ -129,7 +129,7 @@ function fmtTime($t)
                     <a style="text-decoration: none" href="/guide/current-tour/customers"
                         class="w-100 action-btn action-blue">
                         <i class="fa-solid fa-users"></i>
-                        Xem danh sách khách (<?= count($customers) ?>) và & điểm danh
+                        Xem danh sách khách (<?= count($customers)+1 ?>) và & điểm danh
                     </a>
                 </div>
 
@@ -155,7 +155,9 @@ function fmtTime($t)
                     </a>
                 <?php endforeach; ?>
                 <form method="post" class="ms-auto">
-                    <button onclick="return confirm('Bạn có chắc muốn hoàn thành tour không, hành động này không thể hoàn tác ?')" type="submit" class="btn btn-success btn-finish-tour">
+                    <button
+                        onclick="return confirm('Bạn có chắc muốn hoàn thành tour không, hành động này không thể hoàn tác ?')"
+                        type="submit" class="btn btn-success btn-finish-tour">
                         <i class="fa-solid fa-circle-check me-2"></i>Hoàn thành tour
                     </button>
                 </form>

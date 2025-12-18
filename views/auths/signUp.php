@@ -1,3 +1,5 @@
+<?php requireAdmin()?>
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -13,7 +15,7 @@
     <div class="container min-vh-100 d-flex align-items-center justify-content-center py-3 ">
         <div class="card shadow-lg px-3" style="width: 100%; max-width: 500px; border-radius: 20px;">
             <div class="card-body p-3">
-                <h2 class="text-center fw-bold mb-2">Đăng Ký Tài Khoản</h2>
+                <h2 class="text-center fw-bold mb-2">Đăng ký tài khoản hướng dẫn viên</h2>
                 <p class="text-center text-muted mb-3">Điền thông tin để tạo tài khoản mới</p>
                 <form method="POST" action="sign-up">
                     <div class="mb-2">
