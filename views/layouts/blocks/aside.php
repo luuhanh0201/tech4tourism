@@ -21,7 +21,7 @@
 
     <a href="/dashboard/guide-manager" class="menu-item <?= $active == 'users' ? 'active' : '' ?>">
       <i class="fa-regular fa-circle-user"></i>
-      <span>Quản lí hướng dẫn viên</span>
+      <span>Quản lí người dùng</span>
     </a>
 
     <a href="#" class="menu-item <?= $active == 'statistic' ? 'active' : '' ?>">
