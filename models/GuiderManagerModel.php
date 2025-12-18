@@ -123,6 +123,14 @@ SELECT
 
     }
 
+    public function deleteGuide($id)
+    {
+        $sql = "DELETE FROM users WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
     public function guideAssignmentBookingDetail($guideId, $status)
     {
         $sql = "SELECT 

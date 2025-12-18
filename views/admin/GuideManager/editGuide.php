@@ -168,7 +168,8 @@
                     <i class="bi bi-arrow-left"></i> Quay Lại
                 </a>
                 <div>
-                    <button type="button" class="btn btn-outline-danger me-2">
+                    <button name="submit" class="btn btn-outline-danger me-2"
+                        onclick="return confirm('Hành động này không thể hoàn tác, bạn có chắc muốn xoá?')">
                         <i class="bi bi-trash"></i> Xóa HDV
                     </button>
 
