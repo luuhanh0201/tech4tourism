@@ -41,7 +41,7 @@
                 <option value="asc" <?= (($f['sort_date'] ?? '') === 'asc') ? 'selected' : '' ?>>Cũ → mới</option>
             </select>
 
-            <button class="btn btn-primary">Lọc</button>
+            <button class="btn " style="background-color:var(--color-primary); color:#fff">Lọc</button>
             <a class="btn btn-outline-secondary" href="?">Reset</a>
         </form>
 

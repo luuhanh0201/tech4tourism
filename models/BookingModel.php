@@ -35,15 +35,15 @@ class BookingModel
 
         $sortDate = strtolower(trim((string) $sortDate));
         if ($sortDate === 'asc')
-            $orderParts[] = "bookings.booking_date ASC";   // cũ -> mới
+            $orderParts[] = "bookings.booking_date ASC";   
         if ($sortDate === 'desc')
-            $orderParts[] = "bookings.booking_date DESC";  // mới -> cũ
+            $orderParts[] = "bookings.booking_date DESC";  
 
         $sortPrice = strtolower(trim((string) $sortPrice));
         if ($sortPrice === 'asc')
-            $orderParts[] = "bookings.total_price ASC";   // thấp -> cao
+            $orderParts[] = "bookings.total_price ASC"; 
         if ($sortPrice === 'desc')
-            $orderParts[] = "bookings.total_price DESC";  // cao -> thấp
+            $orderParts[] = "bookings.total_price DESC";
 
         if (empty($orderParts)) {
             $orderParts[] = "bookings.id DESC";

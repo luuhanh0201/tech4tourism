@@ -2,9 +2,11 @@
 class GuiderManagerModel
 {
     public $conn;
+    public $BookingModel;
     public function __construct()
     {
         $this->conn = connectDB();
+        $this->BookingModel = new BookingModel();
     }
 
     public function getAllGuider($status = null)
@@ -135,8 +137,10 @@ SELECT
     bookings.status AS booking_status,
     bookings.payment_status AS payment_status,
     bookings.total_price AS booking_total_price,
+    bookings.notes AS booking_notes,
 
     tours.id AS tour_id,
+    tours.rate AS tour_rate,
     tours.tour_name AS tour_name,
     tours.duration_day AS tour_duration_day,
     tours.duration_night AS tour_duration_night,
@@ -161,8 +165,12 @@ WHERE guide_assignments.guide_id = :guide_id
                 ":guide_id" => $guideId,
                 ":assignment_status" => $status
             ]);
-
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($status === "done") {
+                $a = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                $a = $stmt->fetch(PDO::FETCH_ASSOC);
+            }
+            return $a;
         } catch (\Throwable $th) {
             echo "ERROR: " . $th;
             return null;
@@ -179,17 +187,124 @@ WHERE guide_assignments.guide_id = :guide_id
             // echo '</pre>';
             // die('--- DEBUG DETAIL ASSIGNMENTS ---');
             $stmt = $this->conn->prepare($sql);
-            return      $stmt->execute([
+            return $stmt->execute([
                 ':status' => $status,
                 ':id' => $assignmentId,
                 ':guide_id' => $guideId
             ]);
-           
+
         } catch (\Throwable $th) {
             throw $th;
         }
 
     }
+    public function getTourItinerariesByTourIdModel($tourId)
+    {
+        $sql = "SELECT *
+        FROM tour_itineraries
+        WHERE tour_id = :tour_id
+        ORDER BY day_number ASC, sort_order ASC, start_time ASC, id ASC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':tour_id' => $tourId]);
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+        $grouped = [];
+        foreach ($rows as $row) {
+            $day = (int) $row['day_number'];
+            $grouped[$day][] = $row;
+        }
+        return $grouped;
+    }
+    public function changeStatusCheckInCustomer($bookingId, $checkIn = [])
+    {
+        $bookingId = (int) $bookingId;
+        $checkedIds = [];
+        foreach ((array) $checkIn as $customerId => $val) {
+            if ((int) $val === 1) {
+                $checkedIds[] = (int) $customerId;
+            }
+        }
+        $checkedIds = array_values(array_unique($checkedIds));
+        try {
+            $this->conn->beginTransaction();
+            $sqlReset = "UPDATE customers SET is_checkin = 0 WHERE booking_id = :booking_id";
+            $stmt = $this->conn->prepare($sqlReset);
+            $stmt->execute([':booking_id' => $bookingId]);
+            if (!empty($checkedIds)) {
+                $placeholders = implode(',', array_fill(0, count($checkedIds), '?'));
+                $sqlSet = "UPDATE customers
+                       SET is_checkin = 1
+                       WHERE booking_id = ?
+                       AND id IN ($placeholders)";
+                $stmt2 = $this->conn->prepare($sqlSet);
+                $stmt2->execute(array_merge([$bookingId], $checkedIds));
+            }
+            $this->conn->commit();
+            return true;
+
+        } catch (\Throwable $e) {
+            $this->conn->rollBack();
+            throw $e;
+        }
+    }
+
+    public function successBookingModel($bookingId, $guideId, $assignmentId)
+    {
+        try {
+            $this->conn->beginTransaction();
+
+            // 1) DONE assignment hiện tại
+            $this->changeStatusAssignmentBookingModel($assignmentId, $guideId, "done");
+
+            // 2) DONE booking
+            $sqlUpdateBooking = "
+            UPDATE bookings
+            SET status = 'done'
+            WHERE id = :id
+        ";
+            $stmt = $this->conn->prepare($sqlUpdateBooking);
+            $stmt->execute([
+                ':id' => $bookingId
+            ]);
+
+            // 3) CHECK guide còn assignment active không
+            $sqlCheck = "
+            SELECT COUNT(*) 
+            FROM guide_assignments
+            WHERE guide_id = :guide_id
+              AND status IN ('pending', 'progress')
+        ";
+            $stmt = $this->conn->prepare($sqlCheck);
+            $stmt->execute([
+                ':guide_id' => $guideId
+            ]);
+            $activeCount = (int) $stmt->fetchColumn();
+
+            // 4) UPDATE guide_profiles theo kết quả check
+            $newStatus = ($activeCount > 0) ? 'Đang dẫn' : 'Trống lịch';
+
+            $sqlUpdateProfile = "
+            UPDATE guide_profiles
+            SET status = :status
+            WHERE user_id = :user_id
+        ";
+            $stmt = $this->conn->prepare($sqlUpdateProfile);
+            $stmt->execute([
+                ':status' => $newStatus,
+                ':user_id' => $guideId
+            ]);
+
+            $this->conn->commit();
+            return true;
+
+        } catch (\Throwable $e) {
+            $this->conn->rollBack();
+           
+        }
+    }
+
 }
 
 ?>

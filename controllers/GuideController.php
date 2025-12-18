@@ -18,10 +18,12 @@ class GuideController
         $guideId = $_SESSION['user']['id'];
         $guide = $this->GuiderManagerModel->getDetailGuide($guideId);
         $detailAssignment = $this->GuiderManagerModel->guideAssignmentBookingDetail($guideId, "pending");
-        if ($this->GuiderManagerModel->guideAssignmentBookingDetail($guideId, "progress")) {
-            header("Location: " . $_SERVER['REQUEST_URI'] . "/current-tour");
-            exit;
-        }
+        $currentTour = $this->GuiderManagerModel->guideAssignmentBookingDetail($guideId, "progress");
+        $tourSuccess = $this->GuiderManagerModel->guideAssignmentBookingDetail($guideId, "done");
+        //     echo "<pre>";
+        //    print_r($tourSuccess);
+        //     echo "</pre>";
+        // die;
         if ($_SERVER['REQUEST_METHOD'] === "POST") {
             if ($this->GuiderManagerModel->changeStatusAssignmentBookingModel($detailAssignment['assignment_id'], $guideId, 'progress')) {
                 header("Location: " . $_SERVER['REQUEST_URI'] . "/current-tour");
@@ -33,6 +35,8 @@ class GuideController
             [
                 'guide' => $guide,
                 "detailAssignment" => $detailAssignment,
+                "tourSuccess" => $tourSuccess,
+                'currentTour' => $currentTour
             ],
             "Hướng dẫn viên: " . $_SESSION['user']['fullName']
         );
@@ -42,14 +46,58 @@ class GuideController
         $guideId = $_SESSION['user']['id'];
         $currentTour = $this->GuiderManagerModel->guideAssignmentBookingDetail($guideId, 'progress');
         $customers = $this->CustomerModel->getAllCustomerByBookingId($currentTour['booking_id']);
-        // echo "<pre>";
-        // print_r($currentTour);
-        // die("DEBUG");
-        // echo "</pre>";
+        $itinerariesByDay = $this->GuiderManagerModel->getTourItinerariesByTourIdModel($currentTour['tour_id']);
+
+        if (!$currentTour) {
+            header("Location: /guide");
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === "POST") {
+            $assignmentId = $currentTour['assignment_id'];
+            $guideId = $currentTour['guide_id'];
+            $bookingId = $currentTour['booking_id'];
+
+            $this->GuiderManagerModel->successBookingModel($bookingId, $guideId, $assignmentId);
+
+        }
         renderLayoutAdmin("guideViews/working.php", [
             'currentTour' => $currentTour,
 
-            'customers' => $customers
+            'customers' => $customers,
+            'itinerariesByDay' => $itinerariesByDay
+
         ], "Tour đang làm việc");
     }
+
+    public function ListAndCheckInCustomer()
+    {
+        $guideId = $_SESSION['user']['id'];
+        $currentTour = $this->GuiderManagerModel->guideAssignmentBookingDetail($guideId, 'progress');
+        $customers = $this->CustomerModel->getAllCustomerByBookingId($currentTour['booking_id']);
+        // $itinerariesByDay = $this->GuiderManagerModel->getTourItinerariesByTourIdModel($currentTour['tour_id']);
+        // echo "<pre>";
+        // print_r($itinerariesByDay);
+        // die("DEBUG");
+        // echo "</pre>";
+        if (!$currentTour) {
+            header("Location: /guide");
+        }
+        if ($_SERVER['REQUEST_METHOD'] === "POST") {
+            $checkIn = $_POST['checkin'] ?? [];
+            // echo "<pre>";
+            // print_r($checkIn);
+            // echo "</pre>";
+            // die("DEBUG");
+            if ($this->GuiderManagerModel->changeStatusCheckInCustomer($currentTour['booking_id'], $checkIn)) {
+                header("Location: /guide/current-tour");
+                exit;
+            }
+        }
+        renderLayoutAdmin("guideViews/list-checkin.php", [
+            'currentTour' => $currentTour,
+            'customers' => $customers,
+        ], "Danh sách khách hàng");
+    }
+
+
 }

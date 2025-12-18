@@ -1,3 +1,67 @@
+<?php
+date_default_timezone_set('Asia/Bangkok');
+
+// day đang xem
+$dayViewing = isset($_GET['day']) ? (int) $_GET['day'] : 1;
+if (!isset($itinerariesByDay[$dayViewing])) {
+    $dayViewing = array_key_first($itinerariesByDay);
+}
+$itemsToday = $itinerariesByDay[$dayViewing] ?? [];
+
+// day hiện tại của tour (tính theo ngày khởi hành)
+$startDateStr = !empty($currentTour['assignment_started_at'])
+    ? substr($currentTour['assignment_started_at'], 0, 10) // YYYY-mm-dd
+    : date('Y-m-d');
+
+$start = new DateTime($startDateStr);
+$today = new DateTime('today');
+
+$dayCurrent = (int) $start->diff($today)->format('%a') + 1;
+
+// clamp vào [1..maxDay]
+$maxDay = !empty($itinerariesByDay) ? max(array_keys($itinerariesByDay)) : 1;
+$dayCurrent = max(1, min($dayCurrent, $maxDay));
+
+function statusByDayAndTime(int $dayViewing, int $dayCurrent, ?string $start, ?string $end): array
+{
+    if ($dayViewing < $dayCurrent)
+        return ['timeline-done', 'Hoàn thành', '✓ '];
+    if ($dayViewing > $dayCurrent)
+        return ['timeline-upcoming', 'Sắp tới', ''];
+    if (empty($start) || empty($end))
+        return ['timeline-upcoming', 'Sắp tới', ''];
+
+    $today = date('Y-m-d');
+    $now = time();
+    $s = strtotime("$today $start");
+    $e = strtotime("$today $end");
+
+    // qua nửa đêm
+    if ($e < $s)
+        $e += 86400;
+
+    if ($now < $s)
+        return ['timeline-upcoming', 'Sắp tới', ''];
+    if ($now <= $e)
+        return [
+            'timeline-running',
+            'Đang diễn ra',
+            '<i class="fa-solid fa-circle-play text-primary me-1"></i>'
+        ];
+
+    return ['timeline-done', 'Hoàn thành', '✓ '];
+}
+
+function h($s)
+{
+    return htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8');
+}
+function fmtTime($t)
+{
+    return $t ? date('H:i', strtotime($t)) : '';
+}
+?>
+
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="page-title mb-0">Lịch Làm Việc - HDV</h1>
@@ -24,35 +88,37 @@
         <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-start mb-2">
                 <div>
-                    <div class="tour-title"><?= $currentTour['tour_name'] ?></div>
+                    <div class="tour-title"><?= $currentTour['tour_name'] ?? "" ?></div>
                     <div class="tour-sub">
                         <?= $currentTour['assignment_started_at'] ?> - <?= $currentTour['assignment_ended_at'] ?>
                         (<?= $currentTour['tour_duration_day'] ?> ngày <?= $currentTour['tour_duration_night'] ?> đêm)
                     </div>
                 </div>
                 <div class="ms-3">
-                    <span class="pill-day">Ngày 3/7</span>
+                    <span class="pill-day">
+                        Ngày <?= (int) $dayCurrent ?>/<?= (int) ($currentTour['tour_duration_day'] ?? 0) ?>
+                    </span>
                 </div>
             </div>
 
             <!-- Summary -->
             <div class="row g-3">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="summary-box blue">
                         <div class="summary-label">Số khách</div>
-                        <div class="summary-value-main"><?= count($customers)   ?></div>
+                        <div class="summary-value-main"><?= count($customers) ?></div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="summary-box green">
-                        <div class="summary-label">Điểm tham quan</div>
-                        <div class="summary-value-main">5/12</div>
-                    </div>
-                </div>
-                <div class="col-md-4">
+
+                <?php
+                $totalDays = (int) ($currentTour['tour_duration_day'] ?? 0);
+                $remainingDays = max(0, $totalDays - (int) $dayCurrent);
+                ?>
+
+                <div class="col-md-6">
                     <div class="summary-box purple">
                         <div class="summary-label">Còn lại</div>
-                        <div class="summary-value-main">4 ngày</div>
+                        <div class="summary-value-main"><?= $remainingDays ?> ngày</div>
                     </div>
                 </div>
             </div>
@@ -60,29 +126,13 @@
             <!-- Actions -->
             <div class="row g-3 action-row">
                 <div class="col-md-12">
-                    <button class="w-100 action-btn action-blue">
+                    <a style="text-decoration: none" href="/guide/current-tour/customers"
+                        class="w-100 action-btn action-blue">
                         <i class="fa-solid fa-users"></i>
-                        Xem danh sách khách (22)
-                    </button>
+                        Xem danh sách khách (<?= count($customers) ?>) và & điểm danh
+                    </a>
                 </div>
-                <div class="col-md-6">
-                    <button class="w-100 action-btn action-green">
-                        <i class="fa-solid fa-circle-check"></i>
-                        Điểm danh
-                    </button>
-                </div>
-                <div class="col-md-6">
-                    <button class="w-100 action-btn action-purple">
-                        <i class="fa-solid fa-book-open"></i>
-                        Nhật ký tour
-                    </button>
-                </div>
-                <div class="col-md-12">
-                    <button class="w-100 action-btn action-orange">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                        Báo cáo sự cố
-                    </button>
-                </div>
+
             </div>
         </div>
     </div>
@@ -90,139 +140,79 @@
     <!-- Timeline today -->
     <div class="card timeline-card">
         <div class="card-body p-4">
-            <div class="timeline-title mb-3">Lịch Trình Hôm Nay - 22/12/2025</div>
 
-            <!-- item 1 -->
-            <div class="timeline-item timeline-done">
-                <div class="timeline-time text-center">
-                    <div class="mb-1"><i class="fa-regular fa-clock"></i></div>
-                    8:00
-                </div>
-                <div class="flex-grow-1">
-                    <div class="timeline-main-title">
-                        ✓ Tập trung khách sạn
-                    </div>
-                    <div class="timeline-desc">
-                        Điểm danh: 22/22 khách có mặt
-                    </div>
-                </div>
-                <div>
-                    <span class="timeline-badge">Hoàn thành</span>
-                </div>
+            <!-- Title -->
+            <div class="timeline-title mb-3">
+                Lịch Trình - Ngày <?= (int) $dayViewing ?>
             </div>
 
-            <!-- item 2 -->
-            <div class="timeline-item timeline-running">
-                <div class="timeline-time text-center">
-                    <div class="mb-1"><i class="fa-regular fa-clock"></i></div>
-                    10:00
-                </div>
-                <div class="flex-grow-1">
-                    <div class="timeline-main-title">
-                        <i class="fa-solid fa-circle-play text-primary me-1"></i>
-                        Thăm Chùa Vàng (Kinkaku-ji)
-                    </div>
-                    <div class="timeline-desc">
-                        Hướng dẫn 2 tiếng, chú ý giữ trật tự
-                    </div>
-                </div>
-                <div>
-                    <span class="timeline-badge">Đang diễn ra</span>
-                </div>
+            <!-- Tabs chọn ngày -->
+            <div class="d-flex gap-2 mb-4 flex-wrap">
+                <?php foreach ($itinerariesByDay as $d => $items): ?>
+                    <a href="/guide/current-tour?day=<?= (int) $d ?>"
+                        class="btn <?= ($d == $dayViewing) ? 'btn-primary' : 'btn-outline-primary' ?>">
+                        Ngày <?= (int) $d ?>
+                    </a>
+                <?php endforeach; ?>
+                <form method="post" class="ms-auto">
+                    <button onclick="return confirm('Bạn có chắc muốn hoàn thành tour không, hành động này không thể hoàn tác ?')" type="submit" class="btn btn-success btn-finish-tour">
+                        <i class="fa-solid fa-circle-check me-2"></i>Hoàn thành tour
+                    </button>
+                </form>
             </div>
 
-            <!-- item 3 -->
-            <div class="timeline-item timeline-upcoming">
-                <div class="timeline-time text-center">
-                    <div class="mb-1"><i class="fa-regular fa-clock"></i></div>
-                    12:30
-                </div>
-                <div class="flex-grow-1">
-                    <div class="timeline-main-title">
-                        Ăn trưa - Nhà hàng Sakura
-                    </div>
-                    <div class="timeline-desc">
-                        Set menu đặc biệt, 3 khách ăn chay
-                    </div>
-                </div>
-                <div>
-                    <span class="timeline-badge">Sắp tới</span>
-                </div>
-            </div>
+            <?php if (empty($itemsToday)): ?>
+                <div class="text-muted">Chưa có lịch trình cho ngày này.</div>
+            <?php else: ?>
+                <?php foreach ($itemsToday as $it): ?>
+                    <?php
+                    [$cls, $label, $prefix] = statusByDayAndTime(
+                        (int) $dayViewing,
+                        (int) $dayCurrent,
+                        $it['start_time'] ?? null,
+                        $it['end_time'] ?? null
+                    );
+                    ?>
+                    <div class="timeline-item <?= h($cls) ?>">
+                        <div class="timeline-time text-center">
+                            <div class="mb-1"><i class="fa-regular fa-clock"></i></div>
+                            <?= h(fmtTime($it['start_time'] ?? '')) ?>
+                        </div>
 
-            <!-- item 4 -->
-            <div class="timeline-item timeline-upcoming mb-1">
-                <div class="timeline-time text-center">
-                    <div class="mb-1"><i class="fa-regular fa-clock"></i></div>
-                    15:00
-                </div>
-                <div class="flex-grow-1">
-                    <div class="timeline-main-title">
-                        Tham quan Phố Cổ Gion
+                        <div class="flex-grow-1">
+                            <div class="timeline-main-title">
+                                <?= $prefix ?>         <?= h($it['title'] ?? '') ?>
+                            </div>
+                            <div class="timeline-desc">
+                                <?= nl2br(h($it['description'] ?? '')) ?>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="timeline-badge"><?= h($label) ?></span>
+                        </div>
                     </div>
-                    <div class="timeline-desc">
-                        Tự do chụp ảnh, tập trung 17:30
-                    </div>
-                </div>
-                <div>
-                    <span class="timeline-badge">Sắp tới</span>
-                </div>
-            </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
         </div>
     </div>
+
 
     <!-- Important notes -->
-    <div class="card note-card">
-        <div class="card-body p-4">
-            <div class="section-heading">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                <span>Ghi Chú Quan Trọng</span>
-            </div>
-
-            <div class="note-item note-veg">
-                <div class="note-title">Ăn chay: 3 khách</div>
-                <div class="note-desc">Bà Lan (phòng 302), Chị Hoa, Anh Minh</div>
-            </div>
-
-            <div class="note-item note-diabetes">
-                <div class="note-title">Tiểu đường: 1 khách</div>
-                <div class="note-desc">Ông Tuấn (phòng 205) - cần ăn đúng giờ</div>
-            </div>
-
-            <div class="note-item note-room">
-                <div class="note-title">Phòng đơn: 2 yêu cầu</div>
-                <div class="note-desc">Phòng 401 và 402</div>
-            </div>
-
-            <div class="note-item note-kid mb-1">
-                <div class="note-title">Trẻ em: 4 em nhỏ</div>
-                <div class="note-desc">Độ tuổi: 5–10 tuổi, cần chú ý an toàn</div>
+    <?php if ($currentTour['booking_notes']): ?>
+        <div class="card note-card">
+            <div class="card-body p-4">
+                <div class="section-heading">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>Ghi chú của đoàn</span>
+                </div>
+                <div class="note-item note-veg">
+                    <div class="note-desc"><?= $currentTour['booking_notes'] ?></div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="card emergency-card">
-        <div class="card-body p-4">
-            <div class="section-heading">
-                <i class="fa-solid fa-phone-volume"></i>
-                <span>Liên Hệ Khẩn Cấp</span>
-            </div>
-
-            <div class="emergency-item">
-                <div class="emergency-label">Văn phòng Hà Nội</div>
-                <div class="emergency-value">024-3456-7890</div>
-            </div>
-
-            <div class="emergency-item">
-                <div class="emergency-label">Đại diện Nhật Bản</div>
-                <div class="emergency-value">+81-3-1234-5678</div>
-            </div>
-
-            <div class="emergency-item mb-1">
-                <div class="emergency-label">Cấp cứu địa phương</div>
-                <div class="emergency-value">119</div>
-            </div>
-        </div>
-    </div>
+    <?php endif; ?>
 
 </div>
 

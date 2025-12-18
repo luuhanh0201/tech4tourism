@@ -79,6 +79,7 @@
     '/dashboard' => $dashboardController->Dashboard(),
     "/guide" => $guideController->index(),
     "/guide/current-tour" =>$guideController->CurrentTour(),
+    "/guide/current-tour/customers" =>$guideController->ListAndCheckInCustomer(),
     default => include './views/errorPage.php',
   };
   ?>
