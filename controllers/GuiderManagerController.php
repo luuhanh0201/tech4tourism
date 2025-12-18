@@ -6,14 +6,13 @@ class GuiderManagerController
     {
         $this->GuiderManagerModel = new GuiderManagerModel();
     }
+
     public function index()
     {
-        $guides = "";
-        if (isset($_GET['keyword'])) {
-            $guides = $this->GuiderManagerModel->searchGuide($_GET['keyword']);
-        } else {
-            $guides = $this->GuiderManagerModel->getAllGuider();
-        }
+        $role = isset($_GET['role']) ? trim($_GET['role']) : '';
+        $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
+        $status = isset($_GET['status']) ? trim($_GET['status']) : '';
+        $guides = $this->GuiderManagerModel->getAllGuider($role, $keyword, $status);
         renderLayoutAdmin("admin/GuideManager/index.php", ["guides" => $guides], "Quản lý hướng dẫn viên");
     }
     public function detailGuide()

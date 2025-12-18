@@ -9,42 +9,61 @@ class GuiderManagerModel
         $this->BookingModel = new BookingModel();
     }
 
-    public function getAllGuider($status = null)
+    public function getAllGuider(string $role = '', string $keyword = '', string $status = '')
     {
         $sql = "SELECT
-        users.id,
-        users.full_name,
-        users.avatar,
-        users.email,
-        roles.role,
-        guide_profiles.status,
-        guide_profiles.date_of_birth,
-        guide_profiles.gender,
-        guide_profiles.phone,
-        guide_profiles.address,
-        guide_profiles.avatar_url,
-        guide_profiles.certifications,
-        guide_profiles.language,
-        guide_profiles.rate,
-        guide_profiles.bio
-    FROM users
-    JOIN roles ON roles.user_id = users.id
-    JOIN guide_profiles ON guide_profiles.user_id = users.id
-    WHERE roles.role = 'guide'";
+            users.id,
+            users.full_name,
+            users.avatar,
+            users.email,
+            roles.role,
+            guide_profiles.status,
+            guide_profiles.date_of_birth,
+            guide_profiles.gender,
+            guide_profiles.phone,
+            guide_profiles.address,
+            guide_profiles.avatar_url,
+            guide_profiles.certifications,
+            guide_profiles.language,
+            guide_profiles.rate,
+            guide_profiles.bio
+        FROM users
+        JOIN roles ON roles.user_id = users.id
+        LEFT JOIN guide_profiles ON guide_profiles.user_id = users.id
+        WHERE roles.role IN ('admin', 'guide')
+    ";
 
-        if ($status !== null && $status !== '') {
-            $sql .= " AND guide_profiles.status = :status";
+        $params = [];
+
+        // Lọc theo role
+        if ($role !== '' && in_array($role, ['admin', 'guide'], true)) {
+            $sql .= " AND roles.role = :role ";
+            $params['role'] = $role;
         }
+
+        // Lọc theo keyword
+        if ($keyword !== '') {
+            $sql .= " AND (
+            users.full_name LIKE :keyword
+            OR users.email LIKE :keyword
+            OR guide_profiles.phone LIKE :keyword
+        ) ";
+            $params['keyword'] = '%' . $keyword . '%';
+        }
+
+        // Lọc theo status (chỉ áp dụng cho guide)
+        if ($status !== '' && in_array($status, ['Trống lịch', 'Đang dẫn', 'Tạm nghỉ'], true)) {
+            $sql .= " AND roles.role = 'guide' AND guide_profiles.status = :status ";
+            $params['status'] = $status;
+        }
+
+        $sql .= " ORDER BY users.id DESC ";
 
         $stmt = $this->conn->prepare($sql);
-
-        if ($status !== null && $status !== '') {
-            $stmt->bindValue(':status', $status, PDO::PARAM_STR);
-        }
-
-        $stmt->execute();
+        $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     public function getDetailGuide($id)
     {
